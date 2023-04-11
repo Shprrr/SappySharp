@@ -18,7 +18,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -29,7 +29,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore --output release
+      run: dotnet build --configuration Release --no-restore --property:OutputPath=release
     - name: Unit tests
       if: ${{ env.UNIT_TEST }}
       run: dotnet test --no-restore --verbosity normal
