@@ -1,0 +1,18 @@
+<Window x:Class="SappySharp.Forms.frmAbout_"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SappySharp.Forms"
+    xmlns:usercontrols="clr-namespace:SappySharp.UserControls"
+    mc:Ignorable="d"
+    Title="About"    Height="338"    Width="451" Loaded="Form_Load">
+ <Grid>
+  <Image x:Name="picLogos_" Margin="56,16,0,0" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" />
+  <Image x:Name="picFont_" Margin="16,16,0,0" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" />
+  
+  <Image x:Name="picGroup_" Margin="8,8,0,0" Width="436" Height="68" VerticalAlignment="Top" HorizontalAlignment="Left" />
+  <Label x:Name="Command1_" Margin="296,304,0,0" Padding="2,2,2,2" Width="145" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
+  <Image x:Name="picScroller_" Margin="8,80,0,0" Width="436" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left" />
+ </Grid>
+</Window>
