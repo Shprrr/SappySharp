@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -89,9 +72,9 @@ using static SappySharp.Classes.clsSappyDecoder;
 using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
-using static SappySharp.Classes.cRegistry;
 using System.Diagnostics;
 using SappySharp.Properties;
+using SappySharp.Classes;
 
 static partial class modSappy
 {
@@ -272,16 +255,11 @@ static partial class modSappy
     public static void SetIcon(int hwnd, string sIconResName, bool bSetAsAppIcon = true)
     {
         int lhWndTop = 0;
-        int lhWnd = 0;
-        int cX = 0;
-        int cY = 0;
-        int hIconLarge = 0;
-        int hIconSmall = 0;
 
         if (bSetAsAppIcon)
         {
             // Find VB's hidden parent window:
-            lhWnd = hwnd;
+            int lhWnd = hwnd;
             lhWndTop = lhWnd;
             while (!(lhWnd == 0))
             {
@@ -293,10 +271,10 @@ static partial class modSappy
             }
         }
 
-        cX = GetSystemMetrics(SM_CXICON);
-        cY = GetSystemMetrics(SM_CYICON);
+        int cX = GetSystemMetrics(SM_CXICON);
+        int cY = GetSystemMetrics(SM_CYICON);
         nint hInstance = Process.GetCurrentProcess().Handle;
-        hIconLarge = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
+        int hIconLarge = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
         if (bSetAsAppIcon)
         {
             SendMessageLong(lhWndTop, WM_SETICON, ICON_BIG, hIconLarge);
@@ -305,7 +283,7 @@ static partial class modSappy
 
         cX = GetSystemMetrics(SM_CXSMICON);
         cY = GetSystemMetrics(SM_CYSMICON);
-        hIconSmall = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
+        int hIconSmall = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
         if (bSetAsAppIcon)
         {
             SendMessageLong(lhWndTop, WM_SETICON, ICON_SMALL, hIconSmall);
@@ -323,15 +301,13 @@ static partial class modSappy
 
     public static bool InitCommonControlsVB()
     {
-        bool _InitCommonControlsVB = false;
         // TODO: (NOT SUPPORTED): On Error Resume Next
         tagInitCommonControlsEx iccex = null;
         iccex.lngSize = Marshal.SizeOf(iccex);
         iccex.lngICC = ICC_USEREX_CLASSES;
         InitCommonControlsEx(ref iccex);
-        _InitCommonControlsVB = Err().Number == 0;
         // TODO: (NOT SUPPORTED): On Error GoTo 0
-        return _InitCommonControlsVB;
+        return Err().Number == 0;
     }
 
     // -------------------------------
@@ -342,14 +318,12 @@ static partial class modSappy
 
     public static string FixHex(ref dynamic s, ref int i)
     {
-        string _FixHex = null;
-        string Bleh = "";
-        Bleh = Replace(s, "0x", "&H");
+        string Bleh = Replace(s, "0x", "&H");
         if (Left(Bleh, 2) != "&H")
         {
             Bleh = "&H" + Hex(Val(s));
         }
-        _FixHex = Right("00000000" + Bleh, i);
+        string _FixHex = Right("00000000" + Bleh, i);
         _FixHex = Replace(_FixHex, "&", "");
         _FixHex = Replace(_FixHex, "H", "");
         return _FixHex;
@@ -405,8 +379,7 @@ static partial class modSappy
         // If GetUserDefaultLCID = &H411 Then
         try
         {
-            var ctl = obj as Control;
-            if (ctl is null) return;
+            if (obj is not Control ctl) return;
             if (Resources.ResourceManager.GetString("10000") == "<JAPPLZ>")
             {
                 //obj.Charset = 128;
@@ -489,10 +462,9 @@ static partial class modSappy
     public static void SetMusicInfo(string r_sArtist, string r_sAlbum, string r_sTitle, string r_sWMContentID = vbNullString, string r_sFormat = "{0} - {1}", bool r_bShow = true)
     {
         COPYDATASTRUCT udtData = null;
-        string sBuffer = "";
         int hMSGRUI = 0;
 
-        sBuffer = "\\0Music\\0" + (r_bShow ? 1 : 0) + "\\0" + r_sFormat + "\\0" + r_sArtist + "\\0" + r_sTitle + "\\0" + r_sAlbum + "\\0" + r_sWMContentID + "\\0" + vbNullChar;
+        string sBuffer = "\\0Music\\0" + (r_bShow ? 1 : 0) + "\\0" + r_sFormat + "\\0" + r_sArtist + "\\0" + r_sTitle + "\\0" + r_sAlbum + "\\0" + r_sWMContentID + "\\0" + vbNullChar;
         Trace("Sending to Messenger: \"" + sBuffer + "\"");
 
         udtData.dwData = 0x547;
@@ -537,7 +509,6 @@ static partial class modSappy
 
     public static string InputBox(string Prompt, ref string Title, string Default)
     {
-        string _InputBox = "";
         if (Title == "") Title = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
         frmInputBox.instance.Label1[0].Content = Prompt;
         frmInputBox.instance.Title = Title;
@@ -545,13 +516,11 @@ static partial class modSappy
         frmInputBox.instance.Text1[0].SelectionStart = 0;
         frmInputBox.instance.Text1[0].SelectionLength = Len(frmInputBox.instance.Text1[0]);
         frmInputBox.instance.ShowDialog();
-        _InputBox = frmInputBox.instance.Text1[0].Text;
-        return _InputBox;
+        return frmInputBox.instance.Text1[0].Text;
     }
 
     public static string GetSetting(string name)
     {
-        string _GetSetting = "";
         cRegistry myReg = new()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
@@ -559,12 +528,10 @@ static partial class modSappy
             ValueKey = name,
             ValueType = cRegistry.ERegistryValueTypes.REG_SZ
         };
-        _GetSetting = myReg.Value;
-        return _GetSetting;
+        return myReg.Value;
     }
     public static int GetSettingI(string name)
     {
-        int _GetSettingI = 0;
         cRegistry myReg = new()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
@@ -572,12 +539,11 @@ static partial class modSappy
             ValueKey = name,
             ValueType = cRegistry.ERegistryValueTypes.REG_DWORD
         };
-        _GetSettingI = myReg.Value;
-        return _GetSettingI;
+        return myReg.Value;
     }
     public static void WriteSetting(string name, dynamic Value)
     {
-        cRegistry myReg = new()
+        _ = new cRegistry()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
@@ -588,7 +554,7 @@ static partial class modSappy
     }
     public static void WriteSettingI(string name, int Value)
     {
-        cRegistry myReg = new()
+        _ = new cRegistry()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
