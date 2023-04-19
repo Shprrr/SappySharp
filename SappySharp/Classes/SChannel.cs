@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -91,449 +74,187 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
-
-
-public class SChannel {
-string Key = "";
-Attribute(Key.VB_VarDescription == "Channel ID");
-
-SNotes mvarNotes = null; // local copy
-  public enum ChannelOutputTypes{ 
-  cotDirect = 0
-  , cotSquare1 = 1
-  , cotSquare2 = 2
-  , cotWave = 3
-  , cotNoise = 4
-  , cotUnk5 = 5
-  , cotUnk6 = 6
-  , cotUnk7 = 7
-  , cotMultiSample = 8
-  , cotDrumKit = 9
-  , cotNull = 255
-}
-bool mvarEnabled = false;
-Byte mvarPatchNumber = 0; // local copy
-int mvarPanning = 0; // local copy
-Byte mvarMainVolume = 0; // local copy
-Byte mvarPitchBend = 0; // local copy
-Byte mvarVibratoDepth = 0; // local copy
-Byte mvarVibratoRate = 0; // local copy
-int mvarPitchBendRange = 0; // local copy
-bool mvarSustain = false; // local copy
-int mvarTranspose = 0; // local copy
-SSubroutines mvarSubroutines = null; // local copy
-SappyEventQueue mvarEventQueue = null; // local copy
-int mvarTrackPointer = 0; // local copy
-int mvarLoopPointer = 0; // local copy
-int mvarProgramCounter = 0; // local copy
-bool mvarMute = false;
-ChannelOutputTypes mvarOutputType = null;
-int mvarReturnPointer = 0; // local copy
-bool mvarInSubroutine = false; // localcopy
-int mvarSubroutineCounter = 0; // localcopy
-int mvarSubCountAtLoop = 0; // localcopy
-decimal mvarWaitTicks = 0; // localcopy
-int mvarTrackLengthInBytes = 0;
- // local variable(s) to hold property value(s)
-
-  
-
-
-  
-
-
-  public int TrackPointer{ 
-get {
-int _TrackPointer = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.TrackPointer
-_TrackPointer = mvarTrackPointer;
-return _TrackPointer;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.TrackPointer = 5
-mvarTrackPointer = vData;
-}
-}
-
-
-
-  
-
-  public int LoopPointer{ 
-get {
-int _LoopPointer = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_LoopPointer = mvarLoopPointer;
-return _LoopPointer;
-}
-set {
-ttribute(_LoopPointer.VB_Description == "Pointer to loop point in the event queue");
- // used when assigning a value to the property, on the left side of an assignment.
- // Syntax: X.LoopPointer = 5
-mvarLoopPointer = vData;
-}
-}
-
-
-
-  
-
-  
-
-  
-
-  public bool mute{ 
-get {
-bool _mute = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_mute = mvarMute;
-return _mute;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarMute = vData;
-}
-}
-
-
-  
-
-
-
-  
-
-  
-
-  public int ReturnPointer{ 
-get {
-int _ReturnPointer = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_ReturnPointer = mvarReturnPointer;
-return _ReturnPointer;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarReturnPointer = vData;
-}
-}
-
-
-
-  
-
-
-
-
-  public bool InSubroutine{ 
-get {
-bool _InSubroutine = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_InSubroutine = mvarInSubroutine;
-return _InSubroutine;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarInSubroutine = vData;
-}
-}
-
-
-
-  
-
-  public int SubroutineCounter{ 
-get {
-int _SubroutineCounter = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_SubroutineCounter = mvarSubroutineCounter;
-return _SubroutineCounter;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarSubroutineCounter = vData;
-}
-}
-
-
-
-  
-
-
-  public int SubCountAtLoop{ 
-get {
-int _SubCountAtLoop = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_SubCountAtLoop = mvarSubCountAtLoop;
-return _SubCountAtLoop;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarSubCountAtLoop = vData;
-}
-}
-
-
-
-  
-
-
-
-  public int ProgramCounter{ 
-get {
-int _ProgramCounter = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopPointer
-_ProgramCounter = mvarProgramCounter;
-return _ProgramCounter;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopPointer = 5
-mvarProgramCounter = vData;
-}
-}
-
-
-
-  
-
-
-
-  public SappyEventQueue EventQueue{ 
-get {
-SappyEventQueue _EventQueue = default(SappyEventQueue);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.EventQueue
-_EventQueue = mvarEventQueue;
-return _EventQueue;
-}
-set {
-ttribute(_EventQueue.VB_Description == "Channel's event queue");
- // used when assigning an Object to the property, on the left side of a Set statement.
- // Syntax: Set x.EventQueue = Form1
-mvarEventQueue = vData;
-}
-}
-
-
-
-  
-
-
-
-  public SSubroutines Subroutines{ 
-get {
-SSubroutines _Subroutines = default(SSubroutines);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Subroutines
-_Subroutines = mvarSubroutines;
-return _Subroutines;
-}
-set {
-ttribute(_Subroutines.VB_Description == "Collection of the channel's subroutines");
- // used when assigning an Object to the property, on the left side of a Set statement.
- // Syntax: Set x.Subroutines = Form1
-mvarSubroutines = vData;
-}
-}
-
-
-
-  
-
-
-
-  public int Transpose{ 
-get {
-int _Transpose = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Transpose
-_Transpose = mvarTranspose;
-return _Transpose;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.Transpose = 5
-mvarTranspose = vData;
-}
-}
-
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-  public int PitchBendRange{ 
-get {
-int _PitchBendRange = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.PitchBendRange
-_PitchBendRange = mvarPitchBendRange;
-return _PitchBendRange;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.PitchBendRange = 5
-mvarPitchBendRange = vData;
-}
-}
-
-
-
-  
-
-
-
-  
-
-
-  
-
-  public Byte VibratoRate{ 
-get {
-Byte _VibratoRate = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.VibratoRate
-_VibratoRate = mvarVibratoRate;
-return _VibratoRate;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.VibratoRate = 5
-mvarVibratoRate = vData;
-}
-}
-
-
-
-  
-  public Byte VibratoDepth{ 
-get {
-Byte _VibratoDepth = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.VibratoDepth
-_VibratoDepth = mvarVibratoDepth;
-return _VibratoDepth;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.VibratoDepth = 5
-mvarVibratoDepth = vData;
-}
-}
-
-
-
-  
-  public Byte MainVolume{ 
-get {
-Byte _MainVolume = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.MainVolume
-_MainVolume = mvarMainVolume;
-return _MainVolume;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.MainVolume = 5
-mvarMainVolume = vData;
-}
-}
-
-
-
-  
-
-
-
-  public int Panning{ 
-get {
-int _Panning = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Panning
-_Panning = mvarPanning;
-return _Panning;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.Panning = 5
-mvarPanning = vData;
-}
-}
-
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-
-  public SNotes Notes{ 
-get {
-SNotes _Notes = default(SNotes);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Notes
-_Notes = mvarNotes;
-return _Notes;
-}
-set {
-ttribute(_Notes.VB_Description == "Collection of Notes");
- // used when assigning an Object to the property, on the left side of a Set statement.
- // Syntax: Set x.Notes = Form1
-mvarNotes = vData;
-}
-}
-
-
-
-  
-
-
-
-
-  public int TrackLengthInBytes{ 
-get {
-int _TrackLengthInBytes = default(int);
-_TrackLengthInBytes = mvarTrackLengthInBytes;
-return _TrackLengthInBytes;
-}
-set {
-mvarTrackLengthInBytes = vData;
-}
-}
-
-
-
-  
-
-
-
+namespace SappySharp.Classes;
+
+public class SChannel
+{
+    /// <summary>
+    /// Channel ID
+    /// </summary>
+    public string Key = "";
+
+    SNotes mvarNotes = null; // local copy
+    public enum ChannelOutputTypes
+    {
+        cotDirect = 0
+    , cotSquare1 = 1
+    , cotSquare2 = 2
+    , cotWave = 3
+    , cotNoise = 4
+    , cotUnk5 = 5
+    , cotUnk6 = 6
+    , cotUnk7 = 7
+    , cotMultiSample = 8
+    , cotDrumKit = 9
+    , cotNull = 255
+    }
+    bool mvarEnabled = false;
+    byte mvarPatchNumber = 0; // local copy
+    int mvarPanning = 0; // local copy
+    byte mvarMainVolume = 0; // local copy
+    byte mvarPitchBend = 0; // local copy
+    byte mvarVibratoDepth = 0; // local copy
+    byte mvarVibratoRate = 0; // local copy
+    int mvarPitchBendRange = 0; // local copy
+    bool mvarSustain = false; // local copy
+    int mvarTranspose = 0; // local copy
+    SSubroutines mvarSubroutines = null; // local copy
+    SappyEventQueue mvarEventQueue = null; // local copy
+    int mvarTrackPointer = 0; // local copy
+    int mvarLoopPointer = 0; // local copy
+    int mvarProgramCounter = 0; // local copy
+    bool mvarMute = false;
+    ChannelOutputTypes mvarOutputType;
+    int mvarReturnPointer = 0; // local copy
+    bool mvarInSubroutine = false; // localcopy
+    int mvarSubroutineCounter = 0; // localcopy
+    int mvarSubCountAtLoop = 0; // localcopy
+    decimal mvarWaitTicks = 0; // localcopy
+    int mvarTrackLengthInBytes = 0;
+    // local variable(s) to hold property value(s)
+
+    /// <summary>
+    /// Output Device
+    /// </summary>
+    public ChannelOutputTypes outputtype { get => mvarOutputType; set => mvarOutputType = value; }
+
+    public int TrackPointer
+    {
+        get => mvarTrackPointer;
+        set => mvarTrackPointer = value;
+    }
+
+    /// <summary>
+    /// Pointer to loop point in the event queue
+    /// </summary>
+    public int LoopPointer
+    {
+        get => mvarLoopPointer;
+        set => mvarLoopPointer = value;
+    }
+
+    public bool Enabled { get => mvarEnabled; set => mvarEnabled = value; }
+
+    public bool mute
+    {
+        get => mvarMute;
+        set => mvarMute = value;
+    }
+
+    public decimal WaitTicks { get => mvarWaitTicks; set => mvarWaitTicks = value; }
+
+    public int ReturnPointer
+    {
+        get => mvarReturnPointer;
+        set => mvarReturnPointer = value;
+    }
+
+    public bool InSubroutine
+    {
+        get => mvarInSubroutine;
+        set => mvarInSubroutine = value;
+    }
+
+    public int SubroutineCounter
+    {
+        get => mvarSubroutineCounter;
+        set => mvarSubroutineCounter = value;
+    }
+
+    public int SubCountAtLoop
+    {
+        get => mvarSubCountAtLoop;
+        set => mvarSubCountAtLoop = value;
+    }
+
+    public int ProgramCounter
+    {
+        get => mvarProgramCounter;
+        set => mvarProgramCounter = value;
+    }
+
+    /// <summary>
+    /// Channel's event queue
+    /// </summary>
+    public SappyEventQueue EventQueue
+    {
+        get => mvarEventQueue;
+        set => mvarEventQueue = value;
+    }
+
+    /// <summary>
+    /// Collection of the channel's subroutines
+    /// </summary>
+    public SSubroutines Subroutines
+    {
+        get => mvarSubroutines;
+        set => mvarSubroutines = value;
+    }
+
+    public int Transpose
+    {
+        get => mvarTranspose;
+        set => mvarTranspose = value;
+    }
+
+    public bool Sustain { get => mvarSustain; set => mvarSustain = value; }
+
+    public int PitchBendRange
+    {
+        get => mvarPitchBendRange;
+        set => mvarPitchBendRange = value;
+    }
+
+    public byte PitchBend { get => mvarPitchBend; set => mvarPitchBend = value; }
+
+    public byte VibratoRate
+    {
+        get => mvarVibratoRate;
+        set => mvarVibratoRate = value;
+    }
+
+    public byte VibratoDepth
+    {
+        get => mvarVibratoDepth;
+        set => mvarVibratoDepth = value;
+    }
+
+    public byte MainVolume
+    {
+        get => mvarMainVolume;
+        set => mvarMainVolume = value;
+    }
+
+    public int Panning
+    {
+        get => mvarPanning;
+        set => mvarPanning = value;
+    }
+
+    public byte PatchNumber { get => mvarPatchNumber; set => mvarPatchNumber = value; }
+
+    /// <summary>
+    /// Collection of Notes
+    /// </summary>
+    public SNotes Notes
+    {
+        get => mvarNotes;
+        set => mvarNotes = value;
+    }
+
+    public int TrackLengthInBytes
+    {
+        get => mvarTrackLengthInBytes;
+        set => mvarTrackLengthInBytes = value;
+    }
 }
