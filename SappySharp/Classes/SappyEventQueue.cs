@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -90,94 +73,77 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using System.Collections;
 
+namespace SappySharp.Classes;
 
+/// <summary>
+/// Holds Events to be procesed
+/// </summary>
+public class SappyEventQueue : IEnumerable<SappyEvent>
+{
+    // local variable to hold collection
+    private readonly Collection mCol = new();
+    public void Clear()
+    {
+        while (mCol.Count > 0)
+        {
+            mCol.Remove(1);
+        }
+    }
 
-public class SappyEventQueue {
- // local variable to hold collection
-Collection mCol = null;
-  public void Clear() {
-    while(mCol.count > 0) {
-    mCol.Remove(1);
-  }
-  
-}
+    public SappyEvent Add(int Ticks, byte CommandByte, byte Param1, byte Param2, byte Param3, string sKey = null)
+    {
+        // create a new object
+        SappyEvent objNewMember = new()
+        {
+            // set the properties passed into the method
+            Key = sKey,
+            Ticks = Ticks,
+            CommandByte = CommandByte,
+            Param1 = Param1,
+            Param2 = Param2,
+            Param3 = Param3
+        };
+        // For i = 1 To (mCol.Count)
+        //    If mCol(i).Ticks > objNewMember.Ticks Then
+        //    i = i - 1
+        //    Exit For
+        //    End If
+        // Next i
+        // // If Len(sKey) = 0 Then
+        // If i = 0 Then
+        //     mCol.Add objNewMember, , 1
+        // Else
+        //     If mCol.Count < 1 Then
+        mCol.Add(objNewMember);
+        //     Else
+        //     mCol.Add objNewMember, , , i - 1
+        //     End If
+        // End If
+        // Else
+        //     mCol.Add objNewMember, sKey
+        // End If
 
-  public SappyEvent Add(int Ticks, Byte CommandByte, Byte Param1, Byte Param2, Byte Param3, ref string sKey) {
-SappyEvent _Add = null;
-   // create a new object
-  SappyEvent objNewMember = null;
-  objNewMember = new SappyEvent();
-  
-  
-   // set the properties passed into the method
-  objNewMember.Key = sKey;
-  objNewMember.Ticks = Ticks;
-  objNewMember.CommandByte = CommandByte;
-  objNewMember.Param1 = Param1;
-  objNewMember.Param2 = Param2;
-  objNewMember.Param3 = Param3;
-   // For i = 1 To (mCol.Count)
-   // If mCol(i).Ticks > objNewMember.Ticks Then
-   // i = i - 1
-   // Exit For
-   // End If
-   // Next i
-   // '    If Len(sKey) = 0 Then
-   // If i = 0 Then
-   // mCol.Add objNewMember, , 1
-   // Else
-   // If mCol.Count < 1 Then
-  mCol.Add(objNewMember);
-   // Else
-   // mCol.Add objNewMember, , , i - 1
-   // End If
-   // End If
-   // Else
-   // mCol.Add objNewMember, sKey
-   // End If
-  
-  
-   // return the object created
-  _Add = objNewMember;
-  objNewMember = null;
-  
-  
-return _Add;
-}
+        // return the object created
+        return objNewMember;
+    }
 
-  
+    public SappyEvent this[int Index] => (SappyEvent)mCol[Index];
+    public SappyEvent this[string Key] => (SappyEvent)mCol[Key];
 
+    public int count => mCol.Count;
 
+    public void Remove(dynamic vntIndexKey)
+    {
+        // used when removing an element from the collection
+        // vntIndexKey contains either the Index or Key, which is why
+        // it is declared as a Variant
+        // Syntax: x.Remove(xyz)
 
-  
+        mCol.Remove(vntIndexKey);
+    }
 
-
-  public void Remove(ref dynamic vntIndexKey) {
-   // used when removing an element from the collection
-   // vntIndexKey contains either the Index or Key, which is why
-   // it is declared as a Variant
-   // Syntax: x.Remove(xyz)
-  
-  
-  mCol.Remove(vntIndexKey);
-}
-
-
-  
-
-
-  private void Class_Initialize() {
-   // creates the collection when this class is created
-  mCol = new Collection();
-}
-
-
-  private void Class_Terminate() {
-   // destroys collection when this class is terminated
-  mCol = null;
-}
-
-
-
+    public IEnumerator<SappyEvent> GetEnumerator() => mCol.Cast<SappyEvent>().GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => mCol.GetEnumerator();
 }
