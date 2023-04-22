@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -91,269 +74,103 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
-
-
-public class SDirect {
-string Key = "";
-
-string mvarSampleID = ""; // local copy
-Byte mvarEnvAttenuation = 0; // local copy
-Byte mvarEnvDecay = 0; // local copy
-Byte mvarEnvSustain = 0; // local copy
-Byte mvarEnvRelease = 0; // local copy
-Byte mvarRaw0 = 0; // local copy
-Byte mvarRaw1 = 0; // local copy
-Byte mvarGB1 = 0; // local copy
-Byte mvarGB2 = 0; // local copy
-Byte mvarGB3 = 0; // local copy
-Byte mvarGB4 = 0; // local copy
-bool mvarReverse = false; // local copy
-bool mvarFixedPitch = false; // local copy
-Byte mvarDrumTuneKey = 0; // local copy
-  public enum DirectOutputTypes{ 
-  dotDirect = 0
-  , dotSquare1 = 1
-  , dotSquare2 = 2
-  , dotWave = 3
-  , dotNoise = 4
-  , dotUnk5 = 5
-  , dotUnk6 = 6
-  , dotUnk7 = 7
-}
- // local variable(s) to hold property value(s)
-DirectOutputTypes mvarOutputType = null; // local copy
-  
-
-
-  
-
-
-
-
-  public Byte DrumTuneKey{ 
-get {
-Byte _DrumTuneKey = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.DrumTuneKey
-_DrumTuneKey = mvarDrumTuneKey;
-return _DrumTuneKey;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.DrumTuneKey = 5
-mvarDrumTuneKey = vData;
-}
-}
-
-
-
-  
-
-
-
-  public bool FixedPitch{ 
-get {
-bool _FixedPitch = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.FixedPitch
-_FixedPitch = mvarFixedPitch;
-return _FixedPitch;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.FixedPitch = 5
-mvarFixedPitch = vData;
-}
-}
-
-
-
-  
-
-
-
-  public bool Reverse{ 
-get {
-bool _Reverse = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Reverse
-_Reverse = mvarReverse;
-return _Reverse;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.Reverse = 5
-mvarReverse = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte GB4{ 
-get {
-Byte _GB4 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GB4
-_GB4 = mvarGB4;
-return _GB4;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GB4 = 5
-mvarGB4 = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte GB3{ 
-get {
-Byte _GB3 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GB3
-_GB3 = mvarGB3;
-return _GB3;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GB3 = 5
-mvarGB3 = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte GB2{ 
-get {
-Byte _GB2 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GB2
-_GB2 = mvarGB2;
-return _GB2;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GB2 = 5
-mvarGB2 = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte GB1{ 
-get {
-Byte _GB1 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GB1
-_GB1 = mvarGB1;
-return _GB1;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GB1 = 5
-mvarGB1 = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte Raw1{ 
-get {
-Byte _Raw1 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Raw1
-_Raw1 = mvarRaw1;
-return _Raw1;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.Raw1 = 5
-mvarRaw1 = vData;
-}
-}
-
-
-
-  
-
-
-
-  public Byte Raw0{ 
-get {
-Byte _Raw0 = default(Byte);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.Raw0
-_Raw0 = mvarRaw0;
-return _Raw0;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.Raw0 = 5
-mvarRaw0 = vData;
-}
-}
-
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-  
-
-
-  
-
-
-
-
-
+namespace SappySharp.Classes;
+
+public class SDirect
+{
+    public string Key = "";
+
+    string mvarSampleID = ""; // local copy
+    byte mvarEnvAttenuation = 0; // local copy
+    byte mvarEnvDecay = 0; // local copy
+    byte mvarEnvSustain = 0; // local copy
+    byte mvarEnvRelease = 0; // local copy
+    byte mvarRaw0 = 0; // local copy
+    byte mvarRaw1 = 0; // local copy
+    byte mvarGB1 = 0; // local copy
+    byte mvarGB2 = 0; // local copy
+    byte mvarGB3 = 0; // local copy
+    byte mvarGB4 = 0; // local copy
+    bool mvarReverse = false; // local copy
+    bool mvarFixedPitch = false; // local copy
+    byte mvarDrumTuneKey = 0; // local copy
+    public enum DirectOutputTypes
+    {
+        dotDirect = 0
+    , dotSquare1 = 1
+    , dotSquare2 = 2
+    , dotWave = 3
+    , dotNoise = 4
+    , dotUnk5 = 5
+    , dotUnk6 = 6
+    , dotUnk7 = 7
+    }
+    // local variable(s) to hold property value(s)
+    DirectOutputTypes mvarOutputType; // local copy
+
+    public DirectOutputTypes outputtype { get => mvarOutputType; set => mvarOutputType = value; }
+
+    public byte DrumTuneKey
+    {
+        get => mvarDrumTuneKey;
+        set => mvarDrumTuneKey = value;
+    }
+
+    public bool FixedPitch
+    {
+        get => mvarFixedPitch;
+        set => mvarFixedPitch = value;
+    }
+
+    public bool Reverse
+    {
+        get => mvarReverse;
+        set => mvarReverse = value;
+    }
+
+    public byte GB4
+    {
+        get => mvarGB4;
+        set => mvarGB4 = value;
+    }
+
+    public byte GB3
+    {
+        get => mvarGB3;
+        set => mvarGB3 = value;
+    }
+
+    public byte GB2
+    {
+        get => mvarGB2;
+        set => mvarGB2 = value;
+    }
+
+    public byte GB1
+    {
+        get => mvarGB1;
+        set => mvarGB1 = value;
+    }
+
+    public byte Raw1
+    {
+        get => mvarRaw1;
+        set => mvarRaw1 = value;
+    }
+
+    public byte Raw0
+    {
+        get => mvarRaw0;
+        set => mvarRaw0 = value;
+    }
+
+    public byte EnvRelease { get => mvarEnvRelease; set => mvarEnvRelease = value; }
+
+    public byte EnvSustain { get => mvarEnvSustain; set => mvarEnvSustain = value; }
+
+    public byte EnvDecay { get => mvarEnvDecay; set => mvarEnvDecay = value; }
+
+    public byte EnvAttenuation { get => mvarEnvAttenuation; set => mvarEnvAttenuation = value; }
+
+    public string SampleID { get => mvarSampleID; set => mvarSampleID = value; }
 }
