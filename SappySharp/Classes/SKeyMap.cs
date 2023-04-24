@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -91,35 +74,16 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
+namespace SappySharp.Classes;
 
+public class SKeyMap
+{
+    public string Key = "";
 
-public class SKeyMap {
-string Key = "";
-
-int mvarAssignDirect = 0; // local copy
-  public int AssignDirect{ 
-get {
-int _AssignDirect = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.AssignSample
-_AssignDirect = mvarAssignDirect;
-return _AssignDirect;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.AssignSample = 5
-mvarAssignDirect = vData;
-}
-}
-
-
-
-  
-
-
-
-
-
-
-
+    int mvarAssignDirect = 0; // local copy
+    public int AssignDirect
+    {
+        get => mvarAssignDirect;
+        set => mvarAssignDirect = value;
+    }
 }
