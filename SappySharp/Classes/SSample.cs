@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -91,154 +74,68 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
+namespace SappySharp.Classes;
+
+public class SSample
+{
+    public string Key = "";
+
+    // local variable(s) to hold property value(s)
+    string mvarSampleData = ""; // local copy
+    int mvarLoopStart = 0; // local copy
+    bool mvarLoopEnable = false; // local copy
+    int mvarSize = 0; // local copy
+    int mvarFrequency = 0; // local copy
+    int mvarFModSample = 0; // local copy
+    // local variable(s) to hold property value(s)
+    bool mvarGBWave = false; // local copy
+
+    byte[] mvarSampleDataB = Array.Empty<byte>();
+    int mvarSampleDataL = 0;
+    public byte[] SampleDataB => mvarSampleDataB;
 
 
-public class SSample {
-string Key = "";
+    public void ReadSampleDataFromFile(int fn, int tsize)
+    {
+        Array sampleData =new byte[tsize];
+        mvarSampleDataL = tsize;
+        int filenumber = 0;
+        FileGet(fn, ref sampleData, ReadOffset(filenumber) + 1);
+        mvarSampleDataB = (byte[])sampleData;
+    }
+    public void SaveSampleDataToFile(int fn)
+    {
+        int filenumber = 0;
+        FilePutObject(fn, mvarSampleDataB, WriteOffset(filenumber) + 1);
+    }
 
- // local variable(s) to hold property value(s)
-string mvarSampleData = ""; // local copy
-int mvarLoopStart = 0; // local copy
-bool mvarLoopEnable = false; // local copy
-int mvarSize = 0; // local copy
-int mvarFrequency = 0; // local copy
-int mvarFModSample = 0; // local copy
- // local variable(s) to hold property value(s)
-bool mvarGBWave = false; // local copy
+    public bool GBWave
+    {
+        get => mvarGBWave;
+        set => mvarGBWave = value;
+    }
 
-List<Byte> mvarSampleDataB = new List<Byte>();
-int mvarSampleDataL = 0;
-  public int SampleDataB{ 
-get {
-int _SampleDataB = default(int);
-_SampleDataB = mvarSampleDataB[Index];
-return _SampleDataB;
-}
-set {
-  if(Index > mvarSampleDataL) {
-  // TODO: (NOT SUPPORTED): ReDim Preserve mvarSampleDataB(mvarSampleDataL) As Byte
-}
-if(mvarSampleDataL == 0)// TODO: (NOT SUPPORTED): ReDim Preserve mvarSampleDataB(0) As Byte
+    public bool LoopEnable
+    {
+        get => mvarLoopEnable;
+        set => mvarLoopEnable = value;
+    }
 
-mvarSampleDataB[Index] = newval;
-}
-}
+    public int FModSample
+    {
+        get => mvarFModSample;
+        set => mvarFModSample = value;
+    }
 
+    public int Frequency { get => mvarFrequency; set => mvarFrequency = value; }
 
-public void ReadSampleDataFromFile(int fn, ref int tsize) {
-// TODO: (NOT SUPPORTED): ReDim Preserve mvarSampleDataB(tsize) As Byte
-mvarSampleDataL = tsize;
-Get(#fn, ReadOffset(filenumber) + 1, mvarSampleDataB());
-}
-public void SaveSampleDataToFile(int fn) {
-Put(#fn, WriteOffset(filenumber) + 1, mvarSampleDataB());
-}
+    public int Size { get => mvarSize; set => mvarSize = value; }
 
+    public int loopstart
+    {
+        get => mvarLoopStart;
+        set => mvarLoopStart = value;
+    }
 
-public bool GBWave{ 
-get {
-bool _GBWave = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GBWave
-_GBWave = mvarGBWave;
-return _GBWave;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GBWave = 5
-mvarGBWave = vData;
-}
-}
-
-
-
-
-
-
-public bool LoopEnable{ 
-get {
-bool _LoopEnable = default(bool);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.GBWave
-_LoopEnable = mvarLoopEnable;
-return _LoopEnable;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.GBWave = 5
-mvarLoopEnable = vData;
-}
-}
-
-
-
-
-
-
-
-public int FModSample{ 
-get {
-int _FModSample = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.FModSample
-_FModSample = mvarFModSample;
-return _FModSample;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.FModSample = 5
-mvarFModSample = vData;
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-public int loopstart{ 
-get {
-int _loopstart = default(int);
-used(when retrieving value of a property, on the right side of an assignment.);
- // Syntax: Trace X.LoopStart
-_loopstart = mvarLoopStart;
-return _loopstart;
-}
-set {
-used(when assigning a value to the property, on the left side of an assignment.);
- // Syntax: X.LoopStart = 5
-mvarLoopStart = vData;
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public string SampleData { get => mvarSampleData; set => mvarSampleData = value; }
 }
