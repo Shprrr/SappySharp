@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -90,75 +73,62 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using System.Collections;
 
+namespace SappySharp.Classes;
 
+/// <summary>
+/// Holds a collection of notes
+/// </summary>
+public class SNotes : IEnumerable<SNote>
+{
+    // local variable to hold collection
+    private readonly Collection mCol = new();
+    public void Clear()
+    {
+        while (mCol.Count > 0)
+        {
+            mCol.Remove(1);
+        }
+    }
 
-public class SNotes {
- // local variable to hold collection
-Collection mCol = null;
-  public void Clear() {
-    while(mCol.count > 0) {
-    mCol.Remove(1);
-  }
-  
-}
-  public SNote Add(ref Byte NoteID, ref string sKey) {
-SNote _Add = null;
-   // create a new object
-  SNote objNewMember = null;
-  objNewMember = new SNote();
-  
-  
-   // set the properties passed into the method
-  objNewMember.Key = sKey;
-  objNewMember.NoteID = NoteID;
-    if(Len(sKey) == 0) {
-    mCol.Add(objNewMember);
-    } else {
-    mCol.Add(objNewMember, sKey);
-  }
-  
-  
-   // return the object created
-  _Add = objNewMember;
-  objNewMember = null;
-  
-  
-return _Add;
-}
+    public SNote Add(byte NoteID, string sKey = null)
+    {
+        // create a new object
+        SNote objNewMember = new()
+        {
+            // set the properties passed into the method
+            Key = sKey,
+            NoteID = NoteID
+        };
+        if (Len(sKey) == 0)
+        {
+            mCol.Add(objNewMember);
+        }
+        else
+        {
+            mCol.Add(objNewMember, sKey);
+        }
 
-  
+        // return the object created
+        return objNewMember;
+    }
 
+    public SNote this[int Index] => (SNote)mCol[Index];
+    public SNote this[string Key] => (SNote)mCol[Key];
 
+    public int count => mCol.Count;
 
-  
+    public void Remove(dynamic vntIndexKey)
+    {
+        // used when removing an element from the collection
+        // vntIndexKey contains either the Index or Key, which is why
+        // it is declared as a Variant
+        // Syntax: x.Remove(xyz)
 
+        mCol.Remove(vntIndexKey);
+    }
 
-  public void Remove(ref dynamic vntIndexKey) {
-   // used when removing an element from the collection
-   // vntIndexKey contains either the Index or Key, which is why
-   // it is declared as a Variant
-   // Syntax: x.Remove(xyz)
-  
-  
-  mCol.Remove(vntIndexKey);
-}
-
-
-  
-
-
-  private void Class_Initialize() {
-   // creates the collection when this class is created
-  mCol = new Collection();
-}
-
-
-  private void Class_Terminate() {
-   // destroys collection when this class is terminated
-  mCol = null;
-}
-
-
-
+    public IEnumerator<SNote> GetEnumerator() => mCol.Cast<SNote>().GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => mCol.GetEnumerator();
 }
