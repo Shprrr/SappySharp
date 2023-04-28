@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -90,73 +73,70 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using System.Collections;
 
+namespace SappySharp.Classes;
 
+public class NoteInfos : IEnumerable<NoteInfo>
+{
+    private readonly Collection mCol = new();
 
-public class NoteInfos {
-Collection mCol = null;
+    public void Clear()
+    {
+        while (mCol.Count > 0)
+        {
+            mCol.Remove(1);
+        }
+    }
 
-  public void Clear() {
-    while(mCol.count > 0) {
-    mCol.Remove(1);
-  }
-}
+    public NoteInfo Add(bool Enabled, int FModChannel, byte NoteNumber, int Frequency, byte Velocity, int ParentChannel, byte UnknownValue, NoteOutputTypes outputtype, byte EnvAttenuation, byte EnvDecay, byte EnvSustain, byte EnvRelease, int WaitTicks, byte PatchNumber, string sKey = null)
+    {
+        NoteInfo objNewMember = new()
+        {
+            Key = sKey,
+            NoteOff = false,
+            Enabled = Enabled,
+            FModChannel = FModChannel,
+            NoteNumber = NoteNumber,
+            Frequency = Frequency,
+            Velocity = Velocity,
+            PatchNumber = PatchNumber,
+            ParentChannel = ParentChannel,
+            //SampleID = SampleID,
+            UnknownValue = UnknownValue,
+            outputtype = outputtype,
+            Notephase = NotePhases.npInitial,
+            EnvDestination = 0,
+            EnvStep = 0,
+            EnvPosition = 0,
+            EnvAttenuation = EnvAttenuation,
+            EnvDecay = EnvDecay,
+            EnvSustain = EnvSustain,
+            EnvRelease = EnvRelease,
+            WaitTicks = WaitTicks
+        };
+        if (Len(sKey) == 0)
+        {
+            mCol.Add(objNewMember);
+        }
+        else
+        {
+            mCol.Add(objNewMember, sKey);
+        }
 
-  public NoteInfo Add(bool Enabled, int FModChannel, Byte NoteNumber, int Frequency, Byte Velocity, int ParentChannel, Byte UnknownValue, NoteOutputTypes outputtype, Byte EnvAttenuation, Byte EnvDecay, Byte EnvSustain, Byte EnvRelease, int WaitTicks, Byte PatchNumber, string sKey) {
-NoteInfo _Add = null;
-  NoteInfo objNewMember = null;
-  objNewMember = new NoteInfo();
-  
-  objNewMember.Key = sKey;
-  objNewMember.NoteOff = false;
-  objNewMember.Enabled = Enabled;
-  objNewMember.FModChannel = FModChannel;
-  objNewMember.NoteNumber = NoteNumber;
-  objNewMember.Frequency = Frequency;
-  objNewMember.Velocity = Velocity;
-  objNewMember.PatchNumber = PatchNumber;
-  objNewMember.ParentChannel = ParentChannel;
-  objNewMember.SampleID = SampleID;
-  objNewMember.UnknownValue = UnknownValue;
-  objNewMember.outputtype = outputtype;
-  objNewMember.Notephase = npInitial;
-  objNewMember.EnvDestination = 0;
-  objNewMember.EnvStep = 0;
-  objNewMember.EnvPosition = 0;
-  objNewMember.EnvAttenuation = EnvAttenuation;
-  objNewMember.EnvDecay = EnvDecay;
-  objNewMember.EnvSustain = EnvSustain;
-  objNewMember.EnvRelease = EnvRelease;
-  objNewMember.WaitTicks = WaitTicks;
-    if(Len(sKey) == 0) {
-    mCol.Add(objNewMember);
-    } else {
-    mCol.Add(objNewMember, sKey);
-  }
-  
-  _Add = objNewMember;
-  objNewMember = null;
-return _Add;
-}
+        return objNewMember;
+    }
 
-  
+    public NoteInfo this[int Index] => (NoteInfo)mCol[Index];
+    public NoteInfo this[string Key] => (NoteInfo)mCol[Key];
 
-  
+    public int count => mCol.Count;
 
-  public void Remove(ref dynamic vntIndexKey) {
-  mCol.Remove(vntIndexKey);
-}
+    public void Remove(dynamic vntIndexKey)
+    {
+        mCol.Remove(vntIndexKey);
+    }
 
-  
-
-  private void Class_Initialize() {
-  mCol = new Collection();
-}
-
-  private void Class_Terminate() {
-  mCol = null;
-}
-
-
-
+    public IEnumerator<NoteInfo> GetEnumerator() => mCol.Cast<NoteInfo>().GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => mCol.GetEnumerator();
 }
