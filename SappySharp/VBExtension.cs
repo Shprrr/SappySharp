@@ -548,6 +548,8 @@ public static class VBExtension
     {
         public int Width => (int)System.Windows.SystemParameters.PrimaryScreenWidth;
         public int Height => (int)System.Windows.SystemParameters.PrimaryScreenHeight;
+        public int TwipsPerPixelX => 15;
+        public int TwipsPerPixelY => 15;
         public FrameworkElement ActiveControl;
     }
     public static ScreenMetrics Screen { get => new ScreenMetrics(); }
