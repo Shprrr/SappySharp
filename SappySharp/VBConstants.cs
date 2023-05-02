@@ -119,4 +119,6 @@ public static class VBConstants
     public const int flexAlignLeftCenter = 0;
     public const int flexAlignRightCenter = 0;
     public const int flexAlignCenterCenter = 0;
+
+    public const int vbSrcCopy = 0x00CC0020;
 }
