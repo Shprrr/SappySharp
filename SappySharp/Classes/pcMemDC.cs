@@ -221,7 +221,6 @@ public partial class pcMemDC : IDisposable
             }
 
             // Delete non managed code.
-            // Delete any icons owned by the sbar:
             pDestroy();
             _disposedValue = true;
         }
