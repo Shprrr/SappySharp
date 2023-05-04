@@ -121,4 +121,7 @@ public static class VBConstants
     public const int flexAlignCenterCenter = 0;
 
     public const int vbSrcCopy = 0x00CC0020;
+
+    public const int vbButtonFace = -2147483633; // 0x8000000F
+    public const int vbWindowBackground = -2147483643; // 0x80000005
 }
