@@ -297,7 +297,6 @@ public static class VBExtension
         return -1;
     }
 
-    public static bool VBCloseFile(dynamic FileHandle) { return false; }
     public static bool DoEvents(Window Frm = null)
     {
         //if (Frm == null) Frm = MainMenu1.instance;
