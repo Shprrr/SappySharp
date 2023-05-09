@@ -1,101 +1,661 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="0" xml:space="preserve">
+    <value>Sappy</value>
+  </data>
+  <data name="1" xml:space="preserve">
+    <value>All supported pictures</value>
+  </data>
+  <data name="10" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="100" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="1000" xml:space="preserve">
+    <value>Too cool!</value>
+  </data>
+  <data name="10000" xml:space="preserve">
+    <value>&lt;USPLZ&gt;</value>
+  </data>
+  <data name="1001" xml:space="preserve">
+    <value>Sappy 2006\n----------\nBy Kyoufu Kawa\n\nBased on the original player\nby Andrew Lim (DJ Bouche)\n\nContains portions of the following\ntools previously written by Kawa:\n\ Maple (sound dumper and songtable scanner)\n\ Juicer (track dumper/inserter)\n\nThis product includes software\ndeveloped by vbAccelerator.\n\n\nThanks and greetings to:\n\ Drag     \n\ Tony     \n\ Rick     \n\ Matt     \n\ Prime    \n\ Someguy  \n\ Jeff     \n\ Sakaki   \n\ Hapi-san \n\ Shii     \n\ Kotoko   \n\ Coke Lite\nand Mr. McMahon.\n\nQuote of the Update:                                 \n&lt;FyNXeR&gt; Pardon my spelling... but I'm from Sweden   \n&lt;sumbody&gt; pardon my accent, i am from southeast asia \n&lt;DrMonkey&gt; pardon my shotgun, i'm from west virginia \n\nhttp://helmetedrodent.kickassgamers.com\nhttp://board.acmlm.org                 \nhttp://www.vbaccelerator.com           \n\n&lt;logos&gt;</value>
+  </data>
+  <data name="1002" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="101" xml:space="preserve">
+    <value>Song</value>
+  </data>
+  <data name="102" xml:space="preserve">
+    <value>Please load a game...</value>
+  </data>
+  <data name="103" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="104" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="105" xml:space="preserve">
+    <value>Looking for song list...</value>
+  </data>
+  <data name="106" xml:space="preserve">
+    <value>Song #$INDEX</value>
+  </data>
+  <data name="107" xml:space="preserve">
+    <value>Song #$INDEX - $NAME</value>
+  </data>
+  <data name="108" xml:space="preserve">
+    <value>No playlists</value>
+  </data>
+  <data name="109" xml:space="preserve">
+    <value>No songs</value>
+  </data>
+  <data name="11" xml:space="preserve">
+    <value>&amp;Open</value>
+  </data>
+  <data name="110" xml:space="preserve">
+    <value>The auto-detector does not work on "Golden Sun" games.\n\nThese include:\n"Golden Sun"\n"Golden Sun - The Lost Age"\n"Mario Golf Advance Tour"\n\nSorry for the inconveniance.</value>
+  </data>
+  <data name="111" xml:space="preserve">
+    <value>Loaded from seperate XML file.</value>
+  </data>
+  <data name="12" xml:space="preserve">
+    <value>&amp;Exit</value>
+  </data>
+  <data name="2" xml:space="preserve">
+    <value>GBA Roms (*.gba)</value>
+  </data>
+  <data name="20" xml:space="preserve">
+    <value>&amp;Tasks</value>
+  </data>
+  <data name="2000" xml:space="preserve">
+    <value>Import Tracks</value>
+  </data>
+  <data name="2001" xml:space="preserve">
+    <value>Select the tracks you want to import:</value>
+  </data>
+  <data name="2002" xml:space="preserve">
+    <value>Select where you want to save the tracks:</value>
+  </data>
+  <data name="2003" xml:space="preserve">
+    <value>Header</value>
+  </data>
+  <data name="2004" xml:space="preserve">
+    <value>First track</value>
+  </data>
+  <data name="2005" xml:space="preserve">
+    <value>Track offsets</value>
+  </data>
+  <data name="2006" xml:space="preserve">
+    <value>The second track will be saved right after the first track. Headers are copied.</value>
+  </data>
+  <data name="2007" xml:space="preserve">
+    <value>You must select at least one track.</value>
+  </data>
+  <data name="2008" xml:space="preserve">
+    <value>You must specify a starting track offset.</value>
+  </data>
+  <data name="2009" xml:space="preserve">
+    <value>You must specify a header offset.</value>
+  </data>
+  <data name="2010" xml:space="preserve">
+    <value>Preparing to import tracks...</value>
+  </data>
+  <data name="2011" xml:space="preserve">
+    <value>Importing $FILE to $TO...</value>
+  </data>
+  <data name="2012" xml:space="preserve">
+    <value>Saving header...</value>
+  </data>
+  <data name="2013" xml:space="preserve">
+    <value>Done. Do you want to set the proper entry in the Song Table?</value>
+  </data>
+  <data name="2016" xml:space="preserve">
+    <value>Voicegroup</value>
+  </data>
+  <data name="204" xml:space="preserve">
+    <value>Cannot find $XML. Create a new, blank version now?</value>
+  </data>
+  <data name="205" xml:space="preserve">
+    <value>The game you loaded (gamecode $CODE) is not known.\n\nWould you like to scan for the song table now?</value>
+  </data>
+  <data name="206" xml:space="preserve">
+    <value>Couldn't find the song table. This game probably doesn't use M4A at all, or at least a different version.</value>
+  </data>
+  <data name="207" xml:space="preserve">
+    <value>Found the song table at 0x$TBL. Saving bare bones entry to XML file for quick reloading...</value>
+  </data>
+  <data name="208" xml:space="preserve">
+    <value>Error in the XML file!\n\n$ERROR\n$CAUSE\n\nPlease correct this error and try again.</value>
+  </data>
+  <data name="209" xml:space="preserve">
+    <value>Invalid gamecode - it's all zeroes!</value>
+  </data>
+  <data name="210" xml:space="preserve">
+    <value>Enter game's name:</value>
+  </data>
+  <data name="211" xml:space="preserve">
+    <value>Enter creator's name:</value>
+  </data>
+  <data name="212" xml:space="preserve">
+    <value>Enter tagger's name:</value>
+  </data>
+  <data name="30" xml:space="preserve">
+    <value>&amp;Options</value>
+  </data>
+  <data name="3000" xml:space="preserve">
+    <value>Export Tracks</value>
+  </data>
+  <data name="3001" xml:space="preserve">
+    <value>Select the tracks you want to export:</value>
+  </data>
+  <data name="3002" xml:space="preserve">
+    <value>Select where you want to save the tracks:</value>
+  </data>
+  <data name="3003" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="3004" xml:space="preserve">
+    <value>Any instance of $T is replaced by the current track's number. Likewise, $P is replaced by the track's base pointer.</value>
+  </data>
+  <data name="3005" xml:space="preserve">
+    <value>You must select at least one track.</value>
+  </data>
+  <data name="3006" xml:space="preserve">
+    <value>You must enter a file name pattern.</value>
+  </data>
+  <data name="3007" xml:space="preserve">
+    <value>Preparing to dump tracks...</value>
+  </data>
+  <data name="3008" xml:space="preserve">
+    <value>Dumping track $TRACK...</value>
+  </data>
+  <data name="3009" xml:space="preserve">
+    <value>Dumping to $FILE...</value>
+  </data>
+  <data name="3010" xml:space="preserve">
+    <value>Skipping track $TRACK.</value>
+  </data>
+  <data name="3011" xml:space="preserve">
+    <value>You must specify a full file pattern.</value>
+  </data>
+  <data name="31" xml:space="preserve">
+    <value>Use &amp;MIDI driver</value>
+  </data>
+  <data name="32" xml:space="preserve">
+    <value>Use &amp;Wave driver</value>
+  </data>
+  <data name="33" xml:space="preserve">
+    <value>&amp;Gameboy Mode</value>
+  </data>
+  <data name="34" xml:space="preserve">
+    <value>&amp;Settings</value>
+  </data>
+  <data name="35" xml:space="preserve">
+    <value>&amp;Import LST file</value>
+  </data>
+  <data name="36" xml:space="preserve">
+    <value>Seek by &amp;Playlist</value>
+  </data>
+  <data name="38" xml:space="preserve">
+    <value>Select MIDI device...</value>
+  </data>
+  <data name="39" xml:space="preserve">
+    <value>Remap MIDI instruments...</value>
+  </data>
+  <data name="4" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="40" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="4000" xml:space="preserve">
+    <value>Assemble .S file</value>
+  </data>
+  <data name="4001" xml:space="preserve">
+    <value>.S file name</value>
+  </data>
+  <data name="4002" xml:space="preserve">
+    <value>Base destination offset</value>
+  </data>
+  <data name="4003" xml:space="preserve">
+    <value>Voicegroup offset</value>
+  </data>
+  <data name="4004" xml:space="preserve">
+    <value>Assemble that ugly thing!</value>
+  </data>
+  <data name="4005" xml:space="preserve">
+    <value>You must specify a base offset.</value>
+  </data>
+  <data name="4006" xml:space="preserve">
+    <value>You must specify a voicegroup offset.</value>
+  </data>
+  <data name="4007" xml:space="preserve">
+    <value>You must specify a file name.</value>
+  </data>
+  <data name="41" xml:space="preserve">
+    <value>&amp;About</value>
+  </data>
+  <data name="42" xml:space="preserve">
+    <value>&amp;The Helmeted Rodent on-line</value>
+  </data>
+  <data name="43" xml:space="preserve">
+    <value>Contents</value>
+  </data>
+  <data name="5" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="50" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
+  <data name="5000" xml:space="preserve">
+    <value>MIDI Mapper</value>
+  </data>
+  <data name="5001" xml:space="preserve">
+    <value>Instruments</value>
+  </data>
+  <data name="5002" xml:space="preserve">
+    <value>Drums</value>
+  </data>
+  <data name="5003" xml:space="preserve">
+    <value>Remap to</value>
+  </data>
+  <data name="5004" xml:space="preserve">
+    <value>Instrument</value>
+  </data>
+  <data name="5005" xml:space="preserve">
+    <value>Drum Key</value>
+  </data>
+  <data name="5006" xml:space="preserve">
+    <value>Transpose</value>
+  </data>
+  <data name="5007" xml:space="preserve">
+    <value>Listen</value>
+  </data>
+  <data name="5008" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="51" xml:space="preserve">
+    <value>Record to MIDI</value>
+  </data>
+  <data name="52" xml:space="preserve">
+    <value>Export tracks</value>
+  </data>
+  <data name="53" xml:space="preserve">
+    <value>Import tracks</value>
+  </data>
+  <data name="54" xml:space="preserve">
+    <value>Export samples</value>
+  </data>
+  <data name="55" xml:space="preserve">
+    <value>Assemble song</value>
+  </data>
+  <data name="6" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="60" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="6000" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="6001" xml:space="preserve">
+    <value>ROM database</value>
+  </data>
+  <data name="6002" xml:space="preserve">
+    <value>Song repeats</value>
+  </data>
+  <data name="6003" xml:space="preserve">
+    <value>(0 for infinite)</value>
+  </data>
+  <data name="6004" xml:space="preserve">
+    <value>Reload last ROM on startup</value>
+  </data>
+  <data name="6005" xml:space="preserve">
+    <value>Now Playing</value>
+  </data>
+  <data name="6006" xml:space="preserve">
+    <value>Write Now Playing info for mIRC script</value>
+  </data>
+  <data name="6007" xml:space="preserve">
+    <value>Send Now Playing info to MSN Messenger</value>
+  </data>
+  <data name="6008" xml:space="preserve">
+    <value>Interface</value>
+  </data>
+  <data name="6009" xml:space="preserve">
+    <value>Disable annoying sounds</value>
+  </data>
+  <data name="6010" xml:space="preserve">
+    <value>Force nice task bar</value>
+  </data>
+  <data name="6011" xml:space="preserve">
+    <value>Playback</value>
+  </data>
+  <data name="6012" xml:space="preserve">
+    <value>Skin</value>
+  </data>
+  <data name="6013" xml:space="preserve">
+    <value>Hue</value>
+  </data>
+  <data name="6014" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="6015" xml:space="preserve">
+    <value>Hide task bar (classic mode)</value>
+  </data>
+  <data name="61" xml:space="preserve">
+    <value>Unknown game</value>
+  </data>
+  <data name="62" xml:space="preserve">
+    <value>Unknown code</value>
+  </data>
+  <data name="63" xml:space="preserve">
+    <value>Unknown creator</value>
+  </data>
+  <data name="64" xml:space="preserve">
+    <value>Unknown tagger</value>
+  </data>
+  <data name="65" xml:space="preserve">
+    <value>Made by</value>
+  </data>
+  <data name="66" xml:space="preserve">
+    <value>Tagged by</value>
+  </data>
+  <data name="67" xml:space="preserve">
+    <value>Songtable:</value>
+  </data>
+  <data name="7" xml:space="preserve">
+    <value>Done!</value>
+  </data>
+  <data name="70" xml:space="preserve">
+    <value>Opens a ROM for playback.</value>
+  </data>
+  <data name="7000" xml:space="preserve">
+    <value>Export samples</value>
+  </data>
+  <data name="7001" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="7002" xml:space="preserve">
+    <value>File name pattern</value>
+  </data>
+  <data name="7003" xml:space="preserve">
+    <value>File formats</value>
+  </data>
+  <data name="7004" xml:space="preserve">
+    <value>File name patterns</value>
+  </data>
+  <data name="7005" xml:space="preserve">
+    <value>Any instance of $I is replaced by the instruments voice number. Likewise, $P is replaced by the instrument's pointer.</value>
+  </data>
+  <data name="7010" xml:space="preserve">
+    <value>Raw wave files (*.raw)</value>
+  </data>
+  <data name="7011" xml:space="preserve">
+    <value>Windows wave files (*.wav)</value>
+  </data>
+  <data name="7012" xml:space="preserve">
+    <value>ImpulseTracker samples (*.its)</value>
+  </data>
+  <data name="7013" xml:space="preserve">
+    <value>Sappy source files (*.s)</value>
+  </data>
+  <data name="7020" xml:space="preserve">
+    <value>RAW files contain raw, unprocessed PCM sound data and nothing else. Not even a header. They cannot loop.</value>
+  </data>
+  <data name="7021" xml:space="preserve">
+    <value>WAV files are like RAW, but have headers and can be played as-is without tools. They cannot loop.</value>
+  </data>
+  <data name="7022" xml:space="preserve">
+    <value>ITS files can be used in ModPlug Tracker and retain the sample's original loop point.</value>
+  </data>
+  <data name="7023" xml:space="preserve">
+    <value>Sappy source files are what the Sappy toolkit uses. They are in ARM Assembly, but contain no actual code at all, only data and directives.</value>
+  </data>
+  <data name="7030" xml:space="preserve">
+    <value>#MAPLE EXPORTED SAMPLE - PLEASE CHECK THE HEADER VALUES!</value>
+  </data>
+  <data name="71" xml:space="preserve">
+    <value>Exits the program.</value>
+  </data>
+  <data name="72" xml:space="preserve">
+    <value>Play music with the old MIDI driver.</value>
+  </data>
+  <data name="73" xml:space="preserve">
+    <value>Play music with the new Wave driver.</value>
+  </data>
+  <data name="74" xml:space="preserve">
+    <value>Play all music with square waves.</value>
+  </data>
+  <data name="75" xml:space="preserve">
+    <value>About the program.</value>
+  </data>
+  <data name="76" xml:space="preserve">
+    <value>Visit our website!</value>
+  </data>
+  <data name="80" xml:space="preserve">
+    <value>Save this song as a standard MIDI file.</value>
+  </data>
+  <data name="8000" xml:space="preserve">
+    <value>Analyzing song...</value>
+  </data>
+  <data name="8001" xml:space="preserve">
+    <value>Filling sample pool...</value>
+  </data>
+  <data name="8002" xml:space="preserve">
+    <value>Finishing...</value>
+  </data>
+  <data name="81" xml:space="preserve">
+    <value>Export one or more tracks in this song to files.</value>
+  </data>
+  <data name="82" xml:space="preserve">
+    <value>Replace one or more tracks in this song with tracks saved to file.</value>
+  </data>
+  <data name="83" xml:space="preserve">
+    <value>Export all sounds in this song to files.</value>
+  </data>
+  <data name="84" xml:space="preserve">
+    <value>Assemble MID2AGB output to binary.</value>
+  </data>
+  <data name="90" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="9000" xml:space="preserve">
+    <value>Select MIDI device</value>
+  </data>
+  <data name="9001" xml:space="preserve">
+    <value>Hardware port</value>
+  </data>
+  <data name="9002" xml:space="preserve">
+    <value>Synthesizer</value>
+  </data>
+  <data name="9003" xml:space="preserve">
+    <value>Squarewave Synth</value>
+  </data>
+  <data name="9004" xml:space="preserve">
+    <value>FM Synth</value>
+  </data>
+  <data name="9005" xml:space="preserve">
+    <value>MS Midi Mapper</value>
+  </data>
+  <data name="9006" xml:space="preserve">
+    <value>HW Wavetable Synth</value>
+  </data>
+  <data name="9007" xml:space="preserve">
+    <value>Software Synth</value>
+  </data>
+  <data name="91" xml:space="preserve">
+    <value>Header</value>
+  </data>
+  <data name="92" xml:space="preserve">
+    <value>Voices</value>
+  </data>
+  <data name="93" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="APP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\sappy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BANNER" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BARSAMPLES" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\taskbars.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BETA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\beta.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CLASSICSAPPY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\oldsapp.ICO;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CREDITSFONT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\font.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CREDITSLOGOS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\logos.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GLIDER" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\glider.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NOPIC" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\nopic.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Skin100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\skin.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Skin101" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\skin2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Skin102" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\skin3.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="STATUSICONS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\status.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TOOLICONS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\toolbar.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TWOKAYFIVE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\2k5.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
