@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -47,6 +30,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using SappySharp.Forms;
+using SappySharp.Classes;
 using static modSappy;
 using static FMod;
 using static mdlFile;
@@ -90,187 +74,243 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using System.Windows.Threading;
 
+namespace SappySharp.Forms;
 
-namespace SappySharp.Forms
+// ______________
+// |  SAPPY 2006  |
+// |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
+// | Interface code © 2006 by Kyoufu Kawa               |
+// | Player code © 200X by DJ ßouché                    |
+// | In-program graphics by Kyoufu Kawa                 |
+// | Thanks to SomeGuy, Majin Bluedragon and SlimeSmile |
+// |                                                    |
+// | This code is NOT in the Public Domain or whatever. |
+// | At least until Kyoufu Kawa releases it in the PD   |
+// | himself.  Until then, you're not supposed to even  |
+// | HAVE this code unless given to you by Kawa or any  |
+// | other Helmeted Rodent member.                      |
+// |____________________________________________________|
+// ________________
+// |  About dialog  |
+// |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
+// | Code 100% by Kyoufu Kawa.                          |
+// | Last update: September 25th, 2006                  |
+// |____________________________________________________|
+
+// ###########################################################################################
+public partial class frmAbout : Window
 {
-public partial class frmAbout : Window {
-  private static frmAbout _instance;
-  public static frmAbout instance { set { _instance = null; } get { return _instance ?? (_instance = new frmAbout()); }}  public static void Load() { if (_instance == null) { dynamic A = frmAbout.instance; } }  public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }  public frmAbout() { InitializeComponent(); }
-
-
-public List<Window> frmAbout { get => VBExtension.controlArray<Window>(this, "frmAbout"); }
-
-public List<Image> picLogos { get => VBExtension.controlArray<Image>(this, "picLogos"); }
-
-public List<Image> picFont { get => VBExtension.controlArray<Image>(this, "picFont"); }
-
-public List<Timer> timScroll { get => VBExtension.controlArray<Timer>(this, "timScroll"); }
-
-public List<Image> picGroup { get => VBExtension.controlArray<Image>(this, "picGroup"); }
-
-public List<Label> Command1 { get => VBExtension.controlArray<Label>(this, "Command1"); }
-
-public List<Image> picScroller { get => VBExtension.controlArray<Image>(this, "picScroller"); }
-
- // ______________
- // |  SAPPY 2006  |
- // |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
- // | Interface code © 2006 by Kyoufu Kawa               |
- // | Player code © 200X by DJ ßouché                    |
- // | In-program graphics by Kyoufu Kawa                 |
- // | Thanks to SomeGuy, Majin Bluedragon and SlimeSmile |
- // |                                                    |
- // | This code is NOT in the Public Domain or whatever. |
- // | At least until Kyoufu Kawa releases it in the PD   |
- // | himself.  Until then, you're not supposed to even  |
- // | HAVE this code unless given to you by Kawa or any  |
- // | other Helmeted Rodent member.                      |
- // |____________________________________________________|
- // ________________
- // |  About dialog  |
- // |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
- // | Code 100% by Kyoufu Kawa.                          |
- // | Last update: September 25th, 2006                  |
- // |____________________________________________________|
-
- // ###########################################################################################
-
-
-string lines(128) = ""; // Refactored credits.
-int y = 0; // scroller Y position
-
-[DllImport("user32.dll", EntryPoint="DrawTextA")]
-private static extern int DrawText(int hdc, string lpStr, int nCount, ref RECT lpRect, int wFormat);
-  class RECT{
-  public int left;
-  public int tOp;
-  public int Right;
-  public int Bottom;
-}
-int DT_CENTER = 0x1;
-
-[DllImport("gdi32.dll", EntryPoint="CreateFontA")]
-private static extern int CreateFont(int H, int W, int E, int o, int W, int i, int u, int S, int C, int OP, int CP, int Q, int PAF, string F);
-[DllImport("gdi32.dll")]
-private static extern int SelectObject(int hdc, int hObject);
-[DllImport("gdi32.dll")]
-private static extern int DeleteObject(int hObject);
-[DllImport("gdi32.dll")]
-private static extern int SetTextColor(int hdc, int crColor);
-[DllImport("gdi32.dll")]
-private static extern int SetBkColor(int hdc, int crColor);
-
-pcMemDC myDC = new pcMemDC(); // TODO: (NOT SUPPORTED) Dimmable 'New' not supported on variable declaration.  Instantiated only on declaration.  Please ensure usages
-
-  private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
-private void Command1_Click() {
-  ClickSound();
-  myDC = null;
-  Unload();
-}
-
-  private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
-private void Form_Load() {
-  SetCaptions(ref this);
-  Caption = LoadResString(1002);
-
-  myDC.Width = picScroller.ScaleWidth;
-  myDC.Height = picScroller.ScaleHeight;
-
-  picGroup.Picture = LoadResPicture("BANNER", 0);
-  picScroller.MouseIcon = LoadResPicture("HAND", 2);
-  picFont.Picture = LoadResPicture("CREDITSFONT", 0);
-  picLogos.Picture = LoadResPicture("CREDITSLOGOS", 0);
-  picScroller.BackColor = picFont.point[1, 1].Source;
-  y = picScroller.ScaleHeight;
-
-  string b = "";
-int C = 0;
-int i = 0;
-    for (i = 0; i <= 128; i += 1) {
-    lines(i) = "";
-  }
-  b = LoadResString(1001);
-  C = 0;
-    for (i = 1; i <= Len(b); i += 1) {
-    lines(C) = lines(C) + Mid(b, i, 1);
-      if(Asc(Mid(b, i, 1)) == 10) {
-      C = C + 1;
+    private static frmAbout _instance;
+    public static frmAbout instance { set { _instance = null; } get { return _instance ??= new frmAbout(); } }
+    public static void Load() { if (_instance == null) { dynamic A = frmAbout.instance; } }
+    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
+    public frmAbout()
+    {
+        InitializeComponent();
+        timScroll.Interval = new TimeSpan(0, 0, 0, 0, 50);
+        timScroll.Tick += timScroll_Timer;
     }
-  }
 
-}
+    public DispatcherTimer timScroll { get; set; } = new DispatcherTimer();
 
-  private void Form_Paint() {
-  DrawSkin(ref this);
-}
+    private string[] lines = new string[128]; // Refactored credits.
+    public int y = 0; // scroller Y position
 
-  private void picScroller_MouseDown(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  timScroll.Interval = 1;
-
-  int i = 0;
-  y = (Int(y / 15) - Int(this.y / 15));
-    if(y > 0) {
-      if(left(lines(y), 7) == "http://") {
-      ShellExecute(this.hwnd, "", lines(y), "", "", 0);
+    [DllImport("user32.dll", EntryPoint = "DrawTextA")]
+    private static extern int DrawText(int hdc, string lpStr, int nCount, ref RECT lpRect, int wFormat);
+    class RECT
+    {
+        public int left;
+        public int tOp;
+        public int Right;
+        public int Bottom;
     }
-  }
-}
+    private const int DT_CENTER = 0x1;
 
-  private void picScroller_MouseMove(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  int i = 0;
-  y = (Int(y / 15) - Int(this.y / 15));
-    if(y > 0) {
-      if(left(lines(y), 7) == "http://") {
-      picScroller.MousePointer = 99;
-      } else {
-      picScroller.MousePointer = 0;
+    [DllImport("gdi32.dll", EntryPoint = "CreateFontA")]
+    private static extern int CreateFont(int H, int W, int E, int o, int W2, int i, int u, int S, int C, int OP, int CP, int Q, int PAF, string F);
+    [LibraryImport("gdi32.dll")]
+    private static partial int SelectObject(int hdc, int hObject);
+    [LibraryImport("gdi32.dll")]
+    private static partial int DeleteObject(int hObject);
+    [LibraryImport("gdi32.dll")]
+    private static partial int SetTextColor(int hdc, int crColor);
+    [LibraryImport("gdi32.dll")]
+    private static partial int SetBkColor(int hdc, int crColor);
+
+    pcMemDC myDC = new();
+
+    private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
+    private void Command1_Click()
+    {
+        ClickSound();
+        myDC = null;
+        Unload();
     }
-  }
-}
 
-  private void picScroller_MouseUp(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  timScroll.Interval = 50;
-}
+    private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
+    private void Form_Load()
+    {
+        SetCaptions(this);
+        Title = Properties.Resources._1002;
 
-  private void timScroll_Timer() {
-  int F = 0;
-int of = 0;
-RECT rc = null;
-int r = 0;
-int x = 0;
-int i = 0;
+        myDC.Width = (int)picScroller.Width;
+        myDC.Height = (int)picScroller.Height;
 
-    for (r = 0; r <= lines.Count; r += 1) {
-    x = (picScroller.ScaleWidth / 2) - ((Len(lines(r)) * 8) / 2) - 4;
-      if(Trim(lines(r)) == "<logos>") {
-      BitBlt(myDC.hdc, (picScroller.ScaleWidth / 2) - (picLogos.ScaleWidth / 2), y + (r * 15), picLogos.Width, picLogos.Height, picLogos.hdc, 0, 0, vbSrcCopy);
-      } else {
-        for (i = 1; i <= Len(lines(r)); i += 1) {
-          if(Asc(Mid(lines(r), i, 1)) == Asc("\\")) {
-          BitBlt(myDC.hdc, x + (i * 8), y + (r * 15), 8, 16, picFont.hdc, 968 + (Abs(((y + r) / 1.5m) % 6) * 8), 0, vbSrcCopy);
-          } else if(Asc(Mid(lines(r), i, 1)) == Asc("ß")) {
-          BitBlt(myDC.hdc, x + (i * 8), y + (r * 15), 8, 16, picFont.hdc, 864, 0, vbSrcCopy);
-          } else if(Asc(Mid(lines(r), i, 1)) >= Asc("à")) {
-          BitBlt(myDC.hdc, x + (i * 8), y + (r * 15), 8, 16, picFont.hdc, (Asc(Mid(lines(r), i, 1)) - 132) * 8, 0, vbSrcCopy);
-          } else {
-          BitBlt(myDC.hdc, x + (i * 8), y + (r * 15), 8, 16, picFont.hdc, (Asc(Mid(lines(r), i, 1)) - 32) * 8, 0, vbSrcCopy);
+        picGroup.Source = ConvertBitmap(Properties.Resources.BANNER);
+        picScroller.Cursor = Cursors.Hand; //ConvertCursor(Properties.Resources.HAND);
+        picFont.Source = ConvertBitmap(Properties.Resources.CREDITSFONT);
+        picLogos.Source = ConvertBitmap(Properties.Resources.CREDITSLOGOS);
+        //picScroller.BackColor = Properties.Resources.CREDITSFONT.GetPixel(1, 1); //TODO: To review
+        y = (int)picScroller.Height;
+
+        for (int i = 0; i <= 128; i += 1)
+        {
+            lines[i] = "";
         }
-      }
-
+        string b = Properties.Resources._1001;
+        int C = 0;
+        for (int i = 1; i <= Len(b); i += 1)
+        {
+            lines[C] = lines[C] + Mid(b, i, 1);
+            if (Asc(Mid(b, i, 1)) == 10)
+            {
+                C++;
+            }
+        }
     }
-  }
 
-  StretchBlt(myDC.hdc, 0, 31, picScroller.ScaleWidth, -32, frmSappy.instance.picSkin.hdc, 6, 16, 2, 17, vbSrcAnd);
-  StretchBlt(myDC.hdc, 0, picScroller.ScaleHeight - 32, picScroller.ScaleWidth, 32, frmSappy.instance.picSkin.hdc, 6, 16, 2, 17, vbSrcAnd);
+    private void Form_Paint()
+    {
+        DrawSkin(this);
+    }
 
-  myDC.Draw(picScroller.hdc);
+    private void picScroller_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        int button = e.ChangedButton switch
+        {
+            MouseButton.Left => 1,
+            MouseButton.Middle => 2,
+            MouseButton.Right => 4,
+            _ => throw new NotImplementedException()
+        };
+        int shift = 0;
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
+        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
+        Point mousePosition = e.GetPosition(this);
+        picScroller_MouseDown(button, shift, mousePosition.X, mousePosition.Y);
+    }
+    private void picScroller_MouseDown(int Button, int Shift, double x, double y)
+    {
+        timScroll.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
-  y = y - 1;
-  if(y < -800)y = picScroller.ScaleHeight;
-}
+        int i = (int)(Int(y / 15) - Int(this.y / 15));
+        if (y > 0)
+        {
+            if (Left(lines[i], 7) == "http://")
+            {
+                ShellExecute((int)this.hWnd(), "", lines[i], "", "", 0);
+            }
+        }
+    }
 
+    private void picScroller_MouseMove(object sender, MouseEventArgs e)
+    {
+        int button = 0;
+        if (e.LeftButton == MouseButtonState.Pressed) button = 1;
+        if (e.MiddleButton == MouseButtonState.Pressed) button = 2;
+        if (e.RightButton == MouseButtonState.Pressed) button = 4;
+        int shift = 0;
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
+        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
+        Point mousePosition = e.GetPosition(this);
+        picScroller_MouseMove(button, shift, mousePosition.X, mousePosition.Y);
+    }
+    private void picScroller_MouseMove(int Button, int Shift, double x, double y)
+    {
+        int i = (int)(Int(y / 15) - Int(this.y / 15));
+        if (y > 0)
+        {
+            if (Left(lines[i], 7) == "http://")
+            {
+                picScroller.ForceCursor = true;
+            }
+            else
+            {
+                picScroller.ForceCursor = false;
+            }
+        }
+    }
 
-}
+    private void picScroller_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        int button = e.ChangedButton switch
+        {
+            MouseButton.Left => 1,
+            MouseButton.Middle => 2,
+            MouseButton.Right => 4,
+            _ => throw new NotImplementedException()
+        };
+        int shift = 0;
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
+        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
+        Point mousePosition = e.GetPosition(this);
+        picScroller_MouseUp(button, shift, mousePosition.X, mousePosition.Y);
+    }
+    private void picScroller_MouseUp(int Button, int Shift, double x, double y)
+    {
+        timScroll.Interval = new TimeSpan(0, 0, 0, 0, 50);
+    }
+
+    private void timScroll_Timer(object sender, EventArgs e)
+    {
+        int r = 0;
+        int x = 0;
+        int i = 0;
+
+        for (r = 0; r <= lines.Length; r += 1)
+        {
+            x = (int)(picScroller.Width / 2 - Len(lines[r]) * 8 / 2 - 4);
+            if (Trim(lines[r]) == "<logos>")
+            {
+                BitBlt(myDC.hDC, (int)(picScroller.Width / 2 - picLogos.Width / 2), y + r * 15, (int)picLogos.Width, (int)picLogos.Height, (int)picLogos.hWnd(), 0, 0, vbSrcCopy);
+            }
+            else
+            {
+                for (i = 1; i <= Len(lines[r]); i += 1)
+                {
+                    if (Asc(Mid(lines[r], i, 1)) == Asc("\\"))
+                    {
+                        BitBlt(myDC.hDC, x + i * 8, y + r * 15, 8, 16, (int)picFont.hWnd(), (int)(968 + Abs((y + r) / 1.5m % 6) * 8), 0, vbSrcCopy);
+                    }
+                    else if (Asc(Mid(lines[r], i, 1)) == Asc("ß"))
+                    {
+                        BitBlt(myDC.hDC, x + i * 8, y + r * 15, 8, 16, (int)picFont.hWnd(), 864, 0, vbSrcCopy);
+                    }
+                    else if (Asc(Mid(lines[r], i, 1)) >= Asc("à"))
+                    {
+                        BitBlt(myDC.hDC, x + i * 8, y + r * 15, 8, 16, (int)picFont.hWnd(), (Asc(Mid(lines[r], i, 1)) - 132) * 8, 0, vbSrcCopy);
+                    }
+                    else
+                    {
+                        BitBlt(myDC.hDC, x + i * 8, y + r * 15, 8, 16, (int)picFont.hWnd(), (Asc(Mid(lines[r], i, 1)) - 32) * 8, 0, vbSrcCopy);
+                    }
+                }
+
+            }
+        }
+
+        StretchBlt(myDC.hDC, 0, 31, picScroller.Width, -32, frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
+        StretchBlt(myDC.hDC, 0, picScroller.Height - 32, picScroller.ScaleWidth, 32, frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
+
+        myDC.Draw((int)picScroller.hWnd());
+
+        y--;
+        if (y < -800) y = (int)picScroller.Height;
+    }
 }

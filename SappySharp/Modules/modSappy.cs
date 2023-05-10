@@ -336,13 +336,11 @@ static partial class modSappy
     // Loads resource strings for each suitable control on a given form and sets its font
     // to whatever your locale needs.
 
-    public static void SetCaptions(ref Window target)
+    public static void SetCaptions(Window target)
     {
-        FrameworkElement ctl = null;
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        foreach (FrameworkElement iterctl in target.Controls(true))
+        foreach (FrameworkElement ctl in target.Controls(true))
         {
-            ctl = iterctl;
             if (ctl is not TextBlock or not ContentControl) continue;
 
             if ((string)ctl.Tag != "[NoLocal]")
@@ -359,7 +357,7 @@ static partial class modSappy
                     ctl.SetValue(TextBlock.TextProperty, newText);
                     ctl.SetValue(ContentControl.ContentProperty, newText);
                 }
-                SetProperFont(ref ctl);
+                SetProperFont(ctl);
             }
         }
         // TODO: (NOT SUPPORTED): On Error GoTo 0
@@ -374,13 +372,13 @@ static partial class modSappy
 
     // Adapted from an article in the VB docs on MSDN.
 
-    public static void SetProperFont(ref FrameworkElement obj)
+    public static void SetProperFont(FrameworkElement obj)
     {
         // If GetUserDefaultLCID = &H411 Then
         try
         {
             if (obj is not Control ctl) return;
-            if (Resources.ResourceManager.GetString("10000") == "<JAPPLZ>")
+            if (Resources._10000 == "<JAPPLZ>")
             {
                 //obj.Charset = 128;
                 ctl.FontFamily = new("MS Gothic"); // ChrW(&HFF2D) + ChrW(&HFF33) + ChrW(&H20) + ChrW(&HFF30) + ChrW(&H30B4) + ChrW(&H30B7) + ChrW(&H30C3) + ChrW(&H30AF)
@@ -443,7 +441,7 @@ static partial class modSappy
 
     // Wrappers around SetMusicInfo to better manage Now Playing information in MSN Messenger.
 
-    public static void TellMSN(ref string sTitle, ref string sArtist, ref string sAlbum)
+    public static void TellMSN(string sTitle, string sArtist, string sAlbum)
     {
         MSNPlaying = true;
         SetMusicInfo(sArtist, sAlbum, sTitle, "", "{0} - {2} - {1}", true);
@@ -483,8 +481,7 @@ static partial class modSappy
         ghData.Free();
     }
 
-    private const int vbSrcCopy = 0x00CC0020;
-    public static void DrawSkin(ref dynamic Victim)
+    public static void DrawSkin(dynamic Victim)
     {
         Victim.ScaleMode = 3;
         BitBlt(Victim.hdc, 0, 0, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 0, vbSrcCopy);
@@ -498,7 +495,7 @@ static partial class modSappy
         BitBlt(Victim.hdc, Victim.ScaleWidth - 2, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 14, vbSrcCopy);
     }
 
-    public static void SetAllSkinButtons(ref Window Victim)
+    public static void SetAllSkinButtons(Window Victim)
     {
         // Dim ct As Control
         // For Each ct In Victim.Controls
