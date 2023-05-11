@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -47,6 +30,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using SappySharp.Forms;
+using SappySharp.Classes;
 using static modSappy;
 using static FMod;
 using static mdlFile;
@@ -90,265 +74,262 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using MSScriptControl;
 
+namespace SappySharp.Forms;
 
-namespace SappySharp.Forms
+public partial class frmAssembler : Window
 {
-public partial class frmAssembler : Window {
-  private static frmAssembler _instance;
-  public static frmAssembler instance { set { _instance = null; } get { return _instance ?? (_instance = new frmAssembler()); }}  public static void Load() { if (_instance == null) { dynamic A = frmAssembler.instance; } }  public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }  public frmAssembler() { InitializeComponent(); }
+    private static frmAssembler _instance;
+    public static frmAssembler instance { set { _instance = null; } get { return _instance ??= new frmAssembler(); } }
+    public static void Load() { if (_instance == null) { dynamic A = frmAssembler.instance; } }
+    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
+    public frmAssembler() { InitializeComponent(); }
 
+    gCommonDialog MyCC = new();
 
-public List<Window> frmAssembler { get => VBExtension.controlArray<Window>(this, "frmAssembler"); }
+    ScriptControl MyScripter = null; // to do Eval with
+    string[,] Defs = new string[1, 2048];
+    int DefC = 0;
+    string[,] Labels = new string[1, 2048];
+    int LabelC = 0;
 
-public List<TextBox> Text1 { get => VBExtension.controlArray<TextBox>(this, "Text1"); }
+    string FileTit = ""; // just the name.ext part
+    string FileDir = ""; // just the dir part
 
-public List<Button> Command4 { get => VBExtension.controlArray<Button>(this, "Command4"); }
+    string LabelToWatchFor = "";
+    int WatchedLabelOffset = 0;
+    int LabelOffset = 0;
+    int VoiceGroup = 0;
 
-public List<TextBox> txtROM { get => VBExtension.controlArray<TextBox>(this, "txtROM"); }
+    int SongTableEntry = 0;
 
-public List<Button> Command3 { get => VBExtension.controlArray<Button>(this, "Command3"); }
+    bool YouFailedIt = false;
 
-public List<Button> Command2 { get => VBExtension.controlArray<Button>(this, "Command2"); }
+    private void Compile(string file)
+    {
+        string MyLine;
 
-public List<Button> Command1 { get => VBExtension.controlArray<Button>(this, "Command1"); }
+        // Get file title and dir if not already known
+        // WARNING: might fail!
+        // If FileDir = "" Then
+        //   FileTit = MyCC.VBGetFileTitle(txtFile.Text)
+        //   FileDir = Left(txtFile, Len(txtFile) - Len(FileTit))
+        // End If
 
-public List<TextBox> txtFile { get => VBExtension.controlArray<TextBox>(this, "txtFile"); }
+        Seek(99, Convert.ToInt32(txtOffset.Text, 16) + 1);
 
-public List<TextBox> txtVoicegroup { get => VBExtension.controlArray<TextBox>(this, "txtVoicegroup"); }
+        int ff = FreeFile(); // find next file # to use, can't use hardcoded #s here
+        FileOpen(ff, file, OpenMode.Input);
+        // On Error GoTo hell
+        do
+        {
+            MyLine = LineInput(ff);
+            MyLine = Replace(MyLine, vbTab, " "); // fold in the tabs
+            if (InStr(1, MyLine, "@") != 0)
+            { // strip away comments
+                MyLine = Left(MyLine, InStr(1, MyLine, "@") - 1);
+            }
+            MyLine = Trim(MyLine); // strip away spaces
+            MyLine = Replace(MyLine, "0x", "&H"); // VB-ify all hex numbers
+            MyLine = Replace(MyLine, ",", ", "); // do some more folding
+            MyLine = Replace(MyLine, "  ", " ");
+            MyLine = Replace(MyLine, "  ", " ");
+            MyLine = Replace(MyLine, ",", "");
+            for (int i = DefC; i <= -1; i += 0)
+            { // fold out all equs
+                MyLine = Replace(MyLine, Defs[0, i], Defs[1, i]);
+            }
+            if (Len(MyLine) == 0) goto Bleh; // did we end up with an empty line? then skip it.
 
-public List<TextBox> txtOffset { get => VBExtension.controlArray<TextBox>(this, "txtOffset"); }
+            List<string> MyKeywords = new(Split(MyLine)); // split up the line into seperate keywords
 
-public List<Label> Label6 { get => VBExtension.controlArray<Label>(this, "Label6"); }
+            if (Right(MyKeywords[0], 1) == ":")
+            { // is this a label?
+                Labels[0, LabelC] = Left(MyKeywords[0], Len(MyKeywords[0]) - 1); // take out the label name
+                Labels[1, LabelC] = (Seek(99) - 1 + 0x8000000).ToString(); // find and store the current target file position
+                if (Labels[0, LabelC] == LabelToWatchFor)
+                { // is this the song header's label?
+                    WatchedLabelOffset = (int)Seek(99); // store header offset
+                }
+                LabelC++;
+                goto Bleh; // stop compiling. we can get away with this thanks to the well-formed MID2AGB output.
+            }
 
-public List<Label> Label5 { get => VBExtension.controlArray<Label>(this, "Label5"); }
+            switch (MyKeywords[0])
+            {
+                case ".include":
+                    if (Dir(Mid(MyKeywords[1], 2, Len(MyKeywords[1]) - 2)) == "")
+                    {
+                        MsgBox("Can't find file " + MyKeywords[1] + " for inclusion. Assembly halted.");
+                        YouFailedIt = true; // FUCK!
+                        return;
+                    }
+                    Compile(Mid(MyKeywords[1], 2, Len(MyKeywords[1]) - 2)); // fork out a new compiler
 
-public List<Label> Label2 { get => VBExtension.controlArray<Label>(this, "Label2"); }
+                    break;
+                case ".global":
+                    LabelToWatchFor = MyKeywords[1]; // there's only one global: the header's label!
 
-public List<Line> Line2 { get => VBExtension.controlArray<Line>(this, "Line2"); }
+                    break;
+                case ".equ":
+                    Defs[0, DefC] = MyKeywords[1]; // simply store the keyword and value
+                    Defs[1, DefC] = MyKeywords[2];
+                    DefC++;
 
-public List<Line> Line1 { get => VBExtension.controlArray<Line>(this, "Line1"); }
+                    break;
+                case ".byte":
+                    for (int i = 1; i <= MyKeywords.Count; i += 1)
+                    {
+                        if (MyKeywords[i] != "")
+                        {
+                            FilePutObject(99, (byte)Val(MyScripter.Eval(MyKeywords[i]))); // ooooooooooh yeah!
+                        }
+                    }
 
-public List<Label> Label1 { get => VBExtension.controlArray<Label>(this, "Label1"); }
+                    break;
+                case ".word":
+                    for (int i = 0; i <= LabelC; i += 1)
+                    {
+                        if (MyKeywords[1] == Labels[0, i])
+                        {
+                            //Trace(".word " + Labels[0, i] + " -> " + Hex(CLng(Val(Labels[1, i]))));
+                            FilePutObject(99, CLng(Val(Labels[1, i]))); // words in Sappy songs are always label names.
+                            break;
+                        }
+                    }
 
-public List<Label> Label4 { get => VBExtension.controlArray<Label>(this, "Label4"); }
+                    break;
+                case ".end":
+                    goto AfterLoop;
+            }
 
-public List<Label> Label3 { get => VBExtension.controlArray<Label>(this, "Label3"); }
-
-
-cCommonDialog MyCC = new cCommonDialog(); // TODO: (NOT SUPPORTED) Dimmable 'New' not supported on variable declaration.  Instantiated only on declaration.  Please ensure usages
-
-ScriptControl MyScripter = null; // to do Eval with
-var Defs(1 = null;
-string 2048) = "";
-int DefC = 0;
-var Labels(1 = null;
-string 2048) = "";
-int LabelC = 0;
-
-string FileTit = ""; // just the name.ext part
-string FileDir = ""; // just the dir part
-
-string LabelToWatchFor = "";
-int WatchedLabelOffset = 0;
-int LabelOffset = 0;
-int VoiceGroup = 0;
-
-int SongTableEntry = 0;
-
-bool YouFailedIt = false;
-
-  private void Compile(ref string file) {
-  List<string> MyKeywords = new List<string>();
-  string MyLine = "";
-  string D = "";
-  string Eval = "";
-  int ff = 0;
-  int i = 0;
-
-   // Get file title and dir if not already known
-   // WARNING: might fail!
-   // If FileDir = __S1 Then
-   // FileTit = MyCC.VBGetFileTitle(txtFile.Text)
-   // FileDir = Left(txtFile, Len(txtFile) - Len(FileTit))
-   // End If
-
-  Seek(#99, Replace(txtOffset.Text, "0x", "&H") + 1);
-
-  ff = FreeFile; // find next file # to use, can't use hardcoded #s here
-  Open(file For Input As ff);
-   // On Error GoTo hell
-    do {
-    Line(Input #ff, MyLine);
-    MyLine = Replace(MyLine, vbTab, " "); // fold in the tabs
-      if(InStr(1, MyLine, "@")) { // strip away comments
-      MyLine = Left(MyLine, InStr(1, MyLine, "@") - 1);
+        Bleh:
+            DoEvents();
+        } while (!EOF(ff));
+    AfterLoop:
+        FileClose(ff);
+        return;
+    hell:
+        // If Err.Number <> 62 Then
+        MsgBox("Error #" + Err().Number + ", \"" + Err().Description + "\"" + vbCrLf + vbCrLf + "On line: \"" + MyLine + "\".");
+        YouFailedIt = true;
+        return;
+        // End If
     }
-    MyLine = Trim(MyLine); // strip away spaces
-    MyLine = Replace(MyLine, "0x", "&H"); // VB-ify all hex numbers
-    MyLine = Replace(MyLine, ",", ", "); // do some more folding
-    MyLine = Replace(MyLine, "  ", " ");
-    MyLine = Replace(MyLine, "  ", " ");
-    MyLine = Replace(MyLine, ",", "");
-      for (i = DefC; i <= -1; i += 0) { // fold out all equs
-      MyLine = Replace(MyLine, Defs(0, i), Defs(1, i));
+
+    private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
+    private void Command1_Click()
+    {
+        MousePointer = 11;
+        LabelOffset = (int)Val(Replace(txtOffset.Text, "0x", "&H"));
+        SongTableEntry = (int)Val(Replace(Text1.Text, "0x", "&H"));
+        VoiceGroup = (int)Val(Replace(txtVoicegroup.Text, "0x", "&H"));
+        Command1.IsEnabled = false;
+
+        if (txtROM.Text == "")
+        {
+            MsgBox("You must specify both file names.");
+            MousePointer = 0;
+            Command1.IsEnabled = true;
+            return;
+        }
+        if (txtROM.Text == "")
+        {
+            MsgBox("You must specify both file names.");
+            MousePointer = 0;
+            Command1.IsEnabled = true;
+            return;
+        }
+        if (LabelOffset == 0)
+        {
+            MsgBox("You must specify a base offset.");
+            MousePointer = 0;
+            Command1.IsEnabled = true;
+            return;
+        }
+        if (VoiceGroup == 0)
+        {
+            MsgBox("You must specify a voicegroup offset.");
+            MousePointer = 0;
+            Command1.IsEnabled = true;
+            return;
+        }
+        if (SongTableEntry == 0)
+        {
+            MsgBox("You must specify a song table offset.");
+            MousePointer = 0;
+            Command1.IsEnabled = true;
+            return;
+        }
+
+        FileOpen(99, txtROM.Text, OpenMode.Binary);
+
+        MyScripter = new ScriptControl
+        {
+            Language = "vbScript"
+        }; // instantiate and set a new VBScript interpreter
+        Labels[0, 0] = "voicegroup000"; // auto-def a value for "voicegroup000"
+        Labels[1, 0] = (VoiceGroup + 0x8000000).ToString(); // that's VERY important!
+        LabelC = 1;
+
+        FileDir = Left(txtFile.Text, Len(txtFile.Text) - Len(MyCC.VBGetFileTitle(txtFile.Text)));
+        ChDir(FileDir);
+        Compile(MyCC.VBGetFileTitle(txtFile.Text));
+
+        if (YouFailedIt == true)
+        {
+            MousePointer = 0;
+            return;
+        }
+
+        Command2.Content = "Close";
+
+        if (MsgBox("Done. Do you want to set the proper entry in the Song Table?", vbYesNo) == vbYes)
+        {
+            FilePutObject(99, WatchedLabelOffset - 1 + 0x8000000, SongTableEntry + 1);
+        }
+
+        MousePointer = 0;
+        Command1.IsEnabled = false;
     }
-    if(Len(MyLine) == 0)goto Bleh; // did we end up with an empty line? then skip it.
 
-    MyKeywords = new List<string>(Split(MyLine)); // split up the line into seperate keywords
-
-      if(Right(MyKeywords[0], 1) == ":") { // is this a label?
-      Labels(0, LabelC) = Left(MyKeywords(0), Len(MyKeywords(0)) - 1); // take out the label name
-      Labels(1, LabelC) = Seek(99) - 1 + &H8000000; // find and store the current target file position
-        if(Labels(0, LabelC) == LabelToWatchFor) { // is this the song header's label?
-        WatchedLabelOffset = Seek(99); // store header offset
-      }
-      LabelC = LabelC + 1;
-      goto Bleh; // stop compiling. we can get away with this thanks to the well-formed MID2AGB output.
+    private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
+    private void Command2_Click()
+    {
+        Unload();
     }
 
-        switch(MyKeywords[0]) {
-        case ".include":
-          if(Dir(Mid(MyKeywords[1], 2, Len(MyKeywords[1]) - 2)) == "") {
-          MsgBox("Can't find file " + MyKeywords[1] + " for inclusion. Assembly halted.");
-          YouFailedIt = true; // FUCK!
-          return;
-        }
-        Compile(Mid(MyKeywords[1], 2, Len(MyKeywords[1]) - 2)); // fork out a new compiler
+    private void Command3_Click(object sender, RoutedEventArgs e) { Command3_Click(); }
+    private void Command3_Click()
+    {
+        string fileTile = null;
+        bool readOnly = false;
+        string filter = "MID2AGB output (*.s)|*.s";
+        int filterIndex = 1;
+        string initDir = null;
+        string dlgTitle = null;
+        string defaultExt = null;
+        int flags = 0;
+        if (MyCC.VBGetOpenFileName(ref FileTit, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        txtFile.Text = FileTit;
+        // FileTit = MyCC.VBGetFileTitle(txtFile.Text)
+        // FileDir = Left(txtFile, Len(txtFile) - Len(FileTit))
+    }
 
-        break;
-case ".global":
-        LabelToWatchFor = MyKeywords[1]; // there's only one global: the header's label!
-
-        break;
-case ".equ":
-        Defs(0, DefC) = MyKeywords(1); // simply store the keyword and value
-        Defs(1, DefC) = MyKeywords(2);
-        DefC = DefC + 1;
-
-        break;
-case ".byte":
-          for (i = 1; i <= MyKeywords.Count; i += 1) {
-            if(MyKeywords[i] != "") {
-            Put(#99, , CByte(Val(MyScripter.Eval(MyKeywords[i])))); // ooooooooooh yeah!
-          }
-        }
-
-        break;
-case ".word":
-          for (i = 0; i <= LabelC; i += 1) {
-            if(MyKeywords[1] == Labels(0, i)) {
-             // Trace __S1 & Labels(0, i) & __S2 & Hex(CLng(Val(Labels(1, i))))
-            Put(#99, , CLng(Val(Labels(1, i)))); // words in Sappy songs are always label names.
-            break;
-          }
-        }
-
-        break;
-case ".end":
-        break;
-  break;
-}
-
-  Bleh:;
-  DoEvents();
-} while(!(EOF(ff)));
-VBCloseFile(ff); // TODO: (NOT SUPPORTED) VB File Access Suppressed.  Convert manually: Close #ff
-return;
-hell:;
- // If Err.Number <> 62 Then
-MsgBox("Error #" + Err().Number + ", \"" + Err().Description + "\"" + vbCrLf + vbCrLf + "On line: \"" + MyLine + "\".");
-YouFailedIt = true;
-return;
- // End If
-}
-
-private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
-private void Command1_Click() {
-MousePointer = 11;
-LabelOffset = Val(Replace(txtOffset.Text, "0x", "&H"));
-SongTableEntry = Val(Replace(Text1.Text, "0x", "&H"));
-VoiceGroup = Val(Replace(txtVoicegroup.Text, "0x", "&H"));
-Command1.IsEnabled = false;
-
-  if(txtROM.Text == "") {
-  MsgBox("You must specify both file names.");
-  MousePointer = 0;
-  Command1.IsEnabled = true;
-  return;
-}
-  if(txtROM.Text == "") {
-  MsgBox("You must specify both file names.");
-  MousePointer = 0;
-  Command1.IsEnabled = true;
-  return;
-}
-  if(LabelOffset == 0) {
-  MsgBox("You must specify a base offset.");
-  MousePointer = 0;
-  Command1.IsEnabled = true;
-  return;
-}
-  if(VoiceGroup == 0) {
-  MsgBox("You must specify a voicegroup offset.");
-  MousePointer = 0;
-  Command1.IsEnabled = true;
-  return;
-}
-  if(SongTableEntry == 0) {
-  MsgBox("You must specify a song table offset.");
-  MousePointer = 0;
-  Command1.IsEnabled = true;
-  return;
-}
-
-VBOpenFile(txtROM, "Binary", 99); // TODO: (NOT SUPPORTED) VB File Access Suppressed.  Convert manually: Open txtROM For Binary As #99
-
-MyScripter = new ScriptControl(); // instantiate and set a new VBScript interpreter
-MyScripter.Language = "vbScript";
-Labels(0, 0) = "voicegroup000"; // auto-def a value for __S2
-Labels(1, 0) = VoiceGroup + &H8000000; // that's VERY important!
-LabelC = 1;
-
-FileDir = Left(txtFile.Text, Len(txtFile.Text) - Len(MyCC.VBGetFileTitle(txtFile.Text)));
-ChDir(FileDir);
-Compile(MyCC.VBGetFileTitle(txtFile.Text));
-
-  if(YouFailedIt == true) {
-  MousePointer = 0;
-  return;
-}
-
-Command2.Caption = "Close";
-
-  if(MsgBox("Done. Do you want to set the proper entry in the Song Table?", vbYesNo) == vbYes) {
-  Put(#99, SongTableEntry + 1, WatchedLabelOffset - 1 + 0x8000000);
-}
-
-MousePointer = 0;
-Command1.IsEnabled = false;
-}
-
-private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
-private void Command2_Click() {
-Unload();
-}
-
-private void Command3_Click(object sender, RoutedEventArgs e) { Command3_Click(); }
-private void Command3_Click() {
-if(MyCC.VBGetOpenFileName(FileTit, , , , , , "MID2AGB output (*.s)|*.s") == false)return;
-txtFile.Text = FileTit;
- // FileTit = MyCC.VBGetFileTitle(txtFile.Text)
- // FileDir = Left(txtFile, Len(txtFile) - Len(FileTit))
-}
-
-private void Command4_Click(object sender, RoutedEventArgs e) { Command4_Click(); }
-private void Command4_Click() {
-string foo = "";
-if(MyCC.VBGetOpenFileName(foo, , , , , , "GBA ROM files (*.gba)|*.gba") == false)return;
-txtROM.Text = foo;
-}
-
-
-}
+    private void Command4_Click(object sender, RoutedEventArgs e) { Command4_Click(); }
+    private void Command4_Click()
+    {
+        string foo = "";
+        string fileTile = "";
+        bool readOnly = false;
+        string filter = "GBA ROM files (*.gba)|*.gba";
+        int filterIndex = 1;
+        string initDir = null;
+        string dlgTitle = null;
+        string defaultExt = null;
+        int flags = 0;
+        if (MyCC.VBGetOpenFileName(ref foo, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        txtROM.Text = foo;
+    }
 }

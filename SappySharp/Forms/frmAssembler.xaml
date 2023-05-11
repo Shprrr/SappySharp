@@ -1,29 +1,43 @@
-<Window x:Class="SappySharp.Forms.frmAssembler_"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SappySharp.Forms"
-    xmlns:usercontrols="clr-namespace:SappySharp.UserControls"
-    mc:Ignorable="d"
-    Title="Assemble .S song file"    Height="169"    Width="401">
- <Grid>
-  <TextBox x:Name="Text1_" Margin="136,104,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <Button x:Name="Command4_" Margin="376,32,0,0" Padding="2,2,2,2" Width="19" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="..." />
-  <TextBox x:Name="txtROM_" Margin="136,32,0,0" Padding="2,2,2,2" Width="233" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <Button x:Name="Command3_" Margin="376,8,0,0" Padding="2,2,2,2" Width="19" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="..." />
-  <Button x:Name="Command2_" Margin="296,136,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Cancel" />
-  <Button x:Name="Command1_" Margin="192,136,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Cook it" />
-  <TextBox x:Name="txtFile_" Margin="136,8,0,0" Padding="2,2,2,2" Width="233" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <TextBox x:Name="txtVoicegroup_" Margin="136,80,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <TextBox x:Name="txtOffset_" Margin="136,56,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <Label x:Name="Label6_" Margin="216,104,0,0" Padding="2,2,2,2" Width="177" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="&lt; &quot;&quot;Table&quot;&quot; value in Sappy" />
-  <Label x:Name="Label5_" Margin="8,104,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="MST offset" />
-  <Label x:Name="Label2_" Margin="8,32,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Target .GBA file" />
-  
-  
-  <Label x:Name="Label1_" Margin="8,8,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content=".S file" />
-  <Label x:Name="Label4_" Margin="8,80,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Voice group address" />
-  <Label x:Name="Label3_" Margin="8,56,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Base offset" />
- </Grid>
+<Window x:Class="SappySharp.Forms.frmAssembler" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Assemble .S song file" Height="169"
+        Width="401">
+    <Grid>
+        <TextBox x:Name="Text1" Margin="136,104,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <Button x:Name="Command4" Margin="376,32,0,0" Padding="2,2,2,2" Width="19" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="..." Click="Command4_Click" />
+        <TextBox x:Name="txtROM" Margin="136,32,0,0" Padding="2,2,2,2" Width="233" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <Button x:Name="Command3" Margin="376,8,0,0" Padding="2,2,2,2" Width="19" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="..." Click="Command3_Click" />
+        <Button x:Name="Command2" Margin="296,136,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Cancel" Click="Command2_Click" />
+        <Button x:Name="Command1" Margin="192,136,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Cook it" Click="Command1_Click" />
+        <TextBox x:Name="txtFile" Margin="136,8,0,0" Padding="2,2,2,2" Width="233" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <TextBox x:Name="txtVoicegroup" Margin="136,80,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <TextBox x:Name="txtOffset" Margin="136,56,0,0" Padding="2,2,2,2" Width="73" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <Label x:Name="Label6" Margin="216,104,0,0" Padding="2,2,2,2" Width="177" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
+                Content="&lt; &quot;&quot;Table&quot;&quot; value in Sappy" />
+        <Label x:Name="Label5" Margin="8,104,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="MST offset" />
+        <Label x:Name="Label2" Margin="8,32,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Target .GBA file" />
+        <Line x:Name="Line2" X1="8" Y1="129" X2="392" Y2="129"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Line x:Name="Line1" X1="8" Y1="128" X2="392" Y2="128"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Label x:Name="Label1" Margin="8,8,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content=".S file" />
+        <Label x:Name="Label4" Margin="8,80,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Voice group address" />
+        <Label x:Name="Label3" Margin="8,56,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Base offset" />
+    </Grid>
 </Window>

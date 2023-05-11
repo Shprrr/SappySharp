@@ -586,7 +586,7 @@ public partial class gCommonDialog
     }
 #endif
 
-    bool VBGetOpenFileName(ref string Filename, ref string FileTitle, ref bool ReadOnly, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, ref string InitDir, ref string DlgTitle, ref string DefaultExt, ref int flags, bool FileMustExist = true, bool MultiSelect = false, bool HideReadOnly = false, int Owner = -1)
+    public bool VBGetOpenFileName(ref string Filename, ref string FileTitle, ref bool ReadOnly, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, ref string InitDir, ref string DlgTitle, ref string DefaultExt, ref int flags, bool FileMustExist = true, bool MultiSelect = false, bool HideReadOnly = false, int Owner = -1)
     {
         bool _VBGetOpenFileName;
 
@@ -793,7 +793,7 @@ public partial class gCommonDialog
         return _FilterLookup;
     }
 
-    string VBGetFileTitle(ref string sFile)
+    public string VBGetFileTitle(string sFile)
     {
         string sFileTitle = new('\0', MAX_PATH);
         int cFileTitle = GetFileTitle(sFile, sFileTitle, MAX_PATH);
