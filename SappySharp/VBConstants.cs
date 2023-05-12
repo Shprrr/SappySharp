@@ -111,6 +111,8 @@ public static class VBConstants
     public enum AlignConstants { vbAlignNone = 0, vbAlignTop = 1, vbAlignBottom = 2, vbAlignLeft = 3, vbAlignRight = 4, vbLeftJustify = 5, vbRightJustify = 6, vbCenter = 7 }
     public enum AlignmentConstants : byte { vbLeftJustify = 0, vbRightJustify = 1, vbCenter = 2 }
 
+    public const int vbLeftButton = 1;
+
     // Cursors
     public const int vbDefault = 0;
     public const int vbArrow = 1;

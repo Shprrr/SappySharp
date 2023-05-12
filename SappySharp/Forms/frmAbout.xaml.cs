@@ -182,27 +182,12 @@ public partial class frmAbout : Window
         }
     }
 
-    private void Form_Paint()
+    private void Form_Paint(object sender, EventArgs e)
     {
         DrawSkin(this);
     }
 
-    private void picScroller_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        int button = e.ChangedButton switch
-        {
-            MouseButton.Left => 1,
-            MouseButton.Middle => 2,
-            MouseButton.Right => 4,
-            _ => throw new NotImplementedException()
-        };
-        int shift = 0;
-        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
-        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
-        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
-        Point mousePosition = e.GetPosition(this);
-        picScroller_MouseDown(button, shift, mousePosition.X, mousePosition.Y);
-    }
+    private void picScroller_MouseDown(object sender, MouseButtonEventArgs e) => CallMouseButton(e, this, picScroller_MouseDown);
     private void picScroller_MouseDown(int Button, int Shift, double x, double y)
     {
         timScroll.Interval = new TimeSpan(0, 0, 0, 0, 1);
@@ -246,22 +231,7 @@ public partial class frmAbout : Window
         }
     }
 
-    private void picScroller_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        int button = e.ChangedButton switch
-        {
-            MouseButton.Left => 1,
-            MouseButton.Middle => 2,
-            MouseButton.Right => 4,
-            _ => throw new NotImplementedException()
-        };
-        int shift = 0;
-        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
-        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
-        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
-        Point mousePosition = e.GetPosition(this);
-        picScroller_MouseUp(button, shift, mousePosition.X, mousePosition.Y);
-    }
+    private void picScroller_MouseUp(object sender, MouseButtonEventArgs e) => CallMouseButton(e, this, picScroller_MouseUp);
     private void picScroller_MouseUp(int Button, int Shift, double x, double y)
     {
         timScroll.Interval = new TimeSpan(0, 0, 0, 0, 50);

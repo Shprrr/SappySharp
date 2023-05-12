@@ -1,4 +1,3 @@
-using VB6 = Microsoft.VisualBasic.Compatibility.VB6;
 using System.Runtime.InteropServices;
 using static VBExtension;
 using static VBConstants;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using static System.DateTime;
 using static System.Math;
 using System.Linq;
-using static Microsoft.VisualBasic.Globals;
 using static Microsoft.VisualBasic.Collection;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
@@ -22,23 +20,8 @@ using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ColorConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.DrawStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.FillStyleConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.GlobalModule;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.Printer;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterCollection;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.PrinterObjectConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.ScaleModeConstants;
-using static Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6.SystemColorConstants;
-using ADODB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -91,75 +74,72 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
+namespace SappySharp.Forms;
 
-namespace SappySharp.Forms
+public partial class frmInputBox : Window
 {
-public partial class frmInputBox : Window {
-  private static frmInputBox _instance;
-  public static frmInputBox instance { set { _instance = null; } get { return _instance ?? (_instance = new frmInputBox()); }}  public static void Load() { if (_instance == null) { dynamic A = frmInputBox.instance; } }  public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }  public frmInputBox() { InitializeComponent(); }
+    private static frmInputBox _instance;
+    public static frmInputBox instance { set { _instance = null; } get { return _instance ??= new frmInputBox(); } }
+    public static void Load() { if (_instance == null) { dynamic A = frmInputBox.instance; } }
+    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
+    public frmInputBox() { InitializeComponent(); }
 
+    [LibraryImport("user32.dll")]
+    private static partial int ReleaseCapture();
+    [DllImport("user32.dll", EntryPoint = "SendMessageA")]
+    private static extern int SendMessage(int hwnd, int wMsg, int wParam, ref dynamic lParam);
+    private const int WM_NCLBUTTONDOWN = 0xA1;
+    private const int HTCAPTION = 2;
 
-public List<Window> frmInputBox { get => VBExtension.controlArray<Window>(this, "frmInputBox"); }
+    private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
+    private void Command1_Click()
+    {
+        Text1.Text = "";
+        Hide();
+    }
 
-public List<TextBox> Text1 { get => VBExtension.controlArray<TextBox>(this, "Text1"); }
+    private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
+    private void Command2_Click()
+    {
+        Hide();
+    }
 
-public List<Label> Command1 { get => VBExtension.controlArray<Label>(this, "Command1"); }
+    private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
+    private void Form_Load()
+    {
+        SetCaptions(this);
+    }
 
-public List<Label> Command2 { get => VBExtension.controlArray<Label>(this, "Command2"); }
+    private void Form_MouseDown(object sender, MouseButtonEventArgs e) => CallMouseButton(e, this, Form_MouseDown);
+    private void Form_MouseDown(int Button, int Shift, double x, double y)
+    {
+        Form_MouseMove(Button, Shift, x, y);
+    }
 
-public List<Line> Line3 { get => VBExtension.controlArray<Line>(this, "Line3"); }
+    private void Form_MouseMove(object sender, MouseEventArgs e) => CallMouseMove(e, this, Form_MouseMove);
+    private void Form_MouseMove(int Button, int Shift, double x, double y)
+    {
+        if (Button == vbLeftButton)
+        {
+            ReleaseCapture();
+            SendMessageLong((int)this.hWnd(), WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        }
+    }
 
-public List<Line> Line4 { get => VBExtension.controlArray<Line>(this, "Line4"); }
+    private void Form_Paint(object sender, EventArgs e)
+    {
+        DrawSkin(this);
+    }
 
-public List<Label> Label1 { get => VBExtension.controlArray<Label>(this, "Label1"); }
+    private void Label1_MouseDown(object sender, MouseButtonEventArgs e) => CallMouseButton(e, this, Label1_MouseDown);
+    private void Label1_MouseDown(int Button, int Shift, double x, double y)
+    {
+        Form_MouseMove(Button, Shift, x, y);
+    }
 
-
-[DllImport("user32.dll")]
-private static extern int ReleaseCapture();
-[DllImport("user32.dll", EntryPoint="SendMessageA")]
-private static extern int SendMessage(int hwnd, int wMsg, int wParam, ref dynamic lParam);
-int WM_NCLBUTTONDOWN = 0xA1;
-int HTCAPTION = 2;
-
-  private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
-private void Command1_Click() {
-  Text1.Text = "";
-  Hide();
-}
-
-  private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
-private void Command2_Click() {
-  Hide();
-}
-
-  private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
-private void Form_Load() {
-  SetCaptions(ref this);
-}
-
-  private void Form_MouseDown(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  Form_MouseMove(Button, Shift, x, y);
-}
-
-  private void Form_MouseMove(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-    if(Button == vbLeftButton) {
-    ReleaseCapture();
-    SendMessageLong(this.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-  }
-}
-
-  private void Form_Paint() {
-  DrawSkin(ref this);
-}
-
-  private void Label1_MouseDown(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  Form_MouseMove(Button, Shift, x, y);
-}
-
-  private void Label1_MouseMove(ref int Button, ref int Shift, ref decimal x, ref decimal y) {
-  Form_MouseMove(Button, Shift, x, y);
-}
-
-
-}
+    private void Label1_MouseMove(object sender, MouseEventArgs e) => CallMouseMove(e, this, Label1_MouseMove);
+    private void Label1_MouseMove(int Button, int Shift, double x, double y)
+    {
+        Form_MouseMove(Button, Shift, x, y);
+    }
 }

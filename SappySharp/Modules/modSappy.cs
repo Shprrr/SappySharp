@@ -507,13 +507,13 @@ static partial class modSappy
     public static string InputBox(string Prompt, ref string Title, string Default)
     {
         if (Title == "") Title = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-        frmInputBox.instance.Label1[0].Content = Prompt;
+        frmInputBox.instance.Label1.Content = Prompt;
         frmInputBox.instance.Title = Title;
-        frmInputBox.instance.Text1[0].Text = Default;
-        frmInputBox.instance.Text1[0].SelectionStart = 0;
-        frmInputBox.instance.Text1[0].SelectionLength = Len(frmInputBox.instance.Text1[0]);
+        frmInputBox.instance.Text1.Text = Default;
+        frmInputBox.instance.Text1.SelectionStart = 0;
+        frmInputBox.instance.Text1.SelectionLength = Len(frmInputBox.instance.Text1);
         frmInputBox.instance.ShowDialog();
-        return frmInputBox.instance.Text1[0].Text;
+        return frmInputBox.instance.Text1.Text;
     }
 
     public static string GetSetting(string name)

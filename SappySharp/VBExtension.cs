@@ -1067,6 +1067,37 @@ public static class VBExtension
         public void Execute(object parameter) { mExecute.Invoke(parameter); }
     }
 
+    public static void CallMouseButton(MouseButtonEventArgs e, Window window, Action<int, int, double, double> mouseButtonAction)
+    {
+        int button = e.ChangedButton switch
+        {
+            MouseButton.Left => VBConstants.vbLeftButton,
+            MouseButton.Middle => 2,
+            MouseButton.Right => 4,
+            _ => throw new NotImplementedException()
+        };
+        int shift = 0;
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
+        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
+        Point mousePosition = e.GetPosition(window);
+        mouseButtonAction(button, shift, mousePosition.X, mousePosition.Y);
+    }
+
+    public static void CallMouseMove(MouseEventArgs e, Window window, Action<int, int, double, double> mouseAction)
+    {
+        int button = 0;
+        if (e.LeftButton == MouseButtonState.Pressed) button = VBConstants.vbLeftButton;
+        if (e.MiddleButton == MouseButtonState.Pressed) button = 2;
+        if (e.RightButton == MouseButtonState.Pressed) button = 4;
+        int shift = 0;
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
+        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
+        Point mousePosition = e.GetPosition(window);
+        mouseAction(button, shift, mousePosition.X, mousePosition.Y);
+    }
+
     public static dynamic VBSwitch(params dynamic[] vals)
     {
         for (int i = 0; i < vals.Length; i += 2)
