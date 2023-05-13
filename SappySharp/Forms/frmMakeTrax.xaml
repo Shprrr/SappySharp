@@ -1,36 +1,54 @@
-<Window x:Class="SappySharp.Forms.frmMakeTrax_"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SappySharp.Forms"
-    xmlns:usercontrols="clr-namespace:SappySharp.UserControls"
-    mc:Ignorable="d"
-    Title="Import Tracks"    Height="272"    Width="416" Loaded="Form_Load">
- <Grid>
-  <TextBox x:Name="txtLog_" Margin="8,272,0,0" Padding="2,2,2,2" Width="401" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Lucida Console" FontSize="8.25" />
-  <Image x:Name="Picture1_" Margin="216,128,0,0" Width="193" Height="97" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <Label x:Name="Label10_" Margin="4,18,0,0" Padding="2,2,2,2" Width="185" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2006]The second track will be saved right after the first track. Headers are copied." />
-    </Image>
-    <Label x:Name="Label9_" Margin="4,2,0,0" Padding="2,2,2,2" Width="185" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[2005]Track offsets" />
-    </Image>
-  <TextBox x:Name="txtVoicegroup_" Margin="320,104,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <TextBox x:Name="txtTrack_" Margin="320,80,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <TextBox x:Name="txtHeaderOffset_" Margin="320,56,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <ListBox x:Name="lstTracks_" Margin="8,56,0,0" Padding="2,2,2,2" Width="193" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-  <usercontrols:FileListBox x:Name="File1_" Margin="72,80,0,0" Padding="2,2,2,2" Width="57" Height="58" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Label x:Name="Command1_" Margin="328,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Label x:Name="Command2_" Margin="240,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Label x:Name="Label8_" Margin="216,104,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2016]Voicegroup" />
-  <Label x:Name="Label6_" Margin="216,80,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2004]First track" />
-  <Label x:Name="Label5_" Margin="216,56,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2003]Header" />
-  <Label x:Name="Label3_" Margin="240,8,0,0" Padding="2,2,2,2" Width="169" Height="41" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2002]Select where you want to save the tracks:" />
-  <Label x:Name="Label4_" Margin="216,8,0,0" Padding="2,2,2,2" Width="17" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="15.75" FontWeight="Bold" Content="2" />
-  
-  
-  
-  
-  <Label x:Name="Label1_" Margin="32,8,0,0" Padding="2,2,2,2" Width="169" Height="41" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2001]Select the tracks you want to import:" />
-  <Label x:Name="Label2_" Margin="8,8,0,0" Padding="2,2,2,2" Width="17" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="15.75" FontWeight="Bold" Content="1" />
- </Grid>
+<Window x:Class="SappySharp.Forms.frmMakeTrax" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Import Tracks" Height="272" Width="416"
+        Loaded="Form_Load">
+    <Grid>
+        <TextBox x:Name="txtLog" Margin="8,272,0,0" Padding="2,2,2,2" Width="401" Height="217" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Lucida Console" FontSize="8.25" />
+        <usercontrols:RenderingControl x:Name="Picture1" Margin="216,128,0,0" Width="193" Height="97" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}"
+                Rendering="Picture1_Paint" />
+        <Label x:Name="Label10" Margin="220,146,0,0" Padding="2,2,2,2" Width="185" Height="75" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
+                Content="[2006]The second track will be saved right after the first track. Headers are copied." />
+        <Label x:Name="Label9" Margin="220,130,0,0" Padding="2,2,2,2" Width="185" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[2005]Track offsets" />
+        <TextBox x:Name="txtVoicegroup" Margin="320,104,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <TextBox x:Name="txtTrack" Margin="320,80,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <TextBox x:Name="txtHeaderOffset" Margin="320,56,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <ListBox x:Name="lstTracks" Margin="8,56,0,0" Padding="2,2,2,2" Width="193" Height="169" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+        <Button x:Name="Command1" Margin="328,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5]Cancel" Click="Command1_Click" />
+        <Button x:Name="Command2" Margin="240,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[4]OK" Click="Command2_Click" />
+        <Label x:Name="Label8" Margin="216,104,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2016]Voicegroup" />
+        <Label x:Name="Label6" Margin="216,80,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2004]First track" />
+        <Label x:Name="Label5" Margin="216,56,0,0" Padding="2,2,2,2" Width="89" Height="17" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[2003]Header" />
+        <Label x:Name="Label3" Margin="240,8,0,0" Padding="2,2,2,2" Width="169" Height="41" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
+                Content="[2002]Select where you want to save the tracks:" />
+        <Label x:Name="Label4" Margin="216,8,0,0" Padding="2,2,2,2" Width="17" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="15.75" FontWeight="Bold" Content="2" />
+        <Line x:Name="Line1" X1="208" Y1="8" X2="208" Y2="232"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Line x:Name="Line2" X1="209" Y1="8" X2="209" Y2="231"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Line x:Name="Line4" X1="8" Y1="232" X2="408" Y2="232"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Line x:Name="Line3" X1="8" Y1="231" X2="408" Y2="231"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Label x:Name="Label1" Margin="32,8,0,0" Padding="2,2,2,2" Width="169" Height="41" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
+                Content="[2001]Select the tracks you want to import:" />
+        <Label x:Name="Label2" Margin="8,8,0,0" Padding="2,2,2,2" Width="17" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="15.75" FontWeight="Bold" Content="1" />
+    </Grid>
 </Window>

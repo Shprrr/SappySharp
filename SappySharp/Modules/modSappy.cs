@@ -316,7 +316,7 @@ static partial class modSappy
 
     // Given a value and the padding length, returns a padded Hex value.
 
-    public static string FixHex(ref dynamic s, ref int i)
+    public static string FixHex(dynamic s, int i)
     {
         string Bleh = Replace(s, "0x", "&H");
         if (Left(Bleh, 2) != "&H")
