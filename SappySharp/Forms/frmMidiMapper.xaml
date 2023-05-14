@@ -1,31 +1,48 @@
-<Window x:Class="SappySharp.Forms.frmMidiMapper_"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SappySharp.Forms"
-    xmlns:usercontrols="clr-namespace:SappySharp.UserControls"
-    mc:Ignorable="d"
-    Title="[5000] MIDI Mapper"    Height="257"    Width="449" Loaded="Form_Load">
- <Grid>
-  <Label x:Name="Command4_" Margin="360,136,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <RadioButton x:Name="Option1_1" Margin="96,0,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5002] Drums" />
-  <RadioButton x:Name="Option1_0" Margin="0,0,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5001] Insts" />
-  
-  <Label x:Name="Command3_" Margin="360,64,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Label x:Name="Command2_" Margin="360,32,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Label x:Name="Command1_" Margin="360,104,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  <Image x:Name="Picture1_1" Margin="8,32,0,0" Width="345" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <ListBox x:Name="lstDrums_" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <ListBox x:Name="lstDrumR_" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <Label x:Name="Label5_" Margin="176,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5003] Remap to" />
-    <Label x:Name="Label4_" Margin="0,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5005] Drum key" />
-  <Image x:Name="Picture1_0" Margin="8,32,0,0" Width="345" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <TextBox x:Name="txtTranspose_" Margin="128,192,0,0" Padding="2,2,2,2" Width="41" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Text="0" />
-    <ListBox x:Name="lstInsts_" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <ListBox x:Name="lstRemapTo_" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <Label x:Name="Label3_" Margin="0,192,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5006] Transpose" />
-    <Label x:Name="Label1_" Margin="0,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5004] Instrument" />
-    <Label x:Name="Label2_" Margin="176,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5003] Remap to" />
- </Grid>
+<Window x:Class="SappySharp.Forms.frmMidiMapper" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="[5000] MIDI Mapper" Height="257"
+        Width="449" Loaded="Form_Load">
+    <Grid>
+        <Button x:Name="Command4" Margin="360,136,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5008] Reset" Click="Command4_Click" />
+        <RadioButton x:Name="Option1_1" Margin="96,0,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5002] Drums" Click="Option1_Click" />
+        <RadioButton x:Name="Option1_0" Margin="0,0,0,0" Padding="2,2,2,2" Width="97" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5001] Insts" Click="Option1_Click" />
+        <Button x:Name="Command3" Margin="360,64,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5] Cancel" Click="Command3_Click" />
+        <Button x:Name="Command2" Margin="360,32,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[4] OK" Click="Command2_Click" />
+        <Button x:Name="Command1" Margin="360,104,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5007] Listen" Click="Command1_Click" />
+        <Grid x:Name="Picture1_1" Margin="8,32,0,0" Width="345" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <ListBox x:Name="lstDrums" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstDrums_Click"
+                    MouseDoubleClick="lstDrums_DblClick" />
+            <ListBox x:Name="lstDrumR" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstDrumR_Click"
+                    MouseDoubleClick="lstDrumR_DblClick" />
+            <Label x:Name="Label5" Margin="176,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5003] Remap to" />
+            <Label x:Name="Label4" Margin="0,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5005] Drum key" />
+        </Grid>
+        <Grid x:Name="Picture1_0" Margin="8,32,0,0" Width="345" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <TextBox x:Name="txtTranspose" Margin="128,192,0,0" Padding="2,2,2,2" Width="41" Height="19" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Text="0" LostFocus="txtTranspose_LostFocus" />
+            <ListBox x:Name="lstInsts" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstInsts_Click"
+                    MouseDoubleClick="lstInsts_DblClick" />
+            <ListBox x:Name="lstRemapTo" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstRemapTo_Click"
+                    MouseDoubleClick="lstRemapTo_DblClick" />
+            <Label x:Name="Label3" Margin="0,192,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5006] Transpose" />
+            <Label x:Name="Label1" Margin="0,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5004] Instrument" />
+            <Label x:Name="Label2" Margin="176,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5003] Remap to" />
+        </Grid>
+    </Grid>
 </Window>
