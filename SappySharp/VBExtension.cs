@@ -350,7 +350,7 @@ public static class VBExtension
     //    public static int getValue(this CheckBox chk) { try { return ((bool)chk.IsChecked); } catch { return false; } }
     public static int setValue(this CheckBox chk, int value) { chk.IsChecked = value != 1; return getValue(chk) ? 1 : 0; }
 
-    public static bool getValue(this Button btn) { try { return ((bool)btn.IsPressed); } catch { return false; } }
+    public static bool getValue(this Button btn) { try { return btn.IsPressed; } catch { return false; } }
     public static bool setValue(this Button btn, bool value) { try { btn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); return true; } catch { return false; } }
     public static BitmapImage getImage(this Button btn)
     {
@@ -489,6 +489,8 @@ public static class VBExtension
     }
     public static bool Move(this FrameworkElement c, double X = -10000, double Y = -10000, double W = -10000, double H = -10000, bool MakeVisible = false)
     { return c.Move((decimal)X, (decimal)Y, (decimal)W, (decimal)H, MakeVisible); }
+    public static bool Move(this FrameworkElement c, int X = -10000, int Y = -10000, int W = -10000, int H = -10000, bool MakeVisible = false)
+    { return c.Move((decimal)X, Y, W, H, MakeVisible); }
     public static void setWindowState(this Window w, WindowState X) { w.WindowState = X; }
 
     public static string AppHelpFile() { return ""; }
@@ -566,7 +568,7 @@ public static class VBExtension
     public static void RemoveItem(this ComboBox c, int Index) { c.Items.RemoveAt(Index); }
     public static void Clear(this ComboBox c) { c.Items.Clear(); }
 
-    public static int itemData(this ListBox c, int I) { try { return ((int)((ComboboxItem)c.Items[I]).Value); } catch (Exception e) { return 0; } }
+    public static int itemData(this ListBox c, int I) { try { return ((ComboboxItem)c.Items[I]).Value; } catch (Exception e) { return 0; } }
     public static bool SelectText(this ListBox c, string S) { for (int i = 0; i < c.Items.Count; i++) if (i.ToString() == S) { c.SelectedIndex = i; return true; } return false; }
     public static int SelectItem(this ListBox c, int I, bool isSelected)
     {
@@ -855,7 +857,7 @@ public static class VBExtension
         Panel G = (Panel)Frm.Content;
         foreach (var C in Frm.Controls())
         {
-            string N = ((FrameworkElement)C).Name;
+            string N = C.Name;
             if (N.StartsWith(Name + "_"))
             {
                 if (controlIndex(N) == baseIndex) continue;
@@ -868,7 +870,7 @@ public static class VBExtension
         int Max = -1;
         foreach (var C in Frm.Controls(true))
         {
-            string N = ((FrameworkElement)C).Name;
+            string N = C.Name;
             if (N.StartsWith(Name + "_"))
             {
                 int K = ValI(Strings.Mid(N, N.LastIndexOf('_') + 2));
@@ -887,7 +889,7 @@ public static class VBExtension
         {
             cts.Add((FrameworkElement)e);
             if (recurse && e is GroupBox)
-                foreach (var f in ((GroupBox)e).Controls(recurse)) cts.Add((FrameworkElement)f);
+                foreach (var f in ((GroupBox)e).Controls(recurse)) cts.Add(f);
         }
         return cts;
     }
@@ -900,7 +902,7 @@ public static class VBExtension
         {
             cts.Add((FrameworkElement)e);
             if (recurse && e is GroupBox)
-                foreach (var f in ((GroupBox)e).Controls(recurse)) cts.Add((FrameworkElement)f);
+                foreach (var f in ((GroupBox)e).Controls(recurse)) cts.Add(f);
         }
         return cts;
     }

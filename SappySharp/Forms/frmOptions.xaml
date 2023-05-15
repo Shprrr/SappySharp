@@ -1,65 +1,88 @@
-<Window x:Class="SappySharp.Forms.frmOptions_"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SappySharp.Forms"
-    xmlns:usercontrols="clr-namespace:SappySharp.UserControls"
-    mc:Ignorable="d"
-    Title="Settings"    Height="265"    Width="537" Loaded="Form_Load" Unloaded="Form_Unload">
- <Grid>
-  <Image x:Name="picPage_3" Margin="128,96,0,0" Width="393" Height="89" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <Label x:Name="cbxPresets_" Margin="240,56,0,0" Padding="2,2,2,2" Width="145" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="picSkin_2" Margin="136,64,0,0" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="picSkin_1" Margin="112,64,0,0" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="picSkinLoad_" Margin="24,16,0,0" Width="25" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="picSkin_0" Margin="88,64,0,0" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <ScrollBar x:Name="HScroll1_" Margin="88,0,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <ScrollBar x:Name="HScroll2_" Margin="88,32,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="Picture5_" Margin="89,17,0,0" Width="265" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Label x:Name="Label4_" Margin="0,64,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6012]Skin" />
-    
-    <Label x:Name="Label7_" Margin="0,0,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6013]Hue" />
-    <Label x:Name="Label8_" Margin="0,32,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6014]Sat" />
-    <Label x:Name="Label10_" Margin="360,0,0,0" Padding="2,2,2,2" Width="33" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="0" />
-    <Label x:Name="Label11_" Margin="360,32,0,0" Padding="2,2,2,2" Width="33" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="0" />
-  </Image>
-  <Image x:Name="picPage_2" Margin="128,24,0,0" Width="393" Height="73" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <Image x:Name="Picture3_" Margin="0,27,0,0" Width="36" Height="36" VerticalAlignment="Top" HorizontalAlignment="Left">
-      <Image x:Name="Image1_" Margin="0,0,0,0" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <CheckBox x:Name="chkHideBar_" Margin="48,48,0,0" Padding="2,2,2,2" Width="345" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6015]HideBar" />
-    <CheckBox x:Name="chkSounds_" Margin="0,0,0,0" Padding="2,2,2,2" Width="393" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6009]NoSounds" />
-    <CheckBox x:Name="chkNiceBar_" Margin="48,24,0,0" Padding="2,2,2,2" Width="345" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6010]NiceBar" />
-  </Image>
-  <Image x:Name="picPage_1" Margin="24,96,0,0" Width="393" Height="49" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <Image x:Name="Picture1_" Margin="0,24,0,0" Width="17" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <Image x:Name="Picture2_" Margin="0,0,0,0" Width="17" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" />
-    <CheckBox x:Name="chkMIRC_" Margin="24,0,0,0" Padding="2,2,2,2" Width="369" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6006]Send to mIRC" />
-    <CheckBox x:Name="chkMSN_" Margin="24,24,0,0" Padding="2,2,2,2" Width="369" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6007]Send to MSN" />
-  </Image>
-  <Image x:Name="picPage_0" Margin="24,24,0,0" Width="393" Height="73" VerticalAlignment="Top" HorizontalAlignment="Left">
-    <TextBox x:Name="txtXFile_" Margin="208,0,0,0" Padding="2,2,2,2" Width="185" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <CheckBox x:Name="chkReload_" Margin="0,48,0,0" Padding="2,2,2,2" Width="393" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6004]reload" />
-    <TextBox x:Name="txtReps_" Margin="208,24,0,0" Padding="2,2,2,2" Width="49" Height="19" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
-    <Label x:Name="Label1_" Margin="0,0,0,0" Padding="2,2,2,2" Width="153" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6001]ROM database" />
-    <Label x:Name="Label2_" Margin="0,24,0,0" Padding="2,2,2,2" Width="153" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6002]Repeats" />
-    <Label x:Name="Label3_" Margin="264,24,0,0" Padding="2,2,2,2" Width="129" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6003]infinite" />
-  </Image>
-  <Label x:Name="MSNList1_" Margin="8,8,0,0" Padding="2,2,2,2" Width="121" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  </Image>
-  <Label x:Name="Command1_" Margin="456,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  </Image>
-  <Label x:Name="cmdOK_" Margin="376,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
-  </Image>
-  
-  </Image>
-  
-  </Image>
-  <Label x:Name="lblHeader_" Margin="144,9,0,0" Padding="2,2,2,2" Width="18" Height="13" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="foo" />
-  </Image>
-  
-  </Image>
-  
-  </Image>
- </Grid>
+<Window x:Class="SappySharp.Forms.frmOptions" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Settings" Height="265" Width="537"
+        Loaded="Form_Load" Unloaded="Form_Unload" SizeChanged="Form_Resize">
+    <Grid>
+        <Grid x:Name="picPage_3" Margin="128,96,0,0" Width="393" Height="89" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <ComboBox x:Name="cbxPresets" Margin="240,56,0,0" Padding="2,2,2,2" Width="145" Height="22" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Selected="cbxPresets_Click" />
+            <usercontrols:RenderingControl x:Name="picSkin_2" Margin="136,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
+            <usercontrols:RenderingControl x:Name="picSkin_1" Margin="112,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
+            <Image x:Name="picSkinLoad" Margin="24,16,0,0" Width="25" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" />
+            <usercontrols:RenderingControl x:Name="picSkin_0" Margin="88,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
+            <ScrollBar x:Name="HScroll1" Margin="88,0,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Orientation="Horizontal" ValueChanged="HScroll1_Change" />
+            <ScrollBar x:Name="HScroll2" Margin="88,32,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Orientation="Horizontal" ValueChanged="HScroll2_Change" />
+            <Image x:Name="Picture5" Margin="89,17,0,0" Width="265" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Loaded="Picture5_Paint" />
+            <Label x:Name="Label4" Margin="0,64,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6012]Skin" />
+            <Canvas x:Name="shpSkinSel" Margin="85,61,22,22"
+                    Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                <Rectangle />
+            </Canvas>
+            <Label x:Name="Label7" Margin="0,0,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6013]Hue" />
+            <Label x:Name="Label8" Margin="0,32,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6014]Sat" />
+            <Label x:Name="Label10" Margin="360,0,0,0" Padding="2,2,2,2" Width="33" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="0" />
+            <Label x:Name="Label11" Margin="360,32,0,0" Padding="2,2,2,2" Width="33" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="0" />
+        </Grid>
+        <Grid x:Name="picPage_2" Margin="128,24,0,0" Width="393" Height="73" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid x:Name="Picture3" Margin="0,27,0,0" Width="36" Height="36" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Image x:Name="Image1" Margin="0,0,0,0" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            </Grid>
+            <CheckBox x:Name="chkHideBar" Margin="48,48,0,0" Padding="2,2,2,2" Width="345" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6015]HideBar" />
+            <CheckBox x:Name="chkSounds" Margin="0,0,0,0" Padding="2,2,2,2" Width="393" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6009]NoSounds" />
+            <CheckBox x:Name="chkNiceBar" Margin="48,24,0,0" Padding="2,2,2,2" Width="345" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6010]NiceBar" Click="chkNiceBar_Click" />
+        </Grid>
+        <Grid x:Name="picPage_1" Margin="24,96,0,0" Width="393" Height="49" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Image x:Name="Picture1" Margin="0,24,0,0" Width="17" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <Image x:Name="Picture2" Margin="0,0,0,0" Width="17" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <CheckBox x:Name="chkMIRC" Margin="24,0,0,0" Padding="2,2,2,2" Width="369" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6006]Send to mIRC" />
+            <CheckBox x:Name="chkMSN" Margin="24,24,0,0" Padding="2,2,2,2" Width="369" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6007]Send to MSN" />
+        </Grid>
+        <Grid x:Name="picPage_0" Margin="24,24,0,0" Width="393" Height="73" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <TextBox x:Name="txtXFile" Margin="208,0,0,0" Padding="2,2,2,2" Width="185" Height="19" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
+            <CheckBox x:Name="chkReload" Margin="0,48,0,0" Padding="2,2,2,2" Width="393" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6004]reload" />
+            <TextBox x:Name="txtReps" Margin="208,24,0,0" Padding="2,2,2,2" Width="49" Height="19" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" LostFocus="txtReps_LostFocus" />
+            <Label x:Name="Label1" Margin="0,0,0,0" Padding="2,2,2,2" Width="153" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6001]ROM database" />
+            <Label x:Name="Label2" Margin="0,24,0,0" Padding="2,2,2,2" Width="153" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6002]Repeats" />
+            <Label x:Name="Label3" Margin="264,24,0,0" Padding="2,2,2,2" Width="129" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6003]infinite" />
+        </Grid>
+        <Canvas x:Name="MSNList1" Margin="8,8,0,0" Width="121" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Button x:Name="Command1" Margin="456,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5]" Click="Command1_Click" />
+        <Button x:Name="cmdOK" Margin="376,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[4]" Click="cmdOK_Click" />
+        <Line x:Name="Line10" X1="136" Y1="225" X2="529" Y2="225"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Line x:Name="Line9" X1="136" Y1="224" X2="529" Y2="224"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Label x:Name="lblHeader" Margin="144,9,0,0" Padding="2,2,2,2" Width="18" Height="13" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="foo" />
+        <Line x:Name="Line6" X1="136" Y1="16" X2="529" Y2="16"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Line x:Name="Line5" X1="136" Y1="17" X2="529" Y2="17"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+    </Grid>
 </Window>
