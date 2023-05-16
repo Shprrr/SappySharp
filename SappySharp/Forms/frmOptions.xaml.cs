@@ -163,8 +163,8 @@ public partial class frmOptions : Window
         Colorize(frmSappy.instance.picSkin, (decimal)HScroll1.Value / 10, (decimal)HScroll2.Value / 10);
         frmSappy.instance.RedrawSkin();
         frmSappy.instance.ebr.Redraw = false;
-        frmSappy.instance.ebr.BackColorStart = frmSappy.instance.picSkin.point[6, 16];
-        frmSappy.instance.ebr.BackColorEnd = frmSappy.instance.picSkin.point[6, 32];
+        frmSappy.instance.ebr.BackColorStart = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 16);
+        frmSappy.instance.ebr.BackColorEnd = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 32);
         frmSappy.instance.ebr.Redraw = true;
 
         ClickSound();
@@ -219,12 +219,11 @@ public partial class frmOptions : Window
         txtReps.Text = GetSettingI("Song Repeats").ToString();
         if (txtReps.Text == "") txtReps.Text = "2";
 
-        decimal hue = 0;
-        decimal sat = 0;
-        string regset = "";
-        int skinno = 0;
+        decimal hue;
+        decimal sat;
+        int skinno;
         // skinno = GetSettingI("Skin")
-        regset = GetSetting("Skin");
+        string regset = GetSetting("Skin");
         if (regset != "") skinno = (int)Val(regset); else skinno = 0;
         regset = GetSetting("Skin Hue");
         if (regset != "") hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.4m;

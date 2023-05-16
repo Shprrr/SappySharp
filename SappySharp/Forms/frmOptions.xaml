@@ -23,7 +23,7 @@
                     Loaded="Picture5_Paint" />
             <Label x:Name="Label4" Margin="0,64,0,0" Padding="2,2,2,2" Width="81" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6012]Skin" />
-            <Canvas x:Name="shpSkinSel" Margin="85,61,22,22"
+            <Canvas x:Name="shpSkinSel" Margin="85,61,0,0" Width="22" Height="22"
                     Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
                 <Rectangle />
             </Canvas>

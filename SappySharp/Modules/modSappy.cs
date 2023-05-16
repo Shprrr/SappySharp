@@ -484,15 +484,15 @@ static partial class modSappy
     public static void DrawSkin(dynamic Victim)
     {
         Victim.ScaleMode = 3;
-        BitBlt(Victim.hdc, 0, 0, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 0, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, 0, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 2, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, 0, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 4, vbSrcCopy);
-        StretchBlt(Victim.hdc, 0, 2, 2, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 6, 2, 2, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, 2, Victim.ScaleWidth - 4, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin[0].hWnd(), 0, 0, 6, 62, vbSrcCopy);
-        StretchBlt(Victim.hdc, Victim.ScaleWidth - 2, 2, 2, Victim.Height - 4, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 8, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, 0, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 10, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, Victim.ScaleHeight - 2, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 12, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin[0].hWnd(), 6, 14, vbSrcCopy);
+        BitBlt(Victim.hdc, 0, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 0, vbSrcCopy);
+        StretchBlt(Victim.hdc, 2, 0, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 2, 2, 2, vbSrcCopy);
+        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 4, vbSrcCopy);
+        StretchBlt(Victim.hdc, 0, 2, 2, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin.hWnd(), 6, 6, 2, 2, vbSrcCopy);
+        StretchBlt(Victim.hdc, 2, 2, Victim.ScaleWidth - 4, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin.hWnd(), 0, 0, 6, 62, vbSrcCopy);
+        StretchBlt(Victim.hdc, Victim.ScaleWidth - 2, 2, 2, Victim.Height - 4, (int)frmSappy.instance.picSkin.hWnd(), 6, 8, 2, 2, vbSrcCopy);
+        BitBlt(Victim.hdc, 0, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 10, vbSrcCopy);
+        StretchBlt(Victim.hdc, 2, Victim.ScaleHeight - 2, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
+        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 14, vbSrcCopy);
     }
 
     public static void SetAllSkinButtons(Window Victim)

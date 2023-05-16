@@ -153,20 +153,17 @@ public partial class frmMidiMapper : Window
     {
         MidiClose();
 
-        IXMLDOMElement NewMap = null;
-        IXMLDOMElement NewInst = null;
-        IXMLDOMAttribute NewAtt = null;
         bool need = false;
 
-        NewMap = frmSappy.instance.x.createElement("midimap");
+        IXMLDOMElement NewMap = frmSappy.instance.x.createElement("midimap");
 
         for (int i = 0; i <= 127; i += 1)
         {
             if (MidiMap[i] != i) // it's remapped
             {
                 need = true;
-                NewInst = frmSappy.instance.x.createElement("inst");
-                NewAtt = frmSappy.instance.x.createAttribute("from");
+                IXMLDOMElement NewInst = frmSappy.instance.x.createElement("inst");
+                IXMLDOMAttribute NewAtt = frmSappy.instance.x.createAttribute("from");
                 NewAtt.value = i;
                 NewInst.attributes.setNamedItem(NewAtt);
                 NewAtt = frmSappy.instance.x.createAttribute("to");
@@ -187,8 +184,8 @@ public partial class frmMidiMapper : Window
             if (DrumMap[i] != i) // it's remapped
             {
                 need = true;
-                NewInst = frmSappy.instance.x.createElement("drum");
-                NewAtt = frmSappy.instance.x.createAttribute("from");
+                IXMLDOMElement NewInst = frmSappy.instance.x.createElement("drum");
+                IXMLDOMAttribute NewAtt = frmSappy.instance.x.createAttribute("from");
                 NewAtt.value = i;
                 NewInst.attributes.setNamedItem(NewAtt);
                 NewAtt = frmSappy.instance.x.createAttribute("to");
@@ -207,7 +204,7 @@ public partial class frmMidiMapper : Window
         }
 
         frmSappy.instance.x.save(frmSappy.instance.xfile);
-        frmSappy.instance.LoadGameFromXML(frmSappy.instance.gamecode);
+        frmSappy.instance.LoadGameFromXML(ref frmSappy.instance.gamecode);
         Unload();
     }
 

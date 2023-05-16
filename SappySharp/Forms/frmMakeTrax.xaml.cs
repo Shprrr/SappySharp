@@ -111,7 +111,6 @@ public partial class frmMakeTrax : Window
     byte MyNumblocks = 0;
     byte MyPriority = 0;
     byte MyReverb = 0;
-    int MyVoiceGroup = 0;
     int SongTableEntry = 0;
 
     int[] Tracks = new int[32];
@@ -187,7 +186,7 @@ public partial class frmMakeTrax : Window
         Command1.Content = Properties.Resources._6;
         // Command1.FontBold = True
         Command1.IsDefault = true;
-        frmSappy.instance.LoadSong(frmSappy.instance.txtSong);
+        frmSappy.instance.LoadSong(int.Parse(frmSappy.instance.txtSong.Text));
         IncessantNoises("TaskComplete");
     }
 

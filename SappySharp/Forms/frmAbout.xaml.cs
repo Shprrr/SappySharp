@@ -127,7 +127,6 @@ public partial class frmAbout : Window
         public int Right;
         public int Bottom;
     }
-    private const int DT_CENTER = 0x1;
 
     [DllImport("gdi32.dll", EntryPoint = "CreateFontA")]
     private static extern int CreateFont(int H, int W, int E, int o, int W2, int i, int u, int S, int C, int OP, int CP, int Q, int PAF, string F);
@@ -202,19 +201,7 @@ public partial class frmAbout : Window
         }
     }
 
-    private void picScroller_MouseMove(object sender, MouseEventArgs e)
-    {
-        int button = 0;
-        if (e.LeftButton == MouseButtonState.Pressed) button = 1;
-        if (e.MiddleButton == MouseButtonState.Pressed) button = 2;
-        if (e.RightButton == MouseButtonState.Pressed) button = 4;
-        int shift = 0;
-        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) shift = 1;
-        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) shift = 2;
-        if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) shift = 4;
-        Point mousePosition = e.GetPosition(this);
-        picScroller_MouseMove(button, shift, mousePosition.X, mousePosition.Y);
-    }
+    private void picScroller_MouseMove(object sender, MouseEventArgs e) => CallMouseMove(e, this, picScroller_MouseMove);
     private void picScroller_MouseMove(int Button, int Shift, double x, double y)
     {
         int i = (int)(Int(y / 15) - Int(this.y / 15));
@@ -239,20 +226,16 @@ public partial class frmAbout : Window
 
     private void timScroll_Timer(object sender, EventArgs e)
     {
-        int r = 0;
-        int x = 0;
-        int i = 0;
-
-        for (r = 0; r <= lines.Length; r += 1)
+        for (int r = 0; r <= lines.Length; r += 1)
         {
-            x = (int)(picScroller.Width / 2 - Len(lines[r]) * 8 / 2 - 4);
+            int x = (int)(picScroller.Width / 2 - Len(lines[r]) * 8 / 2 - 4);
             if (Trim(lines[r]) == "<logos>")
             {
                 BitBlt(myDC.hDC, (int)(picScroller.Width / 2 - picLogos.Width / 2), y + r * 15, (int)picLogos.Width, (int)picLogos.Height, (int)picLogos.hWnd(), 0, 0, vbSrcCopy);
             }
             else
             {
-                for (i = 1; i <= Len(lines[r]); i += 1)
+                for (int i = 1; i <= Len(lines[r]); i += 1)
                 {
                     if (Asc(Mid(lines[r], i, 1)) == Asc("\\"))
                     {
@@ -275,8 +258,8 @@ public partial class frmAbout : Window
             }
         }
 
-        StretchBlt(myDC.hDC, 0, 31, picScroller.Width, -32, frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
-        StretchBlt(myDC.hDC, 0, picScroller.Height - 32, picScroller.ScaleWidth, 32, frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
+        StretchBlt(myDC.hDC, 0, 31, (int)picScroller.Width, -32, (int)frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
+        StretchBlt(myDC.hDC, 0, (int)picScroller.Height - 32, (int)picScroller.Width, 32, (int)frmSappy.instance.picSkin.hWnd(), 6, 16, 2, 17, vbSrcAnd);
 
         myDC.Draw((int)picScroller.hWnd());
 
