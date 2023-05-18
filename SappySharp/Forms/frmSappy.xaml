@@ -48,8 +48,8 @@
                         HorizontalAlignment="Left" Content="&lt;" Tag="[NoLocal]" />
                 <ComboBox x:Name="cbxSongs" Margin="128,8,0,0" Padding="2,2,2,2" Width="161" Height="22" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Tag="[NoLocal]" />
-                <usercontrols:VolumeSlider x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" />
+                <usercontrols:VolumeSlider x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25"
+                        VerticalAlignment="Top" HorizontalAlignment="Left" Change="VolumeSlider1_Change" />
                 <Button x:Name="cmdSpeed_1" Margin="260,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Content="&gt;" Tag="[NoLocal]" />
                 <Label x:Name="lblSong" Margin="8,11,0,0" Padding="2,2,2,2" Width="49" Height="17" VerticalAlignment="Top"
@@ -77,9 +77,10 @@
             <Grid x:Name="picChannels" Margin="170,88,0,0" Width="324" Height="177" VerticalAlignment="Top"
                     HorizontalAlignment="Left">
                 <CheckBox x:Name="chkMute" Margin="2,18,0,0" Padding="2,2,2,2" Width="12" Height="12" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" />
-                <Canvas x:Name="cvwChannel" Margin="0,31,0,0" Width="321" Height="16" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" />
+                        HorizontalAlignment="Left" IsChecked="True" Click="chkMute_Click" />
+                <usercontrols:ChannelViewer x:Name="cvwChannelTemplate" Margin="0,31,0,0" Width="321" Height="16" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" mute="1" Location="0x000000" Delay="0" patch="0" volume="0" Note=""
+                        iType="Direct" />
                 <Line x:Name="linProgress" X1="-1" Y1="16" X2="136" Y2="16" StrokeThickness="2" Stroke="#FFC0C000" />
                 <Label x:Name="lblExpand" Margin="305,16,0,0" Padding="2,2,2,2" Width="16" Height="15" VerticalAlignment="Top"
                         HorizontalAlignment="Left" FontFamily="Marlett" FontSize="9.75" FontWeight="Bold" Content="6"

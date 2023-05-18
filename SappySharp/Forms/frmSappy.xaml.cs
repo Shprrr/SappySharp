@@ -77,13 +77,14 @@ using System.Windows.Threading;
 using MSXML2;
 using SappySharp.Classes;
 using System.Reflection;
+using SappySharp.UserControls;
 
 namespace SappySharp.Forms;
 
 public partial class frmSappy : Window
 {
     private static frmSappy _instance;
-    public static frmSappy instance { set { _instance = null; } get { return _instance ?? (_instance = new frmSappy()); } }
+    public static frmSappy instance { set { _instance = null; } get { return _instance ??= new frmSappy(); } }
     public static void Load() { if (_instance == null) { dynamic A = frmSappy.instance; } }
     public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmSappy()
@@ -99,6 +100,8 @@ public partial class frmSappy : Window
     public DispatcherTimer timPlay { get; set; } = new DispatcherTimer();
 
     public List<MenuItem> mnuOutput { get => VBExtension.controlArray<MenuItem>(this, "mnuOutput"); }
+
+    public List<ChannelViewer> cvwChannel { get; private set; } = new();
 
     // ______________
     // |  SAPPY 2006  |
@@ -233,14 +236,14 @@ public partial class frmSappy : Window
         int i = 0;
         if ((string)chkMute.Tag == "^_^") return;
         // If Playing = True Then
-        // For i = 0 To SappyDecoder.SappyChannels.count - 1
-        // cvwChannel(i).mute = chkMute.value
-        // Next i
+        //   For i = 0 To SappyDecoder.SappyChannels.count - 1
+        //     cvwChannel[i].mute = chkMute.value
+        //   Next i
         // Else
         chkMute.Tag = "O.O";
-        for (i = 0; i <= cvwChannel.count - 1; i += 1)
+        for (i = 0; i <= cvwChannel.Count - 1; i += 1)
         {
-            cvwChannel[i].mute = chkMute.Value;
+            cvwChannel[i].mute = chkMute.IsChecked.GetValueOrDefault() ? 1 : 0;
         }
         chkMute.Tag = "-_-";
         // End If
@@ -274,7 +277,7 @@ public partial class frmSappy : Window
             }
         }
 
-        linProgress.x2 = -1;
+        linProgress.X2 = -1;
 
         SappyDecoder.GlobalVolume = (int)(VolumeSlider1.Value * 5.1m);
         SappyDecoder.PlaySong(myFile, int.Parse(txtSong.Text), SongTbl, ((WantToRecord != 0)), WantToRecordTo);
@@ -285,11 +288,11 @@ public partial class frmSappy : Window
 
         for (i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
         {
-            SappyDecoder.SappyChannels[i + 1].mute = IIf(cvwChannel[i].mute = 1, false, true);
+            SappyDecoder.SappyChannels[i + 1].mute = IIf(cvwChannel[i].mute == 1, false, true);
             cvwChannel[i].Note = "";
             cvwChannel[i].pan = 0;
-            cvwChannel[i].volume = 0;
-            cvwChannel[i].patch = 0;
+            cvwChannel[i].volume = "0";
+            cvwChannel[i].patch = "0";
         }
 
         lblSpeed.Content = SappyDecoder.Tempo;
@@ -422,7 +425,7 @@ public partial class frmSappy : Window
         {
             Playing = false;
             SappyDecoder.StopSong();
-            linProgress.x2 = -1;
+            linProgress.X2 = -1;
         }
         if (mnuAutovance.IsChecked) cmdPrevSong_Click();
 
@@ -432,9 +435,9 @@ public partial class frmSappy : Window
         timPlay.IsEnabled = false;
         cmdPlay.Icon = 19;
         int i = 0;
-        for (i = 0; i <= cvwChannel.count - 1; i += 1)
+        for (i = 0; i <= cvwChannel.Count - 1; i += 1)
         {
-            cvwChannel[i].volume = 0;
+            cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
         }
 
@@ -492,7 +495,7 @@ public partial class frmSappy : Window
         // If Playing = False Then Exit Sub
         // TODO: (NOT SUPPORTED): On Error Resume Next
         if (SappyDecoder.SappyChannels.count < 1) goto FlickIt; // Exit Sub
-        SappyDecoder.SappyChannels[Index + 1].mute = IIf(cvwChannel[Index].mute = 1, false, true);
+        SappyDecoder.SappyChannels[Index + 1].mute = IIf(cvwChannel[Index].mute == 1, false, true);
 
     FlickIt:;
         if ((string)chkMute.Tag == "O.O") return;
@@ -500,20 +503,20 @@ public partial class frmSappy : Window
         int j = 0;
         for (i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
         {
-            if (cvwChannel[i].mute) j++;
+            if (cvwChannel[i].mute == 1) j++;
         }
         chkMute.Tag = "^_^";
         if (j == SappyDecoder.SappyChannels.count)
         {
-            chkMute.Value = 1;
+            chkMute.IsChecked = true;
         }
         else if (j == 0)
         {
-            chkMute.Value = 0;
+            chkMute.IsChecked = false;
         }
         else
         {
-            chkMute.Value = 2;
+            chkMute.IsChecked = null;
         }
         chkMute.Tag = "-_-";
     }
@@ -521,9 +524,9 @@ public partial class frmSappy : Window
     private void cvwChannel_Resize(ref int Index)
     {
         int i = 0;
-        for (i = 1; i <= cvwChannel.count - 1; i += 1)
+        for (i = 1; i <= cvwChannel.Count - 1; i += 1)
         {
-            cvwChannel[i].tOp = cvwChannel[i - 1].tOp + cvwChannel[i - 1].Height;
+            cvwChannel[i].Margin = new(cvwChannel[i].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i].Margin.Right, cvwChannel[i].Margin.Bottom);
         }
     }
 
@@ -552,7 +555,7 @@ public partial class frmSappy : Window
             frmMakeTrax.instance.MyPriority = SongHead.Priority;
             frmMakeTrax.instance.MyReverb = SongHead.Reverb;
             frmMakeTrax.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
-            frmMakeTrax.instance.SongTableEntry = SongTbl + (txtSong.Text * 8);
+            frmMakeTrax.instance.SongTableEntry = SongTbl + (int.Parse(txtSong.Text) * 8);
             frmMakeTrax.instance.ShowDialog();
         }
         if (itm.Key == "takesamp")
@@ -562,7 +565,7 @@ public partial class frmSappy : Window
         }
         if (itm.Key == "codetrax")
         {
-            frmAssembler.instance.SongTableEntry = SongTbl + (txtSong.Text * 8);
+            frmAssembler.instance.SongTableEntry = SongTbl + (int.Parse(txtSong.Text) * 8);
             frmAssembler.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
             frmAssembler.instance.ShowDialog();
         }
@@ -686,7 +689,7 @@ public partial class frmSappy : Window
         lblPC.FontSize = 7;
         lblDel.FontSize = 7;
         lblNote.FontSize = 7;
-        linProgress.x2 = -1;
+        linProgress.X2 = -1;
 
         Trace("- Attach messages");
         AttachMessage(this, this.hWnd(), WM_SIZING);
@@ -844,13 +847,14 @@ public partial class frmSappy : Window
         ebr.Bars["Info"].State = GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
 
         Trace("- Create channel views");
-        for (i = 1; i <= 32; i += 1)
+        cvwChannel.Add(cvwChannelTemplate);
+        for (i = 1; i < 32; i += 1)
         {
-            Load(cvwChannel[i]);
-            cvwChannel[i].tOp = cvwChannel[i - 1].tOp + cvwChannel[i - 1].Height;
-            cvwChannel[i].volume = 0;
+            cvwChannel.Add(new ChannelViewer());
+            cvwChannel[i].Margin = new Thickness(cvwChannel[i - 1].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i - 1].Margin.Right, cvwChannel[i - 1].Margin.Bottom);
+            cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
-            cvwChannel[i].Visible = false;
+            cvwChannel[i].Visibility = Visibility.Hidden;
         }
 
         // Trace "- Load XML"
@@ -912,7 +916,7 @@ public partial class frmSappy : Window
     private void Form_Resize()
     {
         if (WindowState == WindowState.Minimized) return;
-        picChannels.Height = Height - picChannels.tOp - picStatusbar.Height;
+        picChannels.Height = Height - picChannels.Margin.Top - picStatusbar.Height;
     }
 
     private void Form_Unload(ref int Cancel)
@@ -944,14 +948,12 @@ public partial class frmSappy : Window
         DetachMessage(this, this.hWnd(), WM_MOUSEWHEEL);
         // TODO: (NOT SUPPORTED): On Error GoTo 0
         Trace("- Killing forms");
-        if (Forms.count > 1)
+        if (OwnedWindows.Count > 1)
         {
-            Form Form = null;
-            foreach (var iterForm in Forms)
+            foreach (Window Form in OwnedWindows)
             {
-                Form = iterForm;
-                Trace("- ..." + Form.name);
-                Form.instance.Unload();
+                Trace("- ..." + Form.Name);
+                Form.Close();
             }
         }
         Trace("- Will I dream?");
@@ -1042,13 +1044,13 @@ public partial class frmSappy : Window
             lblExpand.Content = "6";
         }
         int i = 0;
-        for (i = 0; i <= cvwChannel.count - 1; i += 1)
+        for (i = 0; i <= cvwChannel.Count - 1; i += 1)
         {
             cvwChannel[i].Expand((string)lblExpand.Content == "5");
         }
-        for (i = 1; i <= cvwChannel.count - 1; i += 1)
+        for (i = 1; i <= cvwChannel.Count - 1; i += 1)
         {
-            cvwChannel[i].tOp = cvwChannel[i - 1].tOp + cvwChannel[i - 1].Height;
+            cvwChannel[i].Margin = new(cvwChannel[i].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i].Margin.Right, cvwChannel[i].Margin.Bottom);
         }
     }
 
@@ -1202,15 +1204,15 @@ public partial class frmSappy : Window
 
         for (k = 0; k <= SongHead.NumTracks - 1; k += 1)
         {
-            cvwChannel[k].Visible = true;
+            cvwChannel[k].Visibility = Visibility.Visible;
             cvwChannel[k].Location = SongHead.Tracks[k] - 0x8000000;
             cvwChannel[k].Note = "...";
-            cvwChannel[k].Delay = 0;
+            cvwChannel[k].Delay = "0";
             cvwChannel[k].pan = 0;
-            cvwChannel[k].patch = 0;
+            cvwChannel[k].patch = "0";
             cvwChannel[k].Velocity = 0;
             cvwChannel[k].Vibrato = 0;
-            cvwChannel[k].volume = 0;
+            cvwChannel[k].volume = "0";
         }
 
         lblDef.Content = "0x" + FixHex(SongTbl + (i * 8), 6);
@@ -1487,20 +1489,16 @@ public partial class frmSappy : Window
 
     private void SaveBareBonesGameToXML()
     {
-        IXMLDOMElement n1 = null;
-        IXMLDOMComment n2 = null;
-        IXMLDOMElement n3 = null;
-        IXMLDOMAttribute n4 = null;
         string gamename = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (12)
         FileGet(99, ref gamename, 0xA1);
-        n1 = x.createElement("rom");
+        IXMLDOMElement n1 = x.createElement("rom");
 
         n1.setAttribute("code", gamecode);
         n1.setAttribute("name", gamename);
         n1.setAttribute("songtable", "0x" + Hex(SongTbl)); // FixHex(SongTbl, 6)
 
-        n3 = x.createElement("playlist");
-        n4 = x.createAttribute("name");
+        IXMLDOMElement n3 = x.createElement("playlist");
+        IXMLDOMAttribute n4 = x.createAttribute("name");
         n4.text = "Main";
         n3.attributes.setNamedItem(n4);
         n1.appendChild(n3);
@@ -1854,7 +1852,7 @@ x.save(xfile);
         mnuOutput[0].IsEnabled = true;
         mnuOutput[1].IsEnabled = true;
         mnuGBMode.IsEnabled = mnuOutput[0].IsChecked;
-        linProgress.x2 = -1;
+        linProgress.X2 = -1;
         ShutMSN();
     }
 
@@ -1914,7 +1912,7 @@ x.save(xfile);
             }
             ct = ((ct / 127) * (SappyDecoder.SappyChannels[c].MainVolume / 127)) * 255;
             cvwChannel[c - 1].Delay = SappyDecoder.SappyChannels[c].WaitTicks;
-            cvwChannel[c - 1].volume = ct;
+            cvwChannel[c - 1].volume = ct.ToString();
             cvwChannel[c - 1].pan = SappyDecoder.SappyChannels[c].Panning - 64;
             cvwChannel[c - 1].patch = SappyDecoder.SappyChannels[c].PatchNumber;
             cvwChannel[c - 1].Location = SappyDecoder.SappyChannels[c].TrackPointer + SappyDecoder.SappyChannels[c].ProgramCounter;
@@ -1931,7 +1929,7 @@ x.save(xfile);
             totalplayed += SappyDecoder.SappyChannels[c].ProgramCounter;
         }
         totalpercent = (326 / totallen) * totalplayed;
-        linProgress.x2 = totalpercent;
+        linProgress.X2 = totalpercent;
         // Caption = totalplayed & " / " & totallen & " -> " & totalpercent & "%"
         // Dim totalplayed As Long
         // With SappyDecoder.SappyChannels(1)
@@ -1963,7 +1961,6 @@ x.save(xfile);
         LoadSong((int)Val(txtSong.Text));
     }
 
-    private void VolumeSlider1_Change(object sender, System.Windows.Controls.TextChangedEventArgs e) { VolumeSlider1_Change(); }
     private void VolumeSlider1_Change(int NewValue)
     {
         decimal VolumeScalar = 0;
