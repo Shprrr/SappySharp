@@ -253,7 +253,7 @@ public partial class frmSappy : Window
         string s = "";
         cmdStop_Click();
         MousePointer = 11;
-        SappyDecoder.outputtype = (mnuOutput[1].IsChecked ? sotWave : sotMIDI);
+        SappyDecoder.outputtype = (mnuOutput[1].IsChecked ? SongOutputTypes.sotWave : SongOutputTypes.sotMIDI);
         SappyDecoder.ClearMidiPatchMap();
         for (i = 0; i <= 127; i += 1)
         {
@@ -276,16 +276,16 @@ public partial class frmSappy : Window
 
         linProgress.x2 = -1;
 
-        SappyDecoder.GlobalVolume = VolumeSlider1.GetValue * 5.1m;
-        SappyDecoder.PlaySong(myFile, txtSong.Text, SongTbl, ((WantToRecord)), WantToRecordTo);
+        SappyDecoder.GlobalVolume = (int)(VolumeSlider1.Value * 5.1m);
+        SappyDecoder.PlaySong(myFile, int.Parse(txtSong.Text), SongTbl, ((WantToRecord != 0)), WantToRecordTo);
 
         WantToRecord = 2;
 
-        cStatusBar.PanelText("simple") = "";
+        cStatusBar.PanelText("simple", "");
 
         for (i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
         {
-            SappyDecoder.SappyChannels(i + 1).mute = IIf(cvwChannel(i).mute = 1, false, true);
+            SappyDecoder.SappyChannels[i + 1].mute = IIf(cvwChannel[i].mute = 1, false, true);
             cvwChannel[i].Note = "";
             cvwChannel[i].pan = 0;
             cvwChannel[i].volume = 0;
@@ -312,7 +312,7 @@ public partial class frmSappy : Window
         if (GetSettingI("MSN Now Playing") != 0)
         {
             AssemblyName assemblyName = Application.ResourceAssembly.GetName();
-            TellMSN(justthesongname + IIf(SappyDecoder.outputtype == sotMIDI, " (midi)", ""), "Sappy " + assemblyName.Version.Major + "." + assemblyName.Version.Minor, ebr.Bars["Info"].Items["Game"].Text + " (" + gamecode + ")"); // ebr.Bars["Info"].Items["Creator"].Text
+            TellMSN(justthesongname + IIf(SappyDecoder.outputtype == SongOutputTypes.sotMIDI, " (midi)", ""), "Sappy " + assemblyName.Version.Major + "." + assemblyName.Version.Minor, ebr.Bars["Info"].Items["Game"].Text + " (" + gamecode + ")"); // ebr.Bars["Info"].Items["Creator"].Text
         }
 
         mnuOutput[0].IsEnabled = false;
@@ -335,7 +335,7 @@ public partial class frmSappy : Window
             }
             else
             {
-                cbxSongs.SelectedIndex = cbxSongs.SelectedIndex + 1;
+                cbxSongs.SelectedIndex++;
                 do
                 {
                     if (cbxSongs.ItemData[cbxSongs.ListIndex] == 9999)
@@ -346,7 +346,7 @@ public partial class frmSappy : Window
                         }
                         else
                         {
-                            cbxSongs.SelectedIndex = cbxSongs.SelectedIndex + 1;
+                            cbxSongs.SelectedIndex++;
                         }
                     }
                     else
@@ -377,7 +377,7 @@ public partial class frmSappy : Window
             }
             else
             {
-                cbxSongs.SelectedIndex = cbxSongs.SelectedIndex - 1;
+                cbxSongs.SelectedIndex--;
                 do
                 {
                     if (cbxSongs.ItemData[cbxSongs.ListIndex] == 9999)
@@ -388,7 +388,7 @@ public partial class frmSappy : Window
                         }
                         else
                         {
-                            cbxSongs.SelectedIndex = cbxSongs.SelectedIndex - 1;
+                            cbxSongs.SelectedIndex--;
                         }
                     }
                     else
@@ -464,7 +464,7 @@ public partial class frmSappy : Window
         int i = 0;
         for (i = 1; i <= 16; i += 1)
         {
-            if (ItemNumber == TaskMenus(i))
+            if (ItemNumber == TaskMenus[i])
             {
                 itm = ebr.Bars["Tasks"].Items[cPop.MenuKey(ItemNumber)];
                 ebr_ItemClick(itm);
@@ -474,7 +474,7 @@ public partial class frmSappy : Window
 
     private void cPop_ItemHighlight(ref int ItemNumber, ref bool bEnabled, ref bool bSeparator)
     {
-        cStatusBar.PanelText("simple") = cPop.HelpText[ItemNumber];
+        cStatusBar.PanelText("simple", cPop.HelpText[ItemNumber]);
         // cStatusBar.SimpleMode = True
         // cStatusBar.SimpleText = cPop.HelpText(ItemNumber)
         picStatusbar.Refresh();
@@ -482,7 +482,7 @@ public partial class frmSappy : Window
 
     private void cPop_MenuExit()
     {
-        cStatusBar.PanelText("simple") = "";
+        cStatusBar.PanelText("simple", "");
         // cStatusBar.SimpleMode = False
         picStatusbar.Refresh();
     }
@@ -492,7 +492,7 @@ public partial class frmSappy : Window
         // If Playing = False Then Exit Sub
         // TODO: (NOT SUPPORTED): On Error Resume Next
         if (SappyDecoder.SappyChannels.count < 1) goto FlickIt; // Exit Sub
-        SappyDecoder.SappyChannels(Index + 1).mute = IIf(cvwChannel(Index).mute = 1, false, true);
+        SappyDecoder.SappyChannels[Index + 1].mute = IIf(cvwChannel[Index].mute = 1, false, true);
 
     FlickIt:;
         if ((string)chkMute.Tag == "O.O") return;
@@ -500,7 +500,7 @@ public partial class frmSappy : Window
         int j = 0;
         for (i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
         {
-            if (cvwChannel[i].mute) j = j + 1;
+            if (cvwChannel[i].mute) j++;
         }
         chkMute.Tag = "^_^";
         if (j == SappyDecoder.SappyChannels.count)
@@ -649,13 +649,13 @@ public partial class frmSappy : Window
         if (i > 0) Height = i;
         WantedMidiDevice = GetSettingI("MIDI Device");
         i = GetSettingI("FMOD Volume");
-        if (i > 0) VolumeSlider1.SetValue(i);
+        if (i > 0) VolumeSlider1.Value = i;
 
         FullWidth = (int)Width;
         if (Properties.Resources._10000 == "<NLPLZ>" || Properties.Resources._10000 == "<SPLZ>" || Properties.Resources._10000 == "<DPLZ>")
         {
-            FullWidth = FullWidth + (16 * Screen.TwipsPerPixelX);
-            ebr.Width = ebr.Width + (16 * Screen.TwipsPerPixelX);
+            FullWidth += (16 * Screen.TwipsPerPixelX);
+            ebr.Width += (16 * Screen.TwipsPerPixelX);
         }
         ClassicWidth = (int)(FullWidth - ebr.Width - 10);
         HandleClassicMode();
@@ -977,20 +977,20 @@ public partial class frmSappy : Window
         if (iMsg == WM_SIZING)
         {
             RECT myRect = null;
-            CopyMemory(myRect, ByVal lParam, LenB(myRect)); // get the Rect pointed to in lParam
+            CopyMemory(myRect, lParam, LenB(myRect)); // get the Rect pointed to in lParam
             myRect.Right = myRect.left + mywidth; // fix width
             if (myRect.Bottom - myRect.tOp < 280) myRect.Bottom = myRect.tOp + 280; // limit height
-            CopyMemory(ByVal lParam, myRect, LenB(myRect)); // put our edited Rect back in lParam
+            CopyMemory(lParam, myRect, LenB(myRect)); // put our edited Rect back in lParam
         }
 
         if (iMsg == WM_APPCOMMAND)
         {
             // Okay... debug shows that the AppCommand's actual "command" code is in the first byte.
             // Since our track control buttons don't go over 0xF, we can't go over 0xF0000...
-            if (lParam <= 0xF0000)
-            { // ...so first we ensure that part...
-                switch (Val("&H" + Left(Hex(lParam), 1)))
-                { // ...then cut out and evaluate the first nibble.
+            if (lParam <= 0xF0000) // ...so first we ensure that part...
+            {
+                switch (Val("&H" + Left(Hex(lParam), 1))) // ...then cut out and evaluate the first nibble.
+                {
                     case APPCOMMAND_MEDIA_NEXTTRACK:
                         cmdNextSong.Value = true;
                         break;
@@ -1004,10 +1004,10 @@ public partial class frmSappy : Window
                         cmdStop.Value = true;
                         break;
                     case APPCOMMAND_VOLUME_DOWN:
-                        VolumeSlider1.SetValue(VolumeSlider1.GetValue() - 5);
+                        VolumeSlider1.Value -= 5;
                         break;
                     case APPCOMMAND_VOLUME_UP:
-                        VolumeSlider1.SetValue(VolumeSlider1.GetValue() + 5);
+                        VolumeSlider1.Value += 5;
                         // Case Else: Trace "Got an unhandled AppCommand: 0x" & Hex(lParam)
                         break;
                 }
@@ -1019,11 +1019,11 @@ public partial class frmSappy : Window
         {
             if (wParam < 0)
             {
-                VolumeSlider1.SetValue(VolumeSlider1.GetValue() - 5);
+                VolumeSlider1.Value -= 5;
             }
             else if (wParam > 0)
             {
-                VolumeSlider1.SetValue(VolumeSlider1.GetValue() + 5);
+                VolumeSlider1.Value += 5;
             }
         }
 
@@ -1189,7 +1189,7 @@ public partial class frmSappy : Window
         // TODO: (NOT SUPPORTED): On Error GoTo hell
 
         FileGet(99, ref l, SongTbl + (i * 8) + 1);
-        l = l - 0x8000000;
+        l -= 0x8000000;
         SongHeadOrg = l;
         ValueType sh = SongHead;
         FileGet(99, ref sh, l + 1);
@@ -1403,7 +1403,7 @@ public partial class frmSappy : Window
                                     MsgBox("Couldn't find playlist \"" + n2.getAttribute("name") + "\" for gamecode \"" + n2.getAttribute("steal") + "\".");
                                 } // stealing rom
                             } // stealing library
-                            NumPLs = NumPLs + 1;
+                            NumPLs++;
                         }
                         else
                         {
@@ -1424,7 +1424,7 @@ public partial class frmSappy : Window
                                     cbxSongs.AddItemAndData(n4.text, Icon, Icon, Val("&H" + FixHex(n4.getAttribute("track"), 4)), 1);
                                 } // song
                             } // playlist songs
-                            NumPLs = NumPLs + 1;
+                            NumPLs++;
                         } // stealing check
                     } // playlist
                       // TODO: (NOT SUPPORTED): On Error Resume Next
@@ -1458,14 +1458,14 @@ public partial class frmSappy : Window
                                     if (n3.baseName == "id")
                                     {
                                         BleedingEars[BECnt] = n3.value;
-                                        BECnt = BECnt + 1;
+                                        BECnt++;
                                     }
                                     if (n3.baseName == "from")
                                     {
                                         for (i = n3.value; i <= n4.getAttribute("to"); i += 1)
                                         {
                                             BleedingEars[BECnt] = i;
-                                            BECnt = BECnt + 1;
+                                            BECnt++;
                                         }
                                     }
                                 }
@@ -1861,7 +1861,7 @@ x.save(xfile);
     private void SappyDecoder_SongLoop()
     {
         if (loopsToGo == 0) return;
-        loopsToGo = loopsToGo - 1;
+        loopsToGo--;
         if (loopsToGo == 0) cmdStop_Click();
     }
 
@@ -1885,7 +1885,7 @@ x.save(xfile);
                     n = itern;
                     if (SappyDecoder.GetNoteInfo(n.NoteID).Enabled == true && SappyDecoder.GetNoteInfo(n.NoteID).NoteOff == false)
                     {
-                        ct = ct + (((SappyDecoder.GetNoteInfo(n.NoteID).Velocity / 0x7F))) * (SappyDecoder.GetNoteInfo(n.NoteID).EnvPosition / 0xFF) * 0x7F;
+                        ct += (((SappyDecoder.GetNoteInfo(n.NoteID).Velocity / 0x7F))) * (SappyDecoder.GetNoteInfo(n.NoteID).EnvPosition / 0xFF) * 0x7F;
                         ns = ns + NoteToName(SappyDecoder.GetNoteInfo(n.NoteID).NoteNumber) + " ";
                     }
                     switch (SappyDecoder.GetNoteInfo(n.NoteID).outputtype)
@@ -1910,7 +1910,7 @@ x.save(xfile);
                             break;
                     }
                 }
-                ct = ct / SappyDecoder.SappyChannels[c].Notes.count;
+                ct /= SappyDecoder.SappyChannels[c].Notes.count;
             }
             ct = ((ct / 127) * (SappyDecoder.SappyChannels[c].MainVolume / 127)) * 255;
             cvwChannel[c - 1].Delay = SappyDecoder.SappyChannels[c].WaitTicks;
@@ -1927,8 +1927,8 @@ x.save(xfile);
         int totalpercent = 0;
         for (c = 1; c <= SappyDecoder.SappyChannels.count; c += 1)
         {
-            totallen = totallen + SappyDecoder.SappyChannels[c].TrackLengthInBytes;
-            totalplayed = totalplayed + SappyDecoder.SappyChannels[c].ProgramCounter;
+            totallen += SappyDecoder.SappyChannels[c].TrackLengthInBytes;
+            totalplayed += SappyDecoder.SappyChannels[c].ProgramCounter;
         }
         totalpercent = (326 / totallen) * totalplayed;
         linProgress.x2 = totalpercent;
@@ -1949,10 +1949,10 @@ x.save(xfile);
 
     private void timPlay_Timer(object sender, EventArgs e)
     {
-        TotalSeconds = TotalSeconds + 1;
+        TotalSeconds++;
         if (TotalSeconds == 60)
         {
-            TotalMinutes = TotalMinutes + 1;
+            TotalMinutes++;
             TotalSeconds = 0;
         }
     }
@@ -2041,22 +2041,22 @@ x.save(xfile);
         // Set HookedDialog = New cCommonDialog
         // With HookedDialog
         //   .CancelError = False
-        //   .DefaultExt = __S1
+        //   .DefaultExt = "mid"
         //   .DialogTitle = LoadResString(51)
-        //   .Filter = __S1
-        //   .Filename = __S1 & txtSong & __S2
+        //   .Filter = "Type 0 MIDI (*.mid)|*.mid"
+        //   .Filename = "Song " & txtSong & ".mid"
         //   .flags = EOpenFile.OFN_EXPLORER Or EOpenFile.OFN_NOCHANGEDIR
         //   .hwnd = Me.hwnd
         //   .HookDialog = True
         //   If InIDE() Then
-        //     .cdLoadLibrary App.Path & __S1
+        //     .cdLoadLibrary App.Path & "\sappy.exe"
         //   Else
         //     .hInstance = App.hInstance
         //   End If
         //   .TemplateName = 42
         //   .ShowSave
         //   If InIDE() Then .cdFreeLibrary
-        //   If .Filename = __S1 Then Exit Sub
+        //   If .Filename = "" Then Exit Sub
         //   WantToRecordTo = .Filename
         // End With
         // WantToRecord = 1

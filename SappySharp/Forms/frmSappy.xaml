@@ -48,7 +48,7 @@
                         HorizontalAlignment="Left" Content="&lt;" Tag="[NoLocal]" />
                 <ComboBox x:Name="cbxSongs" Margin="128,8,0,0" Padding="2,2,2,2" Width="161" Height="22" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Tag="[NoLocal]" />
-                <Canvas x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25" VerticalAlignment="Top"
+                <usercontrols:VolumeSlider x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25" VerticalAlignment="Top"
                         HorizontalAlignment="Left" />
                 <Button x:Name="cmdSpeed_1" Margin="260,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Content="&gt;" Tag="[NoLocal]" />

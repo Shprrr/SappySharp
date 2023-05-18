@@ -1095,7 +1095,7 @@ public static class VBExtension
         public void Execute(object parameter) { mExecute.Invoke(parameter); }
     }
 
-    public static void CallMouseButton(MouseButtonEventArgs e, Window window, Action<int, int, double, double> mouseButtonAction)
+    public static void CallMouseButton(MouseButtonEventArgs e, IInputElement window, Action<int, int, double, double> mouseButtonAction)
     {
         int button = e.ChangedButton switch
         {
@@ -1112,7 +1112,7 @@ public static class VBExtension
         mouseButtonAction(button, shift, mousePosition.X, mousePosition.Y);
     }
 
-    public static void CallMouseMove(MouseEventArgs e, Window window, Action<int, int, double, double> mouseAction)
+    public static void CallMouseMove(MouseEventArgs e, IInputElement window, Action<int, int, double, double> mouseAction)
     {
         int button = 0;
         if (e.LeftButton == MouseButtonState.Pressed) button = VBConstants.vbLeftButton;
