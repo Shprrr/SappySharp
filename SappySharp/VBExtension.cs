@@ -555,7 +555,7 @@ public static class VBExtension
     }
     public static ScreenMetrics Screen { get => new ScreenMetrics(); }
 
-    public static int itemData(this ComboBox c, int I) { try { return (((ComboboxItem)c.Items[I]).Value); } catch (Exception e) { return 0; } }
+    public static int ItemData(this ComboBox c, int I) { try { return (((ComboboxItem)c.Items[I]).Value); } catch (Exception e) { return 0; } }
     public static int AddItem(this ComboBox c, string C) { return c.Items.Add(new ComboboxItem(C)); }
     public static int AddItem(this ComboBox c, string C, int D) { return c.Items.Add(new ComboboxItem(C, D)); }
     public static int AddItem(this ComboBox c, string C, bool Select) { ComboboxItem x = new ComboboxItem(C); int res = c.Items.Add(x); if (Select) c.SelectedItem = x; return res; }

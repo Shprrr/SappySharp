@@ -123,9 +123,7 @@ public partial class frmOptions : Window
         decimal H = 0;
         decimal l = 0;
         decimal s = 0;
-        int color = (int)cbxPresets.Items[cbxPresets.SelectedIndex];
-        SplitRGB(ref color, ref r, ref g, ref b);
-        cbxPresets.Items[cbxPresets.SelectedIndex] = color;
+        SplitRGB(cbxPresets.ItemData(cbxPresets.SelectedIndex), ref r, ref g, ref b);
         RGBToHLS(r, g, b, ref H, ref l, ref s);
         HScroll1.Value = (double)(H * 10); // - 1
         HScroll2.Value = (double)(s * 10); // - 1
@@ -245,23 +243,13 @@ public partial class frmOptions : Window
         int g = 0;
         int b = 0;
         HLSToRGB(3.4m, 0.5m, 0.4m, ref r, ref g, ref b);
-        cbxPresets.Items.Add(CreateComboBoxItemWithData("MSN-style", r, g, b)); // 0xB47C30 // 508CB4
+        cbxPresets.AddItem("MSN-style", RGB(r, g, b)); // 0xB47C30 // 508CB4
         HLSToRGB(0, 1, 0, ref r, ref g, ref b);
-        cbxPresets.Items.Add(CreateComboBoxItemWithData("Grayscale", r, g, b));
+        cbxPresets.AddItem("Grayscale", RGB(r, g, b));
         HLSToRGB(0.4m, 1, 0.2m, ref r, ref g, ref b);
-        cbxPresets.Items.Add(CreateComboBoxItemWithData("Rusty Nailz", r, g, b));
+        cbxPresets.AddItem("Rusty Nailz", RGB(r, g, b));
         HLSToRGB(2.4m, 1, 0.3m, ref r, ref g, ref b);
-        cbxPresets.Items.Add(CreateComboBoxItemWithData("Green Dreem", r, g, b));
-    }
-
-    private static ComboBoxItem CreateComboBoxItemWithData(string text, int r, int g, int b)
-    {
-        ComboBoxItem item = new()
-        {
-            Content = text,
-            Foreground = new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b))
-        };
-        return item;
+        cbxPresets.AddItem("Green Dreem", RGB(r, g, b));
     }
 
     private void Form_Resize(object sender, SizeChangedEventArgs e)

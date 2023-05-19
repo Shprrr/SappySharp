@@ -7,9 +7,6 @@ using Microsoft.VisualBasic;
 
 namespace SappySharp.UserControls;
 
-/// <summary>
-/// Logique d'interaction pour VolumeSlider.xaml
-/// </summary>
 public partial class VolumeSlider : UserControl
 {
     public VolumeSlider()
@@ -199,7 +196,7 @@ public partial class VolumeSlider : UserControl
 
         //Cls();
 
-        MyColor = CreateSolidBrush(/*TranslateColor(*/BackColor/*)*/);
+        MyColor = CreateSolidBrush(mColorUtils.TranslateColor(BackColor));
         OldColor = SelectObject((int)this.hWnd(), MyColor);
 
         myRect = new RECT { left = 0, tOp = 0, Bottom = 22, Right = 60 };
@@ -260,7 +257,7 @@ public partial class VolumeSlider : UserControl
         set
         {
             int r = 0, g = 0, b = 0;
-            mColorUtils.SplitRGB(ref value, ref r, ref g, ref b);
+            mColorUtils.SplitRGB(value, ref r, ref g, ref b);
             ((SolidColorBrush)Background).Color = Color.FromRgb((byte)r, (byte)g, (byte)b);
         }
     }

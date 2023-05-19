@@ -225,8 +225,8 @@ public partial class frmSappy : Window
     private void cbxSongs_Change()
     {
         if (DontLoadDude) return;
-        if (cbxSongs.ItemData[cbxSongs.ListIndex] == 9999) return; // don't try to load playlists
-        txtSong.Text = cbxSongs.ItemData[cbxSongs.ListIndex];
+        if (cbxSongs.ItemData(cbxSongs.SelectedIndex) == 9999) return; // don't try to load playlists
+        txtSong.Text = cbxSongs.ItemData(cbxSongs.SelectedIndex).ToString();
         LoadSong(int.Parse(txtSong.Text));
     }
 
@@ -331,8 +331,8 @@ public partial class frmSappy : Window
     {
         if (mnuSeekPlaylist.IsChecked)
         {
-            if (cbxSongs.ListCount == 1) return;
-            if (cbxSongs.SelectedIndex == cbxSongs.ListCount - 1)
+            if (cbxSongs.Items.Count == 1) return;
+            if (cbxSongs.SelectedIndex == cbxSongs.Items.Count - 1)
             {
                 cbxSongs.SelectedIndex = 1;
             }
@@ -341,9 +341,9 @@ public partial class frmSappy : Window
                 cbxSongs.SelectedIndex++;
                 do
                 {
-                    if (cbxSongs.ItemData[cbxSongs.ListIndex] == 9999)
+                    if (cbxSongs.ItemData(cbxSongs.SelectedIndex) == 9999)
                     {
-                        if (cbxSongs.SelectedIndex == cbxSongs.ListCount - 1)
+                        if (cbxSongs.SelectedIndex == cbxSongs.Items.Count - 1)
                         {
                             cbxSongs.SelectedIndex = 1;
                         }
@@ -356,8 +356,8 @@ public partial class frmSappy : Window
                     {
                         break;
                     }
-                }
-}
+                } while (true);
+            }
             cbxSongs_Change();
         }
         else
@@ -373,21 +373,21 @@ public partial class frmSappy : Window
     {
         if (mnuSeekPlaylist.IsChecked)
         {
-            if (cbxSongs.ListCount == 1) return;
+            if (cbxSongs.Items.Count == 1) return;
             if (cbxSongs.SelectedIndex == 0)
             {
-                cbxSongs.SelectedIndex = cbxSongs.ListCount - 1;
+                cbxSongs.SelectedIndex = cbxSongs.Items.Count - 1;
             }
             else
             {
                 cbxSongs.SelectedIndex--;
                 do
                 {
-                    if (cbxSongs.ItemData[cbxSongs.ListIndex] == 9999)
+                    if (cbxSongs.ItemData(cbxSongs.SelectedIndex) == 9999)
                     {
                         if (cbxSongs.SelectedIndex == 0)
                         {
-                            cbxSongs.SelectedIndex = cbxSongs.ListCount - 1;
+                            cbxSongs.SelectedIndex = cbxSongs.Items.Count - 1;
                         }
                         else
                         {
@@ -398,8 +398,8 @@ public partial class frmSappy : Window
                     {
                         break;
                     }
-                }
-}
+                } while (true);
+            }
             cbxSongs_Change();
         }
         else
@@ -979,10 +979,16 @@ public partial class frmSappy : Window
         if (iMsg == WM_SIZING)
         {
             RECT myRect = null;
-            CopyMemory(myRect, lParam, LenB(myRect)); // get the Rect pointed to in lParam
+            dynamic dest = myRect;
+            dynamic source = lParam;
+            CopyMemory(ref dest, ref source, Marshal.SizeOf(myRect)); // get the Rect pointed to in lParam
+            myRect = dest;
             myRect.Right = myRect.left + mywidth; // fix width
             if (myRect.Bottom - myRect.tOp < 280) myRect.Bottom = myRect.tOp + 280; // limit height
-            CopyMemory(lParam, myRect, LenB(myRect)); // put our edited Rect back in lParam
+            dest = lParam;
+            source = myRect;
+            CopyMemory(ref dest, ref source, Marshal.SizeOf(myRect)); // put our edited Rect back in lParam
+            lParam = dest;
         }
 
         if (iMsg == WM_APPCOMMAND)
@@ -1235,7 +1241,7 @@ public partial class frmSappy : Window
                     for (m = 0; m <= cbxSongs.Items.Count - 1; m += 1)
                     {
                         // If cbxSongs.List[m] = playlist[k].SongName[l] Then
-                        if ((int)cbxSongs.Items[m] == playlist[k].SongNo[l])
+                        if (cbxSongs.ItemData(m) == playlist[k].SongNo[l])
                         {
                             cbxSongs.SelectedIndex = m;
                             DontLoadDude = false;
@@ -1379,7 +1385,7 @@ public partial class frmSappy : Window
                     {
                         if (n2.getAttribute("steal") != "")
                         {
-                            cbxSongs.AddItemAndData(n2.getAttribute("name"), 13, 13, 9999);
+                            cbxSongs.AddItem((string)n2.getAttribute("name"), 9999);//, 13, 13
                             playlist[NumPLs].NumSongs = 0;
                             foreach (IXMLDOMElement s1 in rootNode.childNodes)
                             {
@@ -1396,7 +1402,7 @@ public partial class frmSappy : Window
                                                     playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = s4.text;
                                                     playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = Val("&H" + FixHex(s4.getAttribute("track"), 4));
                                                     playlist[NumPLs].NumSongs = playlist[NumPLs].NumSongs + 1;
-                                                    cbxSongs.AddItemAndData(s4.text, 14, 14, Val("&H" + FixHex(s4.getAttribute("track"), 4)), 1);
+                                                    cbxSongs.AddItem(s4.text, (int)Val("&H" + FixHex(s4.getAttribute("track"), 4)));//, 14, 14, 1
                                                 } // stealing song
                                             } // stealing playlist children
                                             goto StolenIt;
@@ -1409,7 +1415,7 @@ public partial class frmSappy : Window
                         }
                         else
                         {
-                            cbxSongs.AddItemAndData(n2.getAttribute("name"), 13, 13, 9999);
+                            cbxSongs.AddItem((string)n2.getAttribute("name"), 9999);//, 13, 13
                             picon = 14;
                             if (n2.getAttribute("icon") == "1") picon = 25;
                             playlist[NumPLs].NumSongs = 0;
@@ -1423,7 +1429,7 @@ public partial class frmSappy : Window
                                     playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = n4.text;
                                     playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = Val("&H" + FixHex(n4.getAttribute("track"), 4));
                                     playlist[NumPLs].NumSongs = playlist[NumPLs].NumSongs + 1;
-                                    cbxSongs.AddItemAndData(n4.text, Icon, Icon, Val("&H" + FixHex(n4.getAttribute("track"), 4)), 1);
+                                    cbxSongs.AddItem(n4.text, (int)Val("&H" + FixHex(n4.getAttribute("track"), 4)));//, Icon, Icon, 1
                                 } // song
                             } // playlist songs
                             NumPLs++;
@@ -1483,7 +1489,7 @@ public partial class frmSappy : Window
             }
         BrotherMaynard:;
         }
-        if (cbxSongs.Items.Count == 0) cbxSongs.AddItemAndData("No songs defined", 1, 1, 1);
+        if (cbxSongs.Items.Count == 0) cbxSongs.AddItem("No songs defined", 1);//, 1, 1
         cbxSongs.SelectedIndex = 0;
     }
 
@@ -1721,17 +1727,17 @@ public partial class frmSappy : Window
                                     }
                                 } while (!(y == "END"));
                                 myNewRom.appendChild(myNewList);
-                            }
+                            } while (true);
 
-                          FileClose(95);
+                            FileClose(95);
                         }
                     }
                     rootNode.appendChild(myNewRom);
                 }
             }
         SkipThisShit:;
-        }
-x.save(xfile);
+        } while (true);
+        x.save(xfile);
         FileClose(96);
         IncessantNoises("TaskComplete");
 

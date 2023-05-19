@@ -239,7 +239,7 @@ static partial class mColorUtils
         return _Minimum;
     }
 
-    public static void SplitRGB(ref int lColor, ref int lRed, ref int lGreen, ref int lBlue)
+    public static void SplitRGB(int lColor, ref int lRed, ref int lGreen, ref int lBlue)
     {
         lRed = lColor & 0xFF;
         lGreen = (lColor & 0xFF00) / 0x100;
@@ -253,7 +253,7 @@ static partial class mColorUtils
         return _TranslateColor;
     }
 
-    public static void SplitTest(ref int lColor)
+    public static void SplitTest(int lColor)
     {
         int lRed = lColor & 0xFF;
         int lGreen = (lColor & 0xFF00) / 0x100;
@@ -268,15 +268,14 @@ static partial class mColorUtils
         decimal h = 0;
         decimal l = 0;
         decimal s = 0;
-        int C = 0;
 
         for (int X = 0; X <= Victim.Width; X += 1)
         {
             for (int Y = 0; Y <= Victim.Height; Y += 1)
             {
                 // c = Victim.point(x, y)
-                C = GetPixel((int)Victim.hWnd(), X, Y);
-                SplitRGB(ref C, ref r, ref g, ref b);
+                int C = GetPixel((int)Victim.hWnd(), X, Y);
+                SplitRGB(C, ref r, ref g, ref b);
                 RGBToHLS(r, g, b, ref h, ref s, ref l);
                 HLSToRGB(hue, sat, l, ref r, ref g, ref b);
                 C = RGB(r, g, b);
@@ -286,7 +285,7 @@ static partial class mColorUtils
         }
     }
 
-    public static int ChangeBrightness(ref int lColor, ref decimal iDelta)
+    public static int ChangeBrightness(int lColor, decimal iDelta)
     {
         int r = 0;
         int g = 0;
@@ -294,7 +293,7 @@ static partial class mColorUtils
         decimal h = 0;
         decimal l = 0;
         decimal s = 0;
-        SplitRGB(ref lColor, ref r, ref g, ref b);
+        SplitRGB(lColor, ref r, ref g, ref b);
         RGBToHLS(r, g, b, ref h, ref s, ref l);
         l += iDelta;
         if (l < 0) l = 0;
