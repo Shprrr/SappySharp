@@ -253,10 +253,9 @@ public partial class frmSappy : Window
     private void cmdPlay_Click()
     {
         int i = 0;
-        string s = "";
         cmdStop_Click();
         MousePointer = 11;
-        SappyDecoder.outputtype = (mnuOutput[1].IsChecked ? SongOutputTypes.sotWave : SongOutputTypes.sotMIDI);
+        SappyDecoder.outputtype = mnuOutput[1].IsChecked ? SongOutputTypes.sotWave : SongOutputTypes.sotMIDI;
         SappyDecoder.ClearMidiPatchMap();
         for (i = 0; i <= 127; i += 1)
         {
@@ -273,14 +272,14 @@ public partial class frmSappy : Window
             for (i = 0; i <= 126; i += 1)
             {
                 // SappyDecoder.MidiMap(i) = IIf(i Mod 2 = 1, 80, 81) '80
-                SappyDecoder.SetMidiPatchMap(i, (i % 2 == 1 ? 80 : 81), 0);
+                SappyDecoder.SetMidiPatchMap(i, i % 2 == 1 ? 80 : 81, 0);
             }
         }
 
         linProgress.X2 = -1;
 
         SappyDecoder.GlobalVolume = (int)(VolumeSlider1.Value * 5.1m);
-        SappyDecoder.PlaySong(myFile, int.Parse(txtSong.Text), SongTbl, ((WantToRecord != 0)), WantToRecordTo);
+        SappyDecoder.PlaySong(myFile, int.Parse(txtSong.Text), SongTbl, WantToRecord != 0, WantToRecordTo);
 
         WantToRecord = 2;
 
@@ -555,7 +554,7 @@ public partial class frmSappy : Window
             frmMakeTrax.instance.MyPriority = SongHead.Priority;
             frmMakeTrax.instance.MyReverb = SongHead.Reverb;
             frmMakeTrax.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
-            frmMakeTrax.instance.SongTableEntry = SongTbl + (int.Parse(txtSong.Text) * 8);
+            frmMakeTrax.instance.SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8;
             frmMakeTrax.instance.ShowDialog();
         }
         if (itm.Key == "takesamp")
@@ -565,7 +564,7 @@ public partial class frmSappy : Window
         }
         if (itm.Key == "codetrax")
         {
-            frmAssembler.instance.SongTableEntry = SongTbl + (int.Parse(txtSong.Text) * 8);
+            frmAssembler.instance.SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8;
             frmAssembler.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
             frmAssembler.instance.ShowDialog();
         }
@@ -641,13 +640,13 @@ public partial class frmSappy : Window
         SappyDecoder = new clsSappyDecoder();
 
         Trace("- Get settings");
-        mnuSeekPlaylist.IsChecked = (GetSettingI("Seek by Playlist") == 1);
-        mnuAutovance.IsChecked = (GetSettingI("AutoAdvance") == 1);
+        mnuSeekPlaylist.IsChecked = GetSettingI("Seek by Playlist") == 1;
+        mnuAutovance.IsChecked = GetSettingI("AutoAdvance") == 1;
         regset = GetSetting("Driver");
         if (Trim(regset) == "") regset = "FMOD";
         mnuOutput[0].IsChecked = regset == "MIDI";
         mnuOutput[1].IsChecked = regset == "FMOD";
-        mnuGBMode.IsChecked = (GetSettingI("MIDI in GB Mode") == 1);
+        mnuGBMode.IsChecked = GetSettingI("MIDI in GB Mode") == 1;
         i = GetSettingI("Window Height");
         if (i > 0) Height = i;
         WantedMidiDevice = GetSettingI("MIDI Device");
@@ -657,8 +656,8 @@ public partial class frmSappy : Window
         FullWidth = (int)Width;
         if (Properties.Resources._10000 == "<NLPLZ>" || Properties.Resources._10000 == "<SPLZ>" || Properties.Resources._10000 == "<DPLZ>")
         {
-            FullWidth += (16 * Screen.TwipsPerPixelX);
-            ebr.Width += (16 * Screen.TwipsPerPixelX);
+            FullWidth += 16 * Screen.TwipsPerPixelX;
+            ebr.Width += 16 * Screen.TwipsPerPixelX;
         }
         ClassicWidth = (int)(FullWidth - ebr.Width - 10);
         HandleClassicMode();
@@ -735,7 +734,9 @@ public partial class frmSappy : Window
         cStatusBar.Create(picStatusbar.Source);
         cStatusBar.ImageList = imlStatusbar.hIml;
         cStatusBar.AllowXPStyles = true;
-        cStatusBar.Font = lblSong.Font;
+        cStatusBar.Font = new System.Drawing.Font(lblSong.FontFamily.ToString(), (float)lblSong.FontSize,
+            (lblSong.FontWeight > FontWeights.Regular ? System.Drawing.FontStyle.Bold : System.Drawing.FontStyle.Regular)
+            | (lblSong.FontStyle == FontStyles.Italic ? System.Drawing.FontStyle.Italic : System.Drawing.FontStyle.Regular));
         FixStatusBar();
 
         Trace("- Create menu");
@@ -809,7 +810,7 @@ public partial class frmSappy : Window
         // TODO: (NOT SUPPORTED): With ebr
         ebr.BackColorStart = picSkin.point[6, 16].Source;
         ebr.BackColorEnd = picSkin.point[6, 32].Source;
-        ebr.UseExplorerStyle = (GetSettingI("Force Nice Bar") != 0 ? false : true);
+        ebr.UseExplorerStyle = GetSettingI("Force Nice Bar") != 0 ? false : true;
         ebr.Bars.Add("Tasks", Properties.Resources._50);
         ebr.ImageList = imlImages.hIml;
         ebr.Bars["Tasks"].CanExpand = false;
@@ -1076,7 +1077,7 @@ public partial class frmSappy : Window
     private void mnuFileOpen_Click(object sender, RoutedEventArgs e) { mnuFileOpen_Click(); }
     private void mnuFileOpen_Click()
     {
-        gCommonDialog cc = new gCommonDialog();
+        gCommonDialog cc = new();
         int i = 0;
         string code = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (4)
 
@@ -1196,7 +1197,7 @@ public partial class frmSappy : Window
 
         // TODO: (NOT SUPPORTED): On Error GoTo hell
 
-        FileGet(99, ref l, SongTbl + (i * 8) + 1);
+        FileGet(99, ref l, SongTbl + i * 8 + 1);
         l -= 0x8000000;
         SongHeadOrg = l;
         ValueType sh = SongHead;
@@ -1221,7 +1222,7 @@ public partial class frmSappy : Window
             cvwChannel[k].volume = "0";
         }
 
-        lblDef.Content = "0x" + FixHex(SongTbl + (i * 8), 6);
+        lblDef.Content = "0x" + FixHex(SongTbl + i * 8, 6);
         lblLoc.Content = "0x" + FixHex(SongHeadOrg, 6);
         lblInst.Content = "0x" + FixHex(SongHead.VoiceGroup - 0x8000000, 6);
 
@@ -1255,7 +1256,7 @@ public partial class frmSappy : Window
     ExitForGood:;
 
         // Do mIRC string...
-        gCommonDialog cc = new gCommonDialog();
+        gCommonDialog cc = new();
         AssemblyName assemblyName = Application.ResourceAssembly.GetName();
         songinfo = assemblyName.Version.Major + "." + assemblyName.Version.Minor +
               "|" + cc.VBGetFileTitle(myFile) +
@@ -1614,7 +1615,7 @@ public partial class frmSappy : Window
                 return;
             }
             DoEvents();
-        } while (!(EOF(99)));
+        } while (!EOF(99));
         MousePointer = 0;
     }
 
@@ -1646,7 +1647,7 @@ public partial class frmSappy : Window
     private void mnuImportLST_Click(object sender, RoutedEventArgs e) { mnuImportLST_Click(); }
     private void mnuImportLST_Click()
     {
-        gCommonDialog cc = new gCommonDialog();
+        gCommonDialog cc = new();
         string myFile = "";
         string myDir = "";
         string c = "";
@@ -1661,8 +1662,6 @@ public partial class frmSappy : Window
         IXMLDOMElement myNewRom = null;
         IXMLDOMElement myNewList = null;
         IXMLDOMElement myNewSong = null;
-        IXMLDOMElement oldRom = null;
-        MsgBoxResult blah;
 
         if (cc.VBGetOpenFileName(myFile, , , , , , "Sappy.LST|sappy.lst") == false) return;
         myDir = Left(myFile, Len(myFile) - Len(cc.VBGetFileTitle(myFile)));
@@ -1795,7 +1794,7 @@ public partial class frmSappy : Window
     private void picScreenshot_DblClick(object sender, RoutedEventArgs e) { picScreenshot_DblClick(); }
     private void picScreenshot_DblClick()
     {
-        gCommonDialog cc = new gCommonDialog();
+        gCommonDialog cc = new();
         string s = "";
         s = (string)picScreenshot.Tag;
         if (cc.VBGetOpenFileName(s, , , , , , Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG") == true)
@@ -1887,26 +1886,26 @@ public partial class frmSappy : Window
                 foreach (var itern in SappyDecoder.SappyChannels[c].Notes)
                 {
                     n = itern;
-                    if (SappyDecoder.GetNoteInfo(n.NoteID).Enabled == true && SappyDecoder.GetNoteInfo(n.NoteID).NoteOff == false)
+                    if (SappyDecoder.NoteInfo[n.NoteID].Enabled == true && SappyDecoder.NoteInfo[n.NoteID].NoteOff == false)
                     {
-                        ct += (((SappyDecoder.GetNoteInfo(n.NoteID).Velocity / 0x7F))) * (SappyDecoder.GetNoteInfo(n.NoteID).EnvPosition / 0xFF) * 0x7F;
-                        ns = ns + NoteToName(SappyDecoder.GetNoteInfo(n.NoteID).NoteNumber) + " ";
+                        ct += (int)(SappyDecoder.NoteInfo[n.NoteID].Velocity / 0x7F * (SappyDecoder.NoteInfo[n.NoteID].EnvPosition / 0xFF) * 0x7F);
+                        ns = ns + NoteToName(SappyDecoder.NoteInfo[n.NoteID].NoteNumber) + " ";
                     }
-                    switch (SappyDecoder.GetNoteInfo(n.NoteID).outputtype)
+                    switch (SappyDecoder.NoteInfo[n.NoteID].outputtype)
                     {
-                        case notDirect:
+                        case NoteOutputTypes.notDirect:
                             it = "Direct";
                             break;
-                        case notNoise:
+                        case NoteOutputTypes.notNoise:
                             it = "Noise";
                             break;
-                        case notSquare1:
+                        case NoteOutputTypes.notSquare1:
                             it = "Square1";
                             break;
-                        case notSquare2:
+                        case NoteOutputTypes.notSquare2:
                             it = "Square2";
                             break;
-                        case notWave:
+                        case NoteOutputTypes.notWave:
                             it = "Wave";
                             break;
                         default:
@@ -1916,11 +1915,11 @@ public partial class frmSappy : Window
                 }
                 ct /= SappyDecoder.SappyChannels[c].Notes.count;
             }
-            ct = ((ct / 127) * (SappyDecoder.SappyChannels[c].MainVolume / 127)) * 255;
-            cvwChannel[c - 1].Delay = SappyDecoder.SappyChannels[c].WaitTicks;
+            ct = ct / 127 * (SappyDecoder.SappyChannels[c].MainVolume / 127) * 255;
+            cvwChannel[c - 1].Delay = SappyDecoder.SappyChannels[c].WaitTicks.ToString();
             cvwChannel[c - 1].volume = ct.ToString();
             cvwChannel[c - 1].pan = SappyDecoder.SappyChannels[c].Panning - 64;
-            cvwChannel[c - 1].patch = SappyDecoder.SappyChannels[c].PatchNumber;
+            cvwChannel[c - 1].patch = SappyDecoder.SappyChannels[c].PatchNumber.ToString();
             cvwChannel[c - 1].Location = SappyDecoder.SappyChannels[c].TrackPointer + SappyDecoder.SappyChannels[c].ProgramCounter;
             if (ns != "") cvwChannel[c - 1].Note = ns;
             cvwChannel[c - 1].iType = it;
@@ -1934,7 +1933,7 @@ public partial class frmSappy : Window
             totallen += SappyDecoder.SappyChannels[c].TrackLengthInBytes;
             totalplayed += SappyDecoder.SappyChannels[c].ProgramCounter;
         }
-        totalpercent = (326 / totallen) * totalplayed;
+        totalpercent = 326 / totallen * totalplayed;
         linProgress.X2 = totalpercent;
         // Caption = totalplayed & " / " & totallen & " -> " & totalpercent & "%"
         // Dim totalplayed As Long
@@ -2035,7 +2034,7 @@ public partial class frmSappy : Window
     private void PrepareRecording()
     {
         string target = "";
-        gCommonDialog cc = new gCommonDialog();
+        gCommonDialog cc = new();
         if (cc.VBGetSaveFileName(target, lblSongName.Content + ".mid", , "Type 0 MIDI (*.mid)|*.mid", , , , "mid") == false) return;
         WantToRecord = 1;
         WantToRecordTo = target;

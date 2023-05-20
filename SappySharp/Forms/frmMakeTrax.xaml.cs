@@ -108,12 +108,12 @@ public partial class frmMakeTrax : Window
 
     // ###########################################################################################
 
-    byte MyNumblocks = 0;
-    byte MyPriority = 0;
-    byte MyReverb = 0;
-    int SongTableEntry = 0;
+    public byte MyNumblocks = 0;
+    public byte MyPriority = 0;
+    public byte MyReverb = 0;
+    public int SongTableEntry = 0;
 
-    int[] Tracks = new int[32];
+    private int[] Tracks = new int[32];
 
     private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
     private void Command1_Click()

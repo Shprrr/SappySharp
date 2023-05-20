@@ -86,25 +86,25 @@ public partial class frmAssembler : Window
     public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmAssembler() { InitializeComponent(); }
 
-    gCommonDialog MyCC = new();
+    private gCommonDialog MyCC = new();
 
-    ScriptControl MyScripter = null; // to do Eval with
-    string[,] Defs = new string[1, 2048];
-    int DefC = 0;
-    string[,] Labels = new string[1, 2048];
-    int LabelC = 0;
+    private ScriptControl MyScripter = null; // to do Eval with
+    private string[,] Defs = new string[1, 2048];
+    private int DefC = 0;
+    private string[,] Labels = new string[1, 2048];
+    private int LabelC = 0;
 
-    string FileTit = ""; // just the name.ext part
-    string FileDir = ""; // just the dir part
+    private string FileTit = ""; // just the name.ext part
+    private string FileDir = ""; // just the dir part
 
-    string LabelToWatchFor = "";
-    int WatchedLabelOffset = 0;
-    int LabelOffset = 0;
-    int VoiceGroup = 0;
+    private string LabelToWatchFor = "";
+    private int WatchedLabelOffset = 0;
+    private int LabelOffset = 0;
+    private int VoiceGroup = 0;
 
-    int SongTableEntry = 0;
+    public int SongTableEntry = 0;
 
-    bool YouFailedIt = false;
+    private bool YouFailedIt = false;
 
     private void Compile(string file)
     {

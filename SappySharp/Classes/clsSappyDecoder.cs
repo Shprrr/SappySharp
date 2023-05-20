@@ -92,69 +92,69 @@ public partial class clsSappyDecoder
     private const double GBSquareMulti = 0.5;
     private const double GBWaveMulti = 0.5;
     private const double GBNoiseMulti = 0.5;
-    int lasttempo = 0;
+    private int lasttempo = 0;
 
     /// <summary>
     /// Collection of channels.
     /// </summary>
-    SChannels SappyChannels = new();
-    NoteInfos NoteQueue = new();
-    NoteInfo[] NoteArray = new NoteInfo[32];
+    public SChannels SappyChannels = new();
+    public NoteInfos NoteQueue = new();
+    private NoteInfo[] NoteArray = new NoteInfo[32];
 
-    WithEvents CTimerMM EventProcessor = null;
-    WithEvents CTimerMM NoteProcessor = null;
+    public WithEvents CTimerMM EventProcessor = null;
+    public WithEvents CTimerMM NoteProcessor = null;
 
-    int TotalTicks = 0; // by Kawa
-    int TotalMSecs = 0; // by Kawa
-    int Beats = 0; // by Kawa
-    delegate void EmptyEventHandler();
-    event EmptyEventHandler SongLoop; // by Kawa
+    public int TotalTicks = 0; // by Kawa
+    public int TotalMSecs = 0; // by Kawa
+    public int Beats = 0; // by Kawa
+    public delegate void EmptyEventHandler();
+    public event EmptyEventHandler SongLoop; // by Kawa
     /// <summary>
     /// Raised when the song finishes playing.
     /// </summary>
-    event EmptyEventHandler SongFinish;
+    public event EmptyEventHandler SongFinish;
     /// <summary>
     /// Raised when there's new tracking info to display.
     /// </summary>
-    event EmptyEventHandler UpdateDisplay;
-    delegate void ChangedTempoEventHandler(int newtempo);
+    public event EmptyEventHandler UpdateDisplay;
+    public delegate void ChangedTempoEventHandler(int newtempo);
     /// <summary>
     /// Raised when a Tempo command is found in the song data
     /// </summary>
-    event ChangedTempoEventHandler ChangedTempo;
-    delegate void PlayedANoteEventHandler(byte channelid, byte notenum, byte lenno);
-    event PlayedANoteEventHandler PlayedANote;
-    delegate void LoadingEventHandler(int status);
-    event LoadingEventHandler Loading;
-    delegate void BeatEventHandler(int beats);
-    event BeatEventHandler Beat;
+    public event ChangedTempoEventHandler ChangedTempo;
+    public delegate void PlayedANoteEventHandler(byte channelid, byte notenum, byte lenno);
+    public event PlayedANoteEventHandler PlayedANote;
+    public delegate void LoadingEventHandler(int status);
+    public event LoadingEventHandler Loading;
+    public delegate void BeatEventHandler(int beats);
+    public event BeatEventHandler Beat;
 
-    SSamples SamplePool = new();
-    SDirects Directs = new();
-    SDrumKits DrumKits = new();
-    SInstruments Instruments = new();
+    public SSamples SamplePool = new();
+    public SDirects Directs = new();
+    public SDrumKits DrumKits = new();
+    public SInstruments Instruments = new();
 
     // local variable(s) to hold property value(s)
-    decimal mvarNoteFrameCounter = 0;
-    decimal mvarTickCounter = 0;
-    decimal mvarLastTick = 0;
-    string mvarFileName = "";
-    int mvarTranspose = 0;
-    int mvarSongListPointer = 0;
-    int mvarSongPointer = 0;
-    int mvarSongNumber = 0;
-    int mvarLayer = 0;
-    int mvarInstrumentTablePointer = 0;
-    int mvarCurrentSong = 0;
-    int incr = 0;
-    int incr2 = 0;
-    byte mvarGB1Chan = 0;
-    byte mvarGB2Chan = 0;
-    byte mvarGB3Chan = 0;
-    byte mvarGB4Chan = 0;
-    bool mvarPlaying = false;
-    int mvarTempo = 0;
-    int InstrumentTable = 0;
+    private decimal mvarNoteFrameCounter = 0;
+    private decimal mvarTickCounter = 0;
+    private decimal mvarLastTick = 0;
+    private string mvarFileName = "";
+    private int mvarTranspose = 0;
+    private int mvarSongListPointer = 0;
+    private int mvarSongPointer = 0;
+    private int mvarSongNumber = 0;
+    private int mvarLayer = 0;
+    private int mvarInstrumentTablePointer = 0;
+    private int mvarCurrentSong = 0;
+    private int incr = 0;
+    private int incr2 = 0;
+    private byte mvarGB1Chan = 0;
+    private byte mvarGB2Chan = 0;
+    private byte mvarGB3Chan = 0;
+    private byte mvarGB4Chan = 0;
+    private bool mvarPlaying = false;
+    private int mvarTempo = 0;
+    private int InstrumentTable = 0;
 
     public enum SongOutputTypes
     {
@@ -163,34 +163,34 @@ public partial class clsSappyDecoder
     , sotMIDI = 2
     }
 
-    SongOutputTypes mvarOutputType;
-    int mvarGlobalVolume = 0; // by Kawa
+    private SongOutputTypes mvarOutputType;
+    private int mvarGlobalVolume = 0; // by Kawa
 
-    int GBWaveBaseFreq = 880;
-    int SappyPPQN = 24;
+    private const int GBWaveBaseFreq = 880;
+    private const int SappyPPQN = 24;
 
-    int[] MidiPatchMap = new int[127]; // by Kawa
-    int[] MidiPatchTrans = new int[127];
-    int[] MidiDrumMap = new int[127];
-    int[] EarPiercers = new int[127];
-    int EarPiercerCnt = 0;
+    private int[] MidiPatchMap = new int[127]; // by Kawa
+    private int[] MidiPatchTrans = new int[127];
+    private int[] MidiDrumMap = new int[127];
+    private int[] EarPiercers = new int[127];
+    private int EarPiercerCnt = 0;
 
-    bool PlayingNow = false;
+    private bool PlayingNow = false;
 
-    class tBufferRawMidiEvent
+    private class tBufferRawMidiEvent
     {
         public int RawDelta;
         public int Ticks;
         public string EventCode;
     }
     // Private Type tBufferTrack
-    // Length As Long
-    // Events(-1 To 5000) As tBufferRawMidiEvent
+    //   Length As Long
+    //   Events(-1 To 5000) As tBufferRawMidiEvent
     // End Type
     // Private BufferTrack(32) As tBufferTrack
-    tBufferRawMidiEvent PreviousEvent = null;
-    bool Recording = false;
-    int midifile = 0;
+    private tBufferRawMidiEvent PreviousEvent = null;
+    private bool Recording = false;
+    private int midifile = 0;
 
     private void BufferEvent(string EventCode, int Ticks)
     {
