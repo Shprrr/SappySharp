@@ -221,7 +221,7 @@ public partial class frmSappy : Window
     // Private WithEvents HookedDialog As cCommonDialog
     // Private m_bInIDE As Boolean
 
-    private void cbxSongs_Change(object sender, System.Windows.Controls.TextChangedEventArgs e) { cbxSongs_Change(); }
+    private void cbxSongs_Change(object sender, SelectionChangedEventArgs e) { cbxSongs_Change(); }
     private void cbxSongs_Change()
     {
         if (DontLoadDude) return;
@@ -237,7 +237,7 @@ public partial class frmSappy : Window
         if ((string)chkMute.Tag == "^_^") return;
         // If Playing = True Then
         //   For i = 0 To SappyDecoder.SappyChannels.count - 1
-        //     cvwChannel[i].mute = chkMute.value
+        //     cvwChannel[i].mute = chkMute.muteChanged
         //   Next i
         // Else
         chkMute.Tag = "O.O";
@@ -489,7 +489,7 @@ public partial class frmSappy : Window
         picStatusbar.Refresh();
     }
 
-    private void cvwChannel_MuteChanged(ref int Index)
+    private void cvwChannel_MuteChanged(int Index)
     {
         // If Playing = False Then Exit Sub
         // TODO: (NOT SUPPORTED): On Error Resume Next
@@ -520,7 +520,7 @@ public partial class frmSappy : Window
         chkMute.Tag = "-_-";
     }
 
-    private void cvwChannel_Resize(ref int Index)
+    private void cvwChannel_Resize(int Index)
     {
         int i = 0;
         for (i = 1; i <= cvwChannel.Count - 1; i += 1)
@@ -604,7 +604,6 @@ public partial class frmSappy : Window
     private void Form_Load()
     {
         int i = 0;
-        int j = 0;
         string regset = "";
 
         Trace("frmSappy/Form_Load()");
@@ -638,6 +637,12 @@ public partial class frmSappy : Window
 
         Trace("- Create Sappy engine");
         SappyDecoder = new clsSappyDecoder();
+        SappyDecoder.Beat += SappyDecoder_Beat;
+        SappyDecoder.ChangedTempo += SappyDecoder_ChangedTempo;
+        SappyDecoder.Loading += SappyDecoder_Loading;
+        SappyDecoder.SongFinish += SappyDecoder_SongFinish;
+        SappyDecoder.SongLoop += SappyDecoder_SongLoop;
+        SappyDecoder.UpdateDisplay += SappyDecoder_UpdateDisplay;
 
         Trace("- Get settings");
         mnuSeekPlaylist.IsChecked = GetSettingI("Seek by Playlist") == 1;
@@ -697,11 +702,13 @@ public partial class frmSappy : Window
 
         Trace("- Load tool pics");
         StdPicture stdPic = new StdPicture();
-        imlImages = new cVBALImageList(); // vbalImages
-        imlImages.OwnerHDC = this.hWnd();
-        imlImages.ColourDepth = eilColourDepth.ILC_COLOR8;
-        imlImages.IconSizeX = 16;
-        imlImages.IconSizeY = 16;
+        imlImages = new cVBALImageList
+        {
+            OwnerHDC = this.hWnd(),
+            ColourDepth = eilColourDepth.ILC_COLOR8,
+            IconSizeX = 16,
+            IconSizeY = 16
+        }; // vbalImages
         imlImages.Create();
 
         stdPic = Properties.Resources.TOOLICONS;
@@ -719,11 +726,13 @@ public partial class frmSappy : Window
         // cmdStop.Picture = imlImages.ItemPicture[18]
         // cmdPlay.Picture = imlImages.ItemPicture[19]
         Trace("- Load status pics");
-        imlStatusbar = new cVBALImageList(); // vbalStatusBar
-        imlStatusbar.OwnerHDC = this.hWnd();
-        imlStatusbar.ColourDepth = eilColourDepth.ILC_COLOR8;
-        imlStatusbar.IconSizeX = 16;
-        imlStatusbar.IconSizeY = 16;
+        imlStatusbar = new cVBALImageList
+        {
+            OwnerHDC = this.hWnd(),
+            ColourDepth = eilColourDepth.ILC_COLOR8,
+            IconSizeX = 16,
+            IconSizeY = 16
+        }; // vbalStatusBar
         imlStatusbar.Create();
 
         stdPic = Properties.Resources.STATUSICONS;
@@ -849,9 +858,13 @@ public partial class frmSappy : Window
 
         Trace("- Create channel views");
         cvwChannel.Add(cvwChannelTemplate);
+        cvwChannelTemplate.MuteChanged += (sender, e) => cvwChannel_MuteChanged(0);
+        cvwChannelTemplate.Resize += (sender, e) => cvwChannel_Resize(0);
         for (i = 1; i < 32; i += 1)
         {
             cvwChannel.Add(new ChannelViewer());
+            cvwChannel[i].MuteChanged += (sender, e) => cvwChannel_MuteChanged(i);
+            cvwChannel[i].Resize += (sender, e) => cvwChannel_Resize(i);
             cvwChannel[i].Margin = new Thickness(cvwChannel[i - 1].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i - 1].Margin.Right, cvwChannel[i - 1].Margin.Bottom);
             cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
@@ -914,7 +927,7 @@ public partial class frmSappy : Window
         // frmSelectMidiOut.Show 1
     }
 
-    private void Form_Resize()
+    private void Form_Resize(object sender, SizeChangedEventArgs e)
     {
         if (WindowState == WindowState.Minimized) return;
         picChannels.Height = Height - picChannels.Margin.Top - picStatusbar.Height;
@@ -1039,7 +1052,7 @@ public partial class frmSappy : Window
         return _ISubclass_WindowProc;
     }
 
-    private void lblExpand_Click(object sender, RoutedEventArgs e) { lblExpand_Click(); }
+    private void lblExpand_Click(object sender, MouseButtonEventArgs e) { lblExpand_Click(); }
     private void lblExpand_Click()
     {
         if ((string)lblExpand.Content == "6")
@@ -1791,7 +1804,7 @@ public partial class frmSappy : Window
         // StretchBlt picChannels.hdc, 0, 0, picChannels.ScaleWidth, 17, picSkin.hdc, 6, 16, 2, 17, vbSrcCopy
     }
 
-    private void picScreenshot_DblClick(object sender, RoutedEventArgs e) { picScreenshot_DblClick(); }
+    private void picScreenshot_DblClick(object sender, MouseButtonEventArgs e) { if (e.ClickCount != 2) return; picScreenshot_DblClick(); }
     private void picScreenshot_DblClick()
     {
         gCommonDialog cc = new();
@@ -1806,7 +1819,7 @@ public partial class frmSappy : Window
         }
     }
 
-    private void picStatusbar_DblClick(object sender, RoutedEventArgs e) { picStatusbar_DblClick(); }
+    private void picStatusbar_DblClick(object sender, MouseButtonEventArgs e) { picStatusbar_DblClick(); }
     private void picStatusbar_DblClick()
     {
         if ((int)picStatusbar.Tag >= 402 && (int)picStatusbar.Tag <= 436)
@@ -1822,12 +1835,12 @@ public partial class frmSappy : Window
         picStatusbar.Tag = x + IIf(ebr.Visibility == Visibility.Hidden, ebr.Width, 0);
     }
 
-    private void picStatusBar_Paint()
+    private void picStatusBar_Paint(object sender, DrawingContext e)
     {
         cStatusBar.Draw();
     }
 
-    private void picTop_Paint()
+    private void picTop_Paint(object sender, DrawingContext e)
     {
         RedrawSkin();
     }

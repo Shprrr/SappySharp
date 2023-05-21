@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -43,6 +44,9 @@ public partial class ChannelViewer : UserControl
     dynamic m_Vibrato = 0;
     dynamic m_Pan = 0;
 
+    public event EventHandler Resize;
+    public event EventHandler MuteChanged;
+
     public int mute
     {
         get => chkMute.IsChecked.GetValueOrDefault() ? 1 : 0;
@@ -50,6 +54,7 @@ public partial class ChannelViewer : UserControl
         {
             if (value == 2) value = 1;
             chkMute.IsChecked = value == 1;
+            MuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -94,6 +99,7 @@ public partial class ChannelViewer : UserControl
             lblExpand.Content = "6";
             Height = 246 / VBExtension.Screen.TwipsPerPixelY;
         }
+        Resize?.Invoke(this, EventArgs.Empty);
     }
 
     private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
