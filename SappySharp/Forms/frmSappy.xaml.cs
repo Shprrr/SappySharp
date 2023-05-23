@@ -1095,7 +1095,15 @@ public partial class frmSappy : Window
         string code = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (4)
 
         if ((string)mnuFileOpen.Tag == "BrotherMaynard") goto skipABit;
-        if (cc.VBGetOpenFileName(myFile, , , , , , Properties.Resources._2 + "|*.gba") == false) return;
+        string fileTile = null;
+        bool readOnly = false;
+        int filterIndex = 1;
+        string filter = Properties.Resources._2 + "|*.gba";
+        string initDir = null;
+        string dlgTitle = null;
+        string defaultExt = null;
+        int flags = 0;
+        if (cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
 
         skipABit:;
         FileClose(99);
@@ -1386,7 +1394,7 @@ public partial class frmSappy : Window
                     {
                         // TODO: (NOT SUPPORTED): On Error Resume Next
                         picScreenshot.Tag = n3.value;
-                        picScreenshot.Source = ConvertBitmap(LoadPicture(n3.Value));
+                        picScreenshot.Source = new BitmapImage(new(n3.value));
                         // TODO: (NOT SUPPORTED): On Error GoTo 0
                     }
                 }
@@ -1676,7 +1684,15 @@ public partial class frmSappy : Window
         IXMLDOMElement myNewList = null;
         IXMLDOMElement myNewSong = null;
 
-        if (cc.VBGetOpenFileName(myFile, , , , , , "Sappy.LST|sappy.lst") == false) return;
+        string fileTile = null;
+        bool readOnly = false;
+        int filterIndex = 1;
+        string filter = "Sappy.LST|sappy.lst";
+        string initDir = null;
+        string dlgTitle = null;
+        string defaultExt = null;
+        int flags = 0;
+        if (cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
         myDir = Left(myFile, Len(myFile) - Len(cc.VBGetFileTitle(myFile)));
 
         x.save(Left(xfile, Len(xfile) - 3) + "bak");
@@ -1808,12 +1824,19 @@ public partial class frmSappy : Window
     private void picScreenshot_DblClick()
     {
         gCommonDialog cc = new();
-        string s = "";
-        s = (string)picScreenshot.Tag;
-        if (cc.VBGetOpenFileName(s, , , , , , Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG") == true)
+        string s = (string)picScreenshot.Tag;
+        string fileTile = null;
+        bool readOnly = false;
+        int filterIndex = 1;
+        string filter = Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG";
+        string initDir = null;
+        string dlgTitle = null;
+        string defaultExt = null;
+        int flags = 0;
+        if (cc.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == true)
         {
             s = cc.VBGetFileTitle(s);
-            picScreenshot.Source = LoadPicture(s);
+            picScreenshot.Source = new BitmapImage(new(s));
             picScreenshot.Tag = s;
             SaveNewRomHeader("screenshot", s);
         }
@@ -1857,7 +1880,14 @@ public partial class frmSappy : Window
 
     private void SappyDecoder_Loading(int status)
     {
-        cStatusBar.PanelText("simple", LoadResString(8000 + status));
+        string statusText = status switch
+        {
+            0 => Properties.Resources._8000,
+            1 => Properties.Resources._8001,
+            2 => Properties.Resources._8002,
+            _ => throw new NotImplementedException(),
+        };
+        cStatusBar.PanelText("simple", statusText);
         // If status = 1 Then cStatusBar.PanelText("simple") = cStatusBar.PanelText("simple") & " (" & progress & "/" & total & ")"
         picStatusbar.Refresh();
     }
@@ -2048,7 +2078,11 @@ public partial class frmSappy : Window
     {
         string target = "";
         gCommonDialog cc = new();
-        if (cc.VBGetSaveFileName(target, lblSongName.Content + ".mid", , "Type 0 MIDI (*.mid)|*.mid", , , , "mid") == false) return;
+        string fileTitle = lblSongName.Content + ".mid";
+        string filter = "Type 0 MIDI (*.mid)|*.mid";
+        int filterIndex = 1;
+        int flags = 0;
+        if (cc.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, ref flags, DefaultExt: "mid") == false) return;
         WantToRecord = 1;
         WantToRecordTo = target;
         cmdPlay.Value = true;

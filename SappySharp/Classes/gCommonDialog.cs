@@ -676,7 +676,7 @@ public partial class gCommonDialog
     }
     private string StrZToStr(string s) => Left(s, lstrlen(s));
 
-    bool VBGetSaveFileName(ref string Filename, ref string FileTitle, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, string InitDir, string DlgTitle, string DefaultExt, ref int flags, bool OverWritePrompt = true, int Owner = -1)
+    public bool VBGetSaveFileName(ref string Filename, ref string FileTitle, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, ref int flags, bool OverWritePrompt = true, string InitDir = null, string DlgTitle = null, string DefaultExt = null, int Owner = -1)
     {
         bool _VBGetSaveFileName;
 
