@@ -161,8 +161,10 @@ public partial class frmOptions : Window
         Colorize(frmSappy.instance.picSkin, (decimal)HScroll1.Value / 10, (decimal)HScroll2.Value / 10);
         frmSappy.instance.RedrawSkin();
         frmSappy.instance.ebr.Redraw = false;
-        frmSappy.instance.ebr.BackColorStart = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 16);
-        frmSappy.instance.ebr.BackColorEnd = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 32);
+        Color color = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 16);
+        frmSappy.instance.ebr.BackColorStart = (uint)RGB(color.R, color.G, color.B);
+        color = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 32);
+        frmSappy.instance.ebr.BackColorEnd = (uint)RGB(color.R, color.G, color.B);
         frmSappy.instance.ebr.Redraw = true;
 
         ClickSound();

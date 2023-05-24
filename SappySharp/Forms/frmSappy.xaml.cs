@@ -78,6 +78,8 @@ using MSXML2;
 using SappySharp.Classes;
 using System.Reflection;
 using SappySharp.UserControls;
+using System.Windows.Forms.Integration;
+using vbalExplorerBarLib6;
 
 namespace SappySharp.Forms;
 
@@ -85,7 +87,7 @@ public partial class frmSappy : Window
 {
     private static frmSappy _instance;
     public static frmSappy instance { set { _instance = null; } get { return _instance ??= new frmSappy(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmSappy.instance; } }
+    public static void Load() { if (_instance == null) { dynamic A = instance; } }
     public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmSappy()
     {
@@ -102,6 +104,8 @@ public partial class frmSappy : Window
     public List<MenuItem> mnuOutput { get => VBExtension.controlArray<MenuItem>(this, "mnuOutput"); }
 
     public List<ChannelViewer> cvwChannel { get; private set; } = new();
+
+    public vbalExplorerBarCtl ebr { get; private set; }
 
     // ______________
     // |  SAPPY 2006  |
@@ -462,7 +466,7 @@ public partial class frmSappy : Window
     private void cPop_Click(object sender, RoutedEventArgs e) { cPop_Click(); }
     private void cPop_Click(int ItemNumber)
     {
-        vbalExplorerBarLib6.cExplorerBarItem itm = null;
+        cExplorerBarItem itm = null;
         int i = 0;
         for (i = 1; i <= 16; i += 1)
         {
@@ -529,12 +533,12 @@ public partial class frmSappy : Window
         }
     }
 
-    private void ebr_BarClick(vbalExplorerBarLib6.cExplorerBar bar)
+    private void ebr_BarClick(ref cExplorerBar bar)
     {
-        WriteSettingI("Bar " + bar.Index + " state", bar.State);
+        WriteSettingI("Bar " + bar.Index + " state", (int)bar.State);
     }
 
-    private void ebr_ItemClick(vbalExplorerBarLib6.cExplorerBarItem itm)
+    private void ebr_ItemClick(ref cExplorerBarItem itm)
     {
         int i = 0;
         string s = "";
@@ -603,6 +607,15 @@ public partial class frmSappy : Window
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
     private void Form_Load()
     {
+        // To call an OCX control.
+        WindowsFormsHost host = new();
+        Type type = Type.GetTypeFromProgID(nameof(vbalExplorerBarCtl), true);
+        ebr = (vbalExplorerBarCtl)Activator.CreateInstance(type);
+        ebr.BarClick += ebr_BarClick;
+        ebr.ItemClick += ebr_ItemClick;
+        host.Child = (System.Windows.Forms.Control)ebr;
+        ebrContainer.Children.Add(host);
+
         int i = 0;
         string regset = "";
 
@@ -662,9 +675,9 @@ public partial class frmSappy : Window
         if (Properties.Resources._10000 == "<NLPLZ>" || Properties.Resources._10000 == "<SPLZ>" || Properties.Resources._10000 == "<DPLZ>")
         {
             FullWidth += 16 * Screen.TwipsPerPixelX;
-            ebr.Width += 16 * Screen.TwipsPerPixelX;
+            ebrContainer.Width += 16 * Screen.TwipsPerPixelX;
         }
-        ClassicWidth = (int)(FullWidth - ebr.Width - 10);
+        ClassicWidth = (int)(FullWidth - ebrContainer.Width - 10);
         HandleClassicMode();
 
         xfile = GetSetting("XML File");
@@ -816,14 +829,16 @@ public partial class frmSappy : Window
         // Next woogy
 
         Trace("- Set up task bar");
-        // TODO: (NOT SUPPORTED): With ebr
-        ebr.BackColorStart = picSkin.point[6, 16].Source;
-        ebr.BackColorEnd = picSkin.point[6, 32].Source;
+        Color color = GetPixelColor((BitmapSource)picSkin.Source, 6, 16);
+        ebr.BackColorStart = (uint)RGB(color.R, color.G, color.B);
+        color = GetPixelColor((BitmapSource)picSkin.Source, 6, 32);
+        ebr.BackColorEnd = (uint)RGB(color.R, color.G, color.B);
         ebr.UseExplorerStyle = GetSettingI("Force Nice Bar") != 0 ? false : true;
         ebr.Bars.Add("Tasks", Properties.Resources._50);
-        ebr.ImageList = imlImages.hIml;
+        object hIml = imlImages.hIml;
+        ebr.set_ImageList(ref hIml);
         ebr.Bars["Tasks"].CanExpand = false;
-        ebr.Bars["Tasks"].State = eBarCollapsed;
+        ebr.Bars["Tasks"].State = EExplorerBarStates.eBarCollapsed;
         Trace("- Add tasks");
         ebr.Bars["Tasks"].Items.Add("taketrax", Properties.Resources._52, 9);
         ebr.Bars["Tasks"].Items.Add("maketrax", Properties.Resources._53, 10);
@@ -835,26 +850,27 @@ public partial class frmSappy : Window
         ebr.Bars["Tasks"].Items["takesamp"].ToolTipText = Properties.Resources._83;
         ebr.Bars["Tasks"].Items["codetrax"].ToolTipText = Properties.Resources._84;
         ebr.Bars["Tasks"].Items["makemidi"].ToolTipText = Properties.Resources._80;
-        for (i = 1; i <= ebr.Bars["Tasks"].Items.count; i += 1)
+        for (i = 1; i <= ebr.Bars["Tasks"].Items.Count; i += 1)
         {
             TaskMenus[i] = cPop.AddItem(ebr.Bars["Tasks"].Items[i].Text, ebr.Bars["Tasks"].Items[i].Key, ebr.Bars["Tasks"].Items[i].ToolTipText, , cPop.MenuIndex["mnuTasks"], ebr.Bars["Tasks"].Items[i].IconIndex, false, false);
         }
-        ebr.Bars["Tasks"].State = GetSettingI("Bar " + ebr.Bars["Tasks"].Index + " state");
+        ebr.Bars["Tasks"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Tasks"].Index + " state");
         Trace("- Set up info bar");
         ebr.Bars.Add("Info", Properties.Resources._60);
         ebr.Bars["Info"].CanExpand = false;
-        ebr.Bars["Info"].State = eBarCollapsed;
-        ebr.Bars["Info"].Items.Add("Game", Properties.Resources._61, , 0);
-        ebr.Bars["Info"].Items.Add("Code", Properties.Resources._62, , 1);
-        ebr.Bars["Info"].Items.Add("Creator", Properties.Resources._63, , 0);
-        ebr.Bars["Info"].Items.Add("Tagger", Properties.Resources._64, , 0);
-        ebr.Bars["Info"].Items.Add("SongTbl", "0x000000", , 1);
-        ebr.Bars["Info"].Items.Add("Screen", , , 2);
+        ebr.Bars["Info"].State = EExplorerBarStates.eBarCollapsed;
+        ebr.Bars["Info"].Items.Add("Game", Properties.Resources._61, IconIndex: 0);
+        ebr.Bars["Info"].Items.Add("Code", Properties.Resources._62, IconIndex: 1);
+        ebr.Bars["Info"].Items.Add("Creator", Properties.Resources._63, IconIndex: 0);
+        ebr.Bars["Info"].Items.Add("Tagger", Properties.Resources._64, IconIndex: 0);
+        ebr.Bars["Info"].Items.Add("SongTbl", "0x000000", IconIndex: 1);
+        ebr.Bars["Info"].Items.Add("Screen", IconIndex: 2);
         ebr.Bars["Info"].Items["Game"].Bold = true;
         ebr.Bars["Info"].Items["SongTbl"].SpacingAfter = 8;
-        ebr.Bars["Info"].Items["Screen"].Control = picScreenshot.Source;
+        object newControl = picScreenshot.Source;
+        ebr.Bars["Info"].Items["Screen"].let_Control(ref newControl);
         ebr.Bars["Info"].Items["Screen"].SpacingAfter = 6;
-        ebr.Bars["Info"].State = GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
+        ebr.Bars["Info"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
 
         Trace("- Create channel views");
         cvwChannel.Add(cvwChannelTemplate);
@@ -889,8 +905,8 @@ public partial class frmSappy : Window
         Trace("- Finalizing");
         // VolumeSlider1.SetValue 50
 
-        if (midiOutGetNumDevs() == 0)
-        { // got no midi
+        if (midiOutGetNumDevs() == 0) // got no midi
+        {
             mnuOutput[0].IsEnabled = false;
             mnuOutput[1].IsChecked = true;
         }
@@ -1855,7 +1871,7 @@ public partial class frmSappy : Window
     private void picStatusbar_MouseMove(object sender, MouseEventArgs e) => CallMouseMove(e, this, picStatusbar_MouseMove);
     private void picStatusbar_MouseMove(int Button, int Shift, double x, double y)
     {
-        picStatusbar.Tag = x + IIf(ebr.Visibility == Visibility.Hidden, ebr.Width, 0);
+        picStatusbar.Tag = x + IIf(ebrContainer.Visibility == Visibility.Hidden, ebrContainer.Width, 0);
     }
 
     private void picStatusBar_Paint(object sender, DrawingContext e)
@@ -2041,7 +2057,7 @@ public partial class frmSappy : Window
     {
         if (GetSettingI("Hide Bar") != 0)
         {
-            ebr.Visibility = Visibility.Hidden;
+            ebrContainer.Visibility = Visibility.Hidden;
             Width = ClassicWidth;
             mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
             picTop.Move(0);
@@ -2050,11 +2066,11 @@ public partial class frmSappy : Window
         }
         else
         {
-            ebr.Visibility = Visibility.Visible;
+            ebrContainer.Visibility = Visibility.Visible;
             Width = FullWidth;
             mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
-            picTop.Move(ebr.Width);
-            picChannels.Move(ebr.Width);
+            picTop.Move(ebrContainer.Width);
+            picChannels.Move(ebrContainer.Width);
             cbxSongs.Height = 330 / Screen.TwipsPerPixelY;
         }
     }

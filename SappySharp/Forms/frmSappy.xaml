@@ -99,10 +99,11 @@
                 <Label x:Name="lblNote" Margin="88,17,0,0" Padding="2,2,2,2" Width="65" Height="12" VerticalAlignment="Top"
                         HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Content="[104]Note" />
             </Grid>
-            <Grid x:Name="ebr" Margin="0,0,0,0" Width="170" Height="423" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel x:Name="ebrContainer" Margin="0,0,0,0" Width="170" Height="423" VerticalAlignment="Top"
+                    HorizontalAlignment="Left">
                 <Image x:Name="picScreenshot" Margin="24,304,0,0" Width="122" Height="82" VerticalAlignment="Top"
                         HorizontalAlignment="Left" MouseLeftButtonDown="picScreenshot_DblClick" />
-            </Grid>
+            </DockPanel>
             <Label x:Name="cPop" Margin="200,288,0,0" Padding="2,2,2,2" Width="0" Height="0" VerticalAlignment="Top"
                     HorizontalAlignment="Left" />
             <Border x:Name="Shape1" Margin="192,280,0,0" Width="225" Height="57" BorderBrush="Navy" BorderThickness="2"
