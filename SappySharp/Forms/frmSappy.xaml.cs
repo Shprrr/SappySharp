@@ -80,6 +80,7 @@ using System.Reflection;
 using SappySharp.UserControls;
 using System.Windows.Forms.Integration;
 using vbalExplorerBarLib6;
+using cPopMenu6;
 
 namespace SappySharp.Forms;
 
@@ -106,6 +107,8 @@ public partial class frmSappy : Window
     public List<ChannelViewer> cvwChannel { get; private set; } = new();
 
     public vbalExplorerBarCtl ebr { get; private set; }
+
+    public PopMenu cPop { get; private set; }
 
     // ______________
     // |  SAPPY 2006  |
@@ -463,8 +466,7 @@ public partial class frmSappy : Window
         mnuGBMode.IsEnabled = mnuOutput[0].IsChecked;
     }
 
-    private void cPop_Click(object sender, RoutedEventArgs e) { cPop_Click(); }
-    private void cPop_Click(int ItemNumber)
+    private void cPop_Click(ref int ItemNumber)
     {
         cExplorerBarItem itm = null;
         int i = 0;
@@ -472,8 +474,8 @@ public partial class frmSappy : Window
         {
             if (ItemNumber == TaskMenus[i])
             {
-                itm = ebr.Bars["Tasks"].Items[cPop.MenuKey(ItemNumber)];
-                ebr_ItemClick(itm);
+                itm = ebr.Bars["Tasks"].Items[cPop.MenuKey[ItemNumber]];
+                ebr_ItemClick(ref itm);
             }
         }
     }
@@ -608,13 +610,22 @@ public partial class frmSappy : Window
     private void Form_Load()
     {
         // To call an OCX control.
-        WindowsFormsHost host = new();
+        WindowsFormsHost ebrHost = new();
         Type type = Type.GetTypeFromProgID(nameof(vbalExplorerBarCtl), true);
         ebr = (vbalExplorerBarCtl)Activator.CreateInstance(type);
         ebr.BarClick += ebr_BarClick;
         ebr.ItemClick += ebr_ItemClick;
-        host.Child = (System.Windows.Forms.Control)ebr;
-        ebrContainer.Children.Add(host);
+        ebrHost.Child = (System.Windows.Forms.Control)ebr;
+        ebrContainer.Children.Add(ebrHost);
+
+        WindowsFormsHost cPopHost = new();
+        type = Type.GetTypeFromProgID(nameof(PopMenu), true);
+        cPop = (PopMenu)Activator.CreateInstance(type);
+        cPop.Click += cPop_Click;
+        cPop.ItemHighlight += cPop_ItemHighlight;
+        cPop.MenuExit += cPop_MenuExit;
+        cPopHost.Child = (System.Windows.Forms.Control)cPop;
+        cPopContainer.Children.Add(cPopHost);
 
         int i = 0;
         string regset = "";
@@ -1138,7 +1149,7 @@ public partial class frmSappy : Window
         cmdStop.IsEnabled = false;
         for (i = 1; i <= 5; i += 1)
         {
-            cPop.IsEnabled[TaskMenus[i]] = false;
+            cPop.Enabled[TaskMenus[i]] = false;
         }
 
         FileOpen(99, myFile, OpenMode.Binary);
@@ -1210,7 +1221,7 @@ public partial class frmSappy : Window
         LoadSong(int.Parse(txtSong.Text));
         for (i = 1; i <= 5; i += 1)
         {
-            cPop.IsEnabled[TaskMenus[i]] = true;
+            cPop.Enabled[TaskMenus[i]] = true;
         }
 
         mnuFileOpen.Tag = "";
