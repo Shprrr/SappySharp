@@ -74,6 +74,7 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 using System.Diagnostics;
+using stdole;
 
 namespace SappySharp.Classes;
 
@@ -241,8 +242,8 @@ public partial class cVBALImageList : IDisposable
     private static partial int PatBlt(int hdc, int x, int y, int nWidth, int nHeight, int dwRop);
     [LibraryImport("user32", EntryPoint = "LoadBitmapA")]
     private static partial int LoadBitmapBynum(int hInstance, int lpBitmapName);
-    class BITMAP
-    {  // 14 bytes
+    class BITMAP // 14 bytes
+    {
         public int bmType;
         public int bmWidth;
         public int bmHeight;
@@ -1288,15 +1289,12 @@ public partial class cVBALImageList : IDisposable
         return _ImagePictureStrip;
     }
 
-
     public IPicture IconToPicture(int hIcon)
     {
-        IPicture _IconToPicture = null;
-
-        if (hIcon == 0) return _IconToPicture;
+        if (hIcon == 0) return null;
 
         // This is all magic if you ask me:
-        Picture NewPic = null;
+        IPicture NewPic = null;
         PictDesc PicConv = null;
         Guid IGuid = null;
 
@@ -1316,20 +1314,16 @@ public partial class cVBALImageList : IDisposable
         IGuid.Data4[5] = 0x30;
         IGuid.Data4[6] = 0xC;
         IGuid.Data4[7] = 0xAB;
-        OleCreatePictureIndirect(PicConv, IGuid, true, NewPic);
+        OleCreatePictureIndirect(ref PicConv, ref IGuid, 1, ref NewPic);
 
-        _IconToPicture = NewPic;
-
-        return _IconToPicture;
+        return NewPic;
     }
 
     public IPicture BitmapToPicture(int hBmp)
     {
-        IPicture _BitmapToPicture = null;
+        if (hBmp == 0) return null;
 
-        if (hBmp == 0) return _BitmapToPicture;
-
-        Picture NewPic = null;
+        IPicture NewPic = null;
         PictDesc tPicConv = null;
         Guid IGuid = null;
 
@@ -1344,13 +1338,10 @@ public partial class cVBALImageList : IDisposable
         IGuid.Data4[7] = 0x46;
 
         // Create a picture object:
-        OleCreatePictureIndirect(tPicConv, IGuid, true, NewPic);
+        OleCreatePictureIndirect(ref tPicConv, ref IGuid, 1, ref NewPic);
 
         // Return it:
-        _BitmapToPicture = NewPic;
-
-
-        return _BitmapToPicture;
+        return NewPic;
     }
 
     public int TranslateColor(int clr, int hPal = 0)

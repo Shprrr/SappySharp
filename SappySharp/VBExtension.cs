@@ -368,7 +368,7 @@ public static class VBExtension
         }
         catch { return null; }
     }
-    public static BitmapImage setImage(this Button Cmd, BitmapImage value)
+    public static BitmapSource setImage(this Button Cmd, BitmapSource value)
     {
         try
         {

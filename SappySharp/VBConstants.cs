@@ -127,4 +127,7 @@ public static class VBConstants
 
     public const int vbButtonFace = -2147483633; // 0x8000000F
     public const int vbWindowBackground = -2147483643; // 0x80000005
+
+    public const int vbPicTypeBitmap = 1;
+    public const int vbPicTypeIcon = 3;
 }
