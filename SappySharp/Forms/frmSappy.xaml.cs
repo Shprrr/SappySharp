@@ -82,10 +82,11 @@ using System.Windows.Forms.Integration;
 using vbalExplorerBarLib6;
 using cPopMenu6;
 using stdole;
+using SSubTimer6;
 
 namespace SappySharp.Forms;
 
-public partial class frmSappy : Window
+public partial class frmSappy : Window, ISubclass
 {
     private static frmSappy _instance;
     public static frmSappy instance { set { _instance = null; } get { return _instance ??= new frmSappy(); } }
@@ -619,16 +620,14 @@ public partial class frmSappy : Window
     {
         // To call an OCX control.
         WindowsFormsHost ebrHost = new();
-        Type type = Type.GetTypeFromProgID(nameof(vbalExplorerBarCtl), true);
-        ebr = (vbalExplorerBarCtl)Activator.CreateInstance(type);
+        ebr = new vbalExplorerBarCtl();
         ebr.BarClick += ebr_BarClick;
         ebr.ItemClick += ebr_ItemClick;
         ebrHost.Child = (System.Windows.Forms.Control)ebr;
         ebrContainer.Children.Add(ebrHost);
 
         WindowsFormsHost cPopHost = new();
-        type = Type.GetTypeFromProgID(nameof(PopMenu), true);
-        cPop = (PopMenu)Activator.CreateInstance(type);
+        cPop = new PopMenu();
         cPop.Click += cPop_Click;
         cPop.ItemHighlight += cPop_ItemHighlight;
         cPop.MenuExit += cPop_MenuExit;
@@ -728,9 +727,10 @@ public partial class frmSappy : Window
         linProgress.X2 = -1;
 
         Trace("- Attach messages");
-        AttachMessage(this, this.hWnd(), WM_SIZING);
-        AttachMessage(this, this.hWnd(), WM_APPCOMMAND);
-        AttachMessage(this, this.hWnd(), WM_MOUSEWHEEL);
+        GSubclass gSubclass = new();
+        gSubclass.AttachMessage(this, (int)this.hWnd(), WM_SIZING);
+        gSubclass.AttachMessage(this, (int)this.hWnd(), WM_APPCOMMAND);
+        gSubclass.AttachMessage(this, (int)this.hWnd(), WM_MOUSEWHEEL);
 
         Trace("- Load tool pics");
         StdPicture stdPic = new();
@@ -993,9 +993,10 @@ public partial class frmSappy : Window
             FileClose(42);
         }
         Trace("- Detaching messages");
-        DetachMessage(this, this.hWnd(), WM_SIZING);
-        DetachMessage(this, this.hWnd(), WM_APPCOMMAND);
-        DetachMessage(this, this.hWnd(), WM_MOUSEWHEEL);
+        GSubclass gSubclass = new();
+        gSubclass.DetachMessage(this, (int)this.hWnd(), WM_SIZING);
+        gSubclass.DetachMessage(this, (int)this.hWnd(), WM_APPCOMMAND);
+        gSubclass.DetachMessage(this, (int)this.hWnd(), WM_MOUSEWHEEL);
         // TODO: (NOT SUPPORTED): On Error GoTo 0
         Trace("- Killing forms");
         if (OwnedWindows.Count > 1)
@@ -1009,11 +1010,11 @@ public partial class frmSappy : Window
         Trace("- Will I dream?");
     }
 
-    private SSubTimer6.EMsgResponse ISubclass_MsgResponse
+    public EMsgResponse MsgResponse
     {
         get
         {
-            return emrPostProcess;
+            return EMsgResponse.emrPostProcess;
         }
         set
         {
@@ -1022,7 +1023,7 @@ public partial class frmSappy : Window
         }
     }
 
-    private int ISubclass_WindowProc(int hwnd, int iMsg, int wParam, int lParam)
+    public int WindowProc(int hwnd, int iMsg, int wParam, int lParam)
     {
         int _ISubclass_WindowProc = 0;
 
