@@ -34,7 +34,8 @@
         </Menu>
 
         <Grid>
-            <Grid x:Name="picTop" Margin="170,0,0,0" Width="324" Height="88" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <usercontrols:RenderingControl x:Name="picTop" Margin="170,0,0,0" Width="324" Height="88" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Rendering="picTop_Paint">
                 <Button x:Name="cmdStop" Margin="287,51,0,0" Padding="2,2,2,2" Width="33" Height="33" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Content="[ ]" Click="cmdStop_Click" />
                 <Button x:Name="cmdPrevSong" Margin="64,8,0,0" Padding="2,2,2,2" Width="22" Height="22" VerticalAlignment="Top"
@@ -71,7 +72,7 @@
                         HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="0x000000" />
                 <Label x:Name="Label1" Margin="8,35,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
                         HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[90]Table" />
-            </Grid>
+            </usercontrols:RenderingControl>
             <Image x:Name="picSkin" Margin="280,288,0,0" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
             <usercontrols:RenderingControl x:Name="picStatusbar" Margin="0,423,0,0" Width="495" Height="17"
                     VerticalAlignment="Top" HorizontalAlignment="Left" Rendering="picStatusBar_Paint"

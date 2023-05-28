@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace SappySharp.UserControls;
 
-public partial class RenderingControl : UserControl
+public partial class RenderingControl : ItemsControl
 {
     public delegate void DrawingEventHandler(object sender, DrawingContext e);
     public event DrawingEventHandler Rendering;
