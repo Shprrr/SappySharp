@@ -73,6 +73,7 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using TimerMM;
 
 namespace SappySharp.Classes;
 
@@ -101,8 +102,8 @@ public partial class clsSappyDecoder
     public NoteInfos NoteQueue = new();
     private NoteInfo[] NoteArray = new NoteInfo[32];
 
-    public WithEvents CTimerMM EventProcessor = null;
-    public WithEvents CTimerMM NoteProcessor = null;
+    public CTimerMM EventProcessor = null;
+    public CTimerMM NoteProcessor = null;
 
     public int TotalTicks = 0; // by Kawa
     public int TotalMSecs = 0; // by Kawa
@@ -197,11 +198,13 @@ public partial class clsSappyDecoder
         // TODO: (NOT SUPPORTED): On Error GoTo hell
         if (Recording == false) return;
         if (midifile != 42) return;
-        tBufferRawMidiEvent newevent = new();
-        // Ticks = Ticks * (mvarTempo / 60) // / (60000000 / SappyPPQN) // MATH!
-        newevent.Ticks = Ticks;
-        newevent.RawDelta = Ticks - PreviousEvent.Ticks;
-        newevent.EventCode = EventCode;
+        tBufferRawMidiEvent newevent = new()
+        {
+            // Ticks = Ticks * (mvarTempo / 60) // / (60000000 / SappyPPQN) // MATH!
+            Ticks = Ticks,
+            RawDelta = Ticks - PreviousEvent.Ticks,
+            EventCode = EventCode
+        };
         WriteVarLen(midifile, newevent.RawDelta);
         FilePutObject(midifile, newevent.EventCode);
         PreviousEvent = newevent;
@@ -283,6 +286,12 @@ public partial class clsSappyDecoder
         set => mvarTickCounter = value;
     }
 
+    public int Transpose
+    {
+        get => mvarTranspose;
+        set => mvarTranspose = value;
+    }
+
     public int Tempo
     {
         get => mvarTempo;
@@ -325,12 +334,7 @@ public partial class clsSappyDecoder
         set => mvarFileName = value;
     }
 
-    public bool NoteBelongsToChannel(byte NoteID, int channelid)
-    {
-        bool _NoteBelongsToChannel = false;
-        _NoteBelongsToChannel = NoteArray[NoteID].ParentChannel == channelid;
-        return _NoteBelongsToChannel;
-    }
+    public bool NoteBelongsToChannel(byte NoteID, int channelid) => NoteArray[NoteID].ParentChannel == channelid;
 
     public void StopSong()
     {
@@ -356,8 +360,8 @@ public partial class clsSappyDecoder
             FilePutObject(midifile, (byte)0x2F);
             FilePutObject(midifile, (byte)0);
 
-            int tlen = 0; // ...to here. (Drag)
-            tlen = (int)(LOF(midifile) - 22); // This line should now give a more accurate track length. (Drag)
+            // ...to here. (Drag)
+            int tlen = (int)(LOF(midifile) - 22); // This line should now give a more accurate track length. (Drag)
             Console.WriteLine("StopSong(): Track length is " + tlen + ", total ticks " + TotalTicks);
 
             // Put #midifile, , CLng(0) // Why are these here? (Drag)
@@ -842,7 +846,7 @@ public partial class clsSappyDecoder
         foreach (var Item in SamplePool)
         {
             Loading.Invoke(1);
-            // OpenFile 2, Item.Key & __S1
+            // OpenFile 2, Item.Key & ".raw"
             // If Item.GBWave = True Then
             //   WriteString 2, Item.SampleData
             // Else
@@ -851,15 +855,15 @@ public partial class clsSappyDecoder
             //   Next i
             // End If
             // CloseFile 2
-            // Item.SampleData = __S1
+            // Item.SampleData = ""
             // If Item.GBWave = True Then
-            //   Item.FModSample = FSOUND_Sample_Load(FSOUND_FREE, Item.Key & __S1, FSOUND_8BITS + FSOUND_LOADRAW + FSOUND_LOOP_NORMAL + FSOUND_MONO + FSOUND_UNSIGNED, 0, 0)
+            //   Item.FModSample = FSOUND_Sample_Load(FSOUND_FREE, Item.Key & ".raw", FSOUND_8BITS + FSOUND_LOADRAW + FSOUND_LOOP_NORMAL + FSOUND_MONO + FSOUND_UNSIGNED, 0, 0)
             //   Call FSOUND_Sample_SetLoopPoints(Item.FModSample, 0, 31)
             // Else
-            //   Item.FModSample = FSOUND_Sample_Load(FSOUND_FREE, Item.Key & __S1, FSOUND_8BITS + FSOUND_LOADRAW + IIf(Item.LoopEnable = True, FSOUND_LOOP_NORMAL, 0) + FSOUND_MONO + FSOUND_SIGNED, 0, 0)
+            //   Item.FModSample = FSOUND_Sample_Load(FSOUND_FREE, Item.Key & ".raw", FSOUND_8BITS + FSOUND_LOADRAW + IIf(Item.LoopEnable = True, FSOUND_LOOP_NORMAL, 0) + FSOUND_MONO + FSOUND_SIGNED, 0, 0)
             //   Call FSOUND_Sample_SetLoopPoints(Item.FModSample, Item.loopstart, Item.Size - 1)
             // End If
-            // DeleteFile Item.Key & __S1
+            // DeleteFile Item.Key & ".raw"
             quark++;
             // On Error Resume Next
             Trace("#" + quark + " - " + Item.GBWave + " - " + Item.SampleData);
@@ -971,6 +975,7 @@ public partial class clsSappyDecoder
         Loading.Invoke(2);
 
         EventProcessor = new CTimerMM();
+        EventProcessor.Timer += EventProcessor_Timer;
         mvarTempo = 120;
         lasttempo = -1;
         incr = 0;
@@ -1019,14 +1024,11 @@ public partial class clsSappyDecoder
     // Added by Kawa in DLL conversion
     public clsSappyDecoder()
     {
-        int ts = 0;
-        int te = 0;
-        int sz = 0;
         Trace(DateTime.Now + vbTab + "- Yo, this be clsSappyDecoder, Class_Initialize()");
         Randomize(DateAndTime.Timer);
-        sz = GetSettingI("Noise Length");
+        int sz = GetSettingI("Noise Length");
         if (sz == 0) sz = 2047;
-        ts = GetTickCount();
+        int ts = GetTickCount();
         for (int i = 0; i <= 9; i += 1)
         {
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(0," + i + ")");
@@ -1040,7 +1042,7 @@ public partial class clsSappyDecoder
                 NoiseWaves[1, i] = NoiseWaves[1, i] + Chr((int)Int(Rnd() * 153)); // (255 * 0.6)))
             }
         }
-        te = GetTickCount();
+        int te = GetTickCount();
         Trace(DateTime.Now + vbTab + "- Took " + (te - ts) + ".");
         mvarGlobalVolume = 255;
         Trace(DateTime.Now + vbTab + "- Done. Back to the studio...");
@@ -1250,8 +1252,8 @@ public partial class clsSappyDecoder
                             SappyChannels[i].Sustain = false;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].NoteOff == false)
-                                { // And NoteArray[Item.NoteID].WaitTicks < 1 Then
+                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].NoteOff == false) // And NoteArray[Item.NoteID].WaitTicks < 1 Then
+                                {
                                     NoteArray[Item.NoteID].NoteOff = true;
                                 }
                             }
@@ -1370,12 +1372,12 @@ public partial class clsSappyDecoder
                             }
                             else if (Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare1 || Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare2)
                             {
-                                das = "square" + ((Directs[Str(pat)].GB1 % 4));
+                                das = "square" + Directs[Str(pat)].GB1 % 4;
                                 daf = NoteToFreq(nn + (60 - Directs[Str(pat)].DrumTuneKey));
                             }
                             else if (Directs[Str(pat)].outputtype == DirectOutputTypes.dotNoise)
                             {
-                                das = "noise" + ((Directs[Str(pat)].GB1 % 2)) + Int(Rnd() * 3);
+                                das = "noise" + Directs[Str(pat)].GB1 % 2 + Int(Rnd() * 3);
                                 daf = NoteToFreq(nn + (60 - Directs[Str(pat)].DrumTuneKey));
                             }
                             else
@@ -1404,7 +1406,7 @@ public partial class clsSappyDecoder
                             }
                             else if (Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotSquare1 || Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotSquare2)
                             {
-                                das = "square" + ((Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].GB1 % 4));
+                                das = "square" + Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].GB1 % 4;
                                 daf = NoteToFreq(nn);
                             }
                             else
@@ -1433,13 +1435,13 @@ public partial class clsSappyDecoder
                             }
                             else if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare1 || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare2)
                             {
-                                das = "square" + ((DrumKits[Str(pat)].Directs[Str(nn)].GB1 % 4));
+                                das = "square" + DrumKits[Str(pat)].Directs[Str(nn)].GB1 % 4;
                                 daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey);
                             }
                             else if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotNoise)
                             {
-                                das = "noise" + ((DrumKits[Str(pat)].Directs[Str(nn)].GB1 % 2)) + Int(Rnd() * 3);
-                                daf = NoteToFreq(((DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey)));
+                                das = "noise" + DrumKits[Str(pat)].Directs[Str(nn)].GB1 % 2 + Int(Rnd() * 3);
+                                daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey);
                             }
                             else
                             {
@@ -1453,7 +1455,7 @@ public partial class clsSappyDecoder
 
                         if (das != "")
                         {
-                            daf *= ((2 ^ (1 / 12)) ^ this.Transpose);
+                            daf *= 2 ^ (1 / 12) ^ Transpose;
                             int dav = CInt(CInt(Item.Velocity) / CInt(0x7F) * (CInt(SappyChannels[Item.ParentChannel].MainVolume) / CInt(0x7F)) * 255);
                             if (mutethis) dav = 0;
 
@@ -1814,7 +1816,7 @@ public partial class clsSappyDecoder
         {
             lasttempo = mvarTempo;
             EventProcessor.Enabled = false;
-            EventProcessor.EventType = etPeriodic;
+            EventProcessor.EventType = EEventTypes.etPeriodic;
             EventProcessor.Interval = 1;
             EventProcessor.Resolution = 1;
             EventProcessor.Enabled = true;
@@ -1828,7 +1830,7 @@ public partial class clsSappyDecoder
     private void NoteProcessor_Timer(int lMilliseconds)
     {
         EventProcessor.Enabled = false;
-        EventProcessor.EventType = etPeriodic;
+        EventProcessor.EventType = EEventTypes.etPeriodic;
         EventProcessor.Interval = 60000 / (mvarTempo * SappyPPQN); // * dticks
         EventProcessor.Resolution = 1;
         EventProcessor.Enabled = true;
@@ -1933,7 +1935,6 @@ public partial class clsSappyDecoder
 
     private void WriteVarLen(int ch, int Value)
     {
-        int buffer = 0;
         // This sets the most significant bits of the value wrong, so
         // I need to fix this. (Drag)
         // buffer = Value And &H7F
@@ -1943,7 +1944,7 @@ public partial class clsSappyDecoder
         // buffer = buffer Or ((Value And &H7F) Or &H80)
         // Wend
         // The following is my code. (Drag)
-        buffer = Value & 0x7F;
+        int buffer = Value & 0x7F;
         while (Value / 128 > 0)
         {
             Value /= 128;
@@ -1967,15 +1968,13 @@ public partial class clsSappyDecoder
 
     public int FlipLong(int Value)
     {
-        string s1 = "";
-        string s2 = "";
         string[] b = new string[4];
-        s1 = Right("00000000" + Hex(Value), 8);
+        string s1 = Right("00000000" + Hex(Value), 8);
         b[0] = Mid(s1, 1, 2);
         b[1] = Mid(s1, 3, 2);
         b[2] = Mid(s1, 5, 2);
         b[3] = Mid(s1, 7, 2);
-        s2 = b[3] + b[2] + b[1] + b[0];
+        string s2 = b[3] + b[2] + b[1] + b[0];
         return (int)Val("&H" + s2);
         // Dim b1 As Byte, b2 As Byte, b3 As Byte, b4 As Byte
         // On Error Resume Next
@@ -2000,19 +1999,15 @@ public partial class clsSappyDecoder
 
     public int FlipInt(int Value)
     {
-        int _FlipInt = 0;
-        byte b1 = 0;
-        byte b2 = 0;
-        b1 = (byte)(Value % 0x100);
+        byte b1 = (byte)(Value % 0x100);
         Value /= 0x100;
-        b2 = (byte)(Value % 0x100);
+        byte b2 = (byte)(Value % 0x100);
 
         Value = b1;
         Value *= 0x100;
         Value += b2;
 
-        _FlipInt = Value;
-        return _FlipInt;
+        return Value;
     }
 
     private void GetSample(SDirect D, SappyDirectHeader dirhead, ref SappySampleHeader smphead, bool UseReadString)
