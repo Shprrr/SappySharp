@@ -23,7 +23,7 @@
         <Button x:Name="Command2" Margin="256,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="[5]" Click="Command2_Click" />
         <ComboBox x:Name="cboSaveAs" Margin="136,8,0,0" Padding="2,2,2,2" Width="201" Height="21" VerticalAlignment="Top"
-                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="cboSaveAs_Click" />
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="cboSaveAs_Click" />
         <TextBox x:Name="txtNamePat" Margin="136,32,0,0" Padding="2,2,2,2" Width="201" Height="19" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
         <Button x:Name="Command1" Margin="168,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"

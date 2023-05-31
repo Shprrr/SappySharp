@@ -73,6 +73,7 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using stdole;
 
 namespace SappySharp.Classes;
 
@@ -152,8 +153,10 @@ public partial class pcMemDC : IDisposable
     }
     public void CreateFromPicture(IPicture sPic)
     {
+        dynamic getObject = null;
         BITMAP tB = null;
-        GetObjectAPI(sPic.Handle, Len(tB), tB);
+        GetObjectAPI(sPic.Handle, Len(tB), ref getObject);
+        tB = getObject;
         Width = tB.bmWidth;
         Height = tB.bmHeight;
         int lhDCC = CreateDCAsNull("DISPLAY", 0, 0, 0);

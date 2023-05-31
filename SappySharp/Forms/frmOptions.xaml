@@ -6,7 +6,7 @@
     <Grid>
         <Grid x:Name="picPage_3" Margin="128,96,0,0" Width="393" Height="89" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ComboBox x:Name="cbxPresets" Margin="240,56,0,0" Padding="2,2,2,2" Width="145" Height="22" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" Selected="cbxPresets_Click" />
+                    HorizontalAlignment="Left" SelectionChanged="cbxPresets_Click" />
             <usercontrols:RenderingControl x:Name="picSkin_2" Margin="136,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
                     HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
             <usercontrols:RenderingControl x:Name="picSkin_1" Margin="112,64,0,0" Width="16" Height="16" VerticalAlignment="Top"

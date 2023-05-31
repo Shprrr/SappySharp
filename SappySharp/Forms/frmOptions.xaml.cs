@@ -73,6 +73,7 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
+using stdole;
 
 namespace SappySharp.Forms;
 
@@ -178,6 +179,20 @@ public partial class frmOptions : Window
         Unload();
     }
 
+    internal class AxHostConverter : System.Windows.Forms.AxHost
+    {
+        private AxHostConverter() : base("") { }
+
+        public static IPictureDisp ImageToPictureDisp(System.Drawing.Image image)
+        {
+            return (IPictureDisp)GetIPictureDispFromPicture(image);
+        }
+
+        public static System.Drawing.Image PictureDispToImage(IPictureDisp pictureDisp)
+        {
+            return GetPictureFromIPicture(pictureDisp);
+        }
+    }
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
     private void Form_Load()
     {
@@ -204,8 +219,8 @@ public partial class frmOptions : Window
 
         SetCaptions(this);
         Title = Properties.Resources._6000;
-        Picture1.Source = frmSappy.instance.imlStatusbar.ItemPicture(3);
-        Picture2.Source = frmSappy.instance.imlStatusbar.ItemPicture(4);
+        Picture1.Source = ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)frmSappy.instance.imlStatusbar.ItemPicture(3)));
+        Picture2.Source = ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)frmSappy.instance.imlStatusbar.ItemPicture(4)));
 
         txtXFile.Text = GetSetting("XML File");
         if (txtXFile.Text == "") txtXFile.Text = "sappy.xml";
@@ -264,7 +279,7 @@ public partial class frmOptions : Window
         }
     }
 
-    private void Form_Unload(ref int Cancel)
+    private void Form_Unload(object sender, RoutedEventArgs e)
     {
         //DetachMessage(this, hwnd, WM_MOUSEWHEEL);
     }

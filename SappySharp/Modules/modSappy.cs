@@ -225,7 +225,7 @@ static partial class modSappy
     [LibraryImport("gdi32.dll")]
     public static partial int GetPixel(int hdc, int x, int y);
 
-    public static void Main()
+    public static void MainStart()
     {
         System.Reflection.AssemblyName assemblyName = Application.ResourceAssembly.GetName();
         Trace("This is " + assemblyName.Name + " version " + assemblyName.Version.Major + "." + assemblyName.Version.Minor + "." + assemblyName.Version.Revision);

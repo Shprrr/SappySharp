@@ -49,7 +49,7 @@
                 <Button x:Name="cmdSpeed_0" Margin="248,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"
                         HorizontalAlignment="Left" Content="&lt;" Tag="[NoLocal]" Click="cmdSpeed_Click" />
                 <ComboBox x:Name="cbxSongs" Margin="128,8,0,0" Padding="2,2,2,2" Width="161" Height="22" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" Tag="[NoLocal]" SelectionChanged="cbxSongs_SelectionChanged" />
+                        HorizontalAlignment="Left" Tag="[NoLocal]" SelectionChanged="cbxSongs_Change" />
                 <usercontrols:VolumeSlider x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25"
                         VerticalAlignment="Top" HorizontalAlignment="Left" Change="VolumeSlider1_Change" />
                 <Button x:Name="cmdSpeed_1" Margin="260,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"

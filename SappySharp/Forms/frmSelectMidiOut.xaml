@@ -7,7 +7,7 @@
         <Button x:Name="Command1" Margin="152,112,0,0" Padding="2,2,2,2" Width="89" Height="25" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="[4]" Click="Command1_Click" />
         <ListBox x:Name="List1" Margin="8,8,0,0" Padding="2,2,2,2" Width="233" Height="89" VerticalAlignment="Top"
-                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="List1_Click" />
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="List1_Click" />
         <Label x:Name="Label1" Margin="8,104,0,0" Padding="2,2,2,2" Width="137" Height="33" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="Blah" />
     </Grid>

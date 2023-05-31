@@ -18,10 +18,10 @@
                 HorizontalAlignment="Left" Content="[5007] Listen" Click="Command1_Click" />
         <Grid x:Name="Picture1_1" Margin="8,32,0,0" Width="345" Height="217" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ListBox x:Name="lstDrums" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstDrums_Click"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="lstDrums_Click"
                     MouseDoubleClick="lstDrums_DblClick" />
             <ListBox x:Name="lstDrumR" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstDrumR_Click"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="lstDrumR_Click"
                     MouseDoubleClick="lstDrumR_DblClick" />
             <Label x:Name="Label5" Margin="176,0,0,0" Padding="2,2,2,2" Width="169" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5003] Remap to" />
@@ -32,10 +32,10 @@
             <TextBox x:Name="txtTranspose" Margin="128,192,0,0" Padding="2,2,2,2" Width="41" Height="19" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Text="0" LostFocus="txtTranspose_LostFocus" />
             <ListBox x:Name="lstInsts" Margin="0,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstInsts_Click"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="lstInsts_Click"
                     MouseDoubleClick="lstInsts_DblClick" />
             <ListBox x:Name="lstRemapTo" Margin="176,16,0,0" Padding="2,2,2,2" Width="169" Height="169" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Selected="lstRemapTo_Click"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" SelectionChanged="lstRemapTo_Click"
                     MouseDoubleClick="lstRemapTo_DblClick" />
             <Label x:Name="Label3" Margin="0,192,0,0" Padding="2,2,2,2" Width="121" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[5006] Transpose" />

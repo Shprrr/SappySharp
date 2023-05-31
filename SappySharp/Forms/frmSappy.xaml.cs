@@ -969,6 +969,12 @@ public partial class frmSappy : Window, ISubclass
         picChannels.Height = Height - picChannels.Margin.Top - picStatusbar.Height;
     }
 
+    private void Form_Unload(object sender, RoutedEventArgs e)
+    {
+        int cancel = e.Handled ? 1 : 0;
+        Form_Unload(ref cancel);
+        e.Handled = cancel != 0;
+    }
     private void Form_Unload(ref int Cancel)
     {
         // TODO: (NOT SUPPORTED): On Error Resume Next

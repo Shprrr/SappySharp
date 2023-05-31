@@ -75,6 +75,7 @@ using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
+using System.Drawing.Printing;
 
 namespace SappySharp.Classes;
 
@@ -910,7 +911,7 @@ public partial class gCommonDialog
         if (PrinterDC == -1)
         {
             PrinterDC = 0;
-            if ((flags & (int)EChooseFont.CF_PrinterFonts) != 0) PrinterDC = Printer.hdc;
+            if ((flags & (int)EChooseFont.CF_PrinterFonts) != 0) PrinterDC = (int)new PrinterSettings().CreateMeasurementGraphics().GetHdc();
         }
         else
         {

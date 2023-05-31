@@ -9,6 +9,6 @@ public partial class App : Application
 {
     public App()
     {
-        modSappy.Main();
+        modSappy.MainStart();
     }
 }
