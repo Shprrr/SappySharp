@@ -29,7 +29,8 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore --property:OutputPath=..\release
+      #run: dotnet build --configuration Release --no-restore --property:OutputPath=..\release
+      run: dotnet msbuild -property:Configuration=Release;OutputPath=..\release
     - name: Unit tests
       if: ${{ env.UNIT_TEST }}
       run: dotnet test --no-restore --verbosity normal
