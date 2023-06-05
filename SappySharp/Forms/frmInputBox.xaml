@@ -1,0 +1,21 @@
+<Window x:Class="SappySharp.Forms.frmInputBox" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="" Height="104" Width="312"
+        MouseDown="Form_MouseDown" MouseMove="Form_MouseMove" Loaded="Form_Load" ContentRendered="Form_Paint">
+    <Grid>
+        <TextBox x:Name="Text1" Margin="8,40,0,0" Padding="2,2,2,2" Width="297" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Text="baz" />
+        <Button x:Name="Command1" Margin="224,72,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[5]Cancel" Click="Command1_Click" />
+        <Button x:Name="Command2" Margin="136,72,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Content="[4]OK" Click="Command2_Click" />
+        <Line x:Name="Line3" X1="8" Y1="64" X2="304" Y2="64"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Line x:Name="Line4" X1="8" Y1="65" X2="304" Y2="65"
+                Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Label x:Name="Label1" Margin="8,8,0,0" Padding="2,2,2,2" Width="297" Height="25" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="bar" MouseDown="Label1_MouseDown"
+                MouseMove="Label1_MouseMove" />
+    </Grid>
+</Window>

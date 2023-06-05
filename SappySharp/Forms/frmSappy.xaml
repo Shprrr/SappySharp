@@ -1,0 +1,123 @@
+<Window x:Class="SappySharp.Forms.frmSappy" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Sappy" Height="440" Width="495"
+        Loaded="Form_Load" Unloaded="Form_Unload" SizeChanged="Form_Resize">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="mnuFile" Header="[10]File">
+                <MenuItem x:Name="mnuFileOpen" Header="[11]Open" Click="mnuFileOpen_Click" />
+                <Separator x:Name="mnuFileSep" />
+                <MenuItem x:Name="mnuFileExit" Header="[12]Exit" Click="mnuFileExit_Click" />
+            </MenuItem>
+            <MenuItem x:Name="mnuTasks" Header="[20]Tasks" />
+            <MenuItem x:Name="mnuOptions" Header="[30]Options">
+                <MenuItem x:Name="mnuOutput_0" Header="[31]Output to MIDI" IsCheckable="True" Click="mnuOutput_Click" />
+                <MenuItem x:Name="mnuOutput_1" Header="[32]Output to Wave" IsCheckable="True" IsChecked="True"
+                        Click="mnuOutput_Click" />
+                <Separator x:Name="mnuOptionsSep" />
+                <MenuItem x:Name="mnuSeekPlaylist" Header="[36]Seek by Playlist" Click="mnuSeekPlaylist_Click" />
+                <MenuItem x:Name="mnuAutovance" Header="[37]AutoAdvance" Visibility="Hidden" Click="mnuAutovance_Click" />
+                <MenuItem x:Name="mnuGBMode" Header="[33]Gameboy Mode" Click="mnuGBMode_Click" />
+                <Separator x:Name="mnuOptionsSep2" />
+                <MenuItem x:Name="mnuImportLST" Header="[35]Import LST file" Click="mnuImportLST_Click" />
+                <MenuItem x:Name="mnuSelectMIDI" Header="[38]Select MIDI device..." Click="mnuSelectMIDI_Click" />
+                <MenuItem x:Name="mnuMidiMap" Header="[39]Remap MIDI instruments..." Click="mnuMidiMap_Click" />
+                <Separator x:Name="mnuOptionsSep3" />
+                <MenuItem x:Name="mnuSettings" Header="[34]Settings" Click="mnuSettings_Click" />
+            </MenuItem>
+            <MenuItem x:Name="mnuHelp" Header="[40]Help">
+                <MenuItem x:Name="mnuHelpHelp" Header="[43]Help" Click="mnuHelpHelp_Click" />
+                <MenuItem x:Name="mnuHelpAbout" Header="[41]About" Click="mnuHelpAbout_Click" />
+                <MenuItem x:Name="mnuHelpOnline" Header="[42]HR Online" Click="mnuHelpOnline_Click" />
+            </MenuItem>
+        </Menu>
+
+        <Grid>
+            <usercontrols:RenderingControl x:Name="picTop" Margin="170,0,0,0" Width="324" Height="88" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Rendering="picTop_Paint">
+                <Button x:Name="cmdStop" Margin="287,51,0,0" Padding="2,2,2,2" Width="33" Height="33" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="[ ]" Click="cmdStop_Click" />
+                <Button x:Name="cmdPrevSong" Margin="64,8,0,0" Padding="2,2,2,2" Width="22" Height="22" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="&lt;" Click="cmdPrevSong_Click" />
+                <Button x:Name="cmdNextSong" Margin="292,8,0,0" Padding="2,2,2,2" Width="22" Height="22" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="&gt;" Click="cmdNextSong_Click" />
+                <TextBox x:Name="txtSong" Margin="91,8,0,0" Padding="2,2,2,2" Width="33" Height="22" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Text="1" LostFocus="txtSong_LostFocus" />
+                <Button x:Name="cmdPlay" Margin="254,51,0,0" Padding="2,2,2,2" Width="33" Height="33" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="|>" Click="cmdPlay_Click" />
+                <Button x:Name="cmdSpeed_0" Margin="248,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="&lt;" Tag="[NoLocal]" Click="cmdSpeed_Click" />
+                <ComboBox x:Name="cbxSongs" Margin="128,8,0,0" Padding="2,2,2,2" Width="161" Height="22" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Tag="[NoLocal]" SelectionChanged="cbxSongs_Change" />
+                <usercontrols:VolumeSlider x:Name="VolumeSlider1" Margin="152,56,0,0" Width="65" Height="25"
+                        VerticalAlignment="Top" HorizontalAlignment="Left" Change="VolumeSlider1_Change" />
+                <Button x:Name="cmdSpeed_1" Margin="260,35,0,0" Padding="2,2,2,2" Width="13" Height="13" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" Content="&gt;" Tag="[NoLocal]" Click="cmdSpeed_Click" />
+                <Label x:Name="lblSong" Margin="8,11,0,0" Padding="2,2,2,2" Width="49" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[101]Song" />
+                <Label x:Name="lblSpeed" Margin="208,35,0,0" Padding="2,2,2,2" Width="33" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="0" />
+                <Label x:Name="Label4" Margin="144,35,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[93]Speed" />
+                <Label x:Name="lblInst" Margin="72,67,0,0" Padding="2,2,2,2" Width="65" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="0x000000" />
+                <Label x:Name="Label3" Margin="8,67,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[92]Voices" />
+                <Label x:Name="lblLoc" Margin="72,51,0,0" Padding="2,2,2,2" Width="65" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="0x000000" />
+                <Label x:Name="Label2" Margin="8,51,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[91]Header" />
+                <Label x:Name="lblDef" Margin="72,35,0,0" Padding="2,2,2,2" Width="65" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="0x000000" />
+                <Label x:Name="Label1" Margin="8,35,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[90]Table" />
+            </usercontrols:RenderingControl>
+            <Image x:Name="picSkin" Margin="280,288,0,0" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <usercontrols:RenderingControl x:Name="picStatusbar" Margin="0,423,0,0" Width="495" Height="17"
+                    VerticalAlignment="Top" HorizontalAlignment="Left" Rendering="picStatusBar_Paint"
+                    MouseDoubleClick="picStatusbar_DblClick" MouseMove="picStatusbar_MouseMove" />
+            <Grid x:Name="picChannels" Margin="170,88,0,0" Width="324" Height="177" VerticalAlignment="Top"
+                    HorizontalAlignment="Left">
+                <CheckBox x:Name="chkMute" Margin="2,18,0,0" Padding="2,2,2,2" Width="12" Height="12" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" IsChecked="True" Click="chkMute_Click" />
+                <usercontrols:ChannelViewer x:Name="cvwChannelTemplate" Margin="0,31,0,0" Width="321" Height="16"
+                        VerticalAlignment="Top" HorizontalAlignment="Left" mute="1" Location="0x000000" Delay="0" patch="0"
+                        volume="0" Note="" iType="Direct" />
+                <Line x:Name="linProgress" X1="-1" Y1="16" X2="136" Y2="16" StrokeThickness="2" Stroke="#FFC0C000" />
+                <Label x:Name="lblExpand" Margin="305,16,0,0" Padding="2,2,2,2" Width="16" Height="15" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Marlett" FontSize="9.75" FontWeight="Bold" Content="6"
+                        Tag="[NoLocal]" MouseUp="lblExpand_Click" />
+                <Label x:Name="lblSongName" Margin="16,2,0,0" Padding="2,2,2,2" Width="289" Height="11" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" FontWeight="Bold"
+                        Content="[102]PleaseLoadGame" Tag="[NoLocal]" />
+                <Line x:Name="Line2" X1="0" Y1="16" X2="326" Y2="16" StrokeThickness="2" Stroke="#FF808000" />
+                <Line x:Name="Line1" X1="0" Y1="30" X2="326" Y2="30" StrokeThickness="2" Stroke="#FF808000" />
+                <Label x:Name="lblPC" Margin="18,17,0,0" Padding="2,2,2,2" Width="41" Height="12" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Content="[103]Loc" />
+                <Label x:Name="lblDel" Margin="64,17,0,0" Padding="2,2,2,2" Width="17" Height="12" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Content="Del" />
+                <Label x:Name="lblNote" Margin="88,17,0,0" Padding="2,2,2,2" Width="65" Height="12" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Content="[104]Note" />
+            </Grid>
+            <DockPanel x:Name="ebrContainer" Margin="0,0,0,0" Width="170" Height="423" VerticalAlignment="Top"
+                    HorizontalAlignment="Left">
+                <Image x:Name="picScreenshot" Margin="24,304,0,0" Width="122" Height="82" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" MouseLeftButtonDown="picScreenshot_DblClick" />
+            </DockPanel>
+            <DockPanel x:Name="cPopContainer" Margin="200,288,0,0" Width="0" Height="0" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" />
+            <Border x:Name="Shape1" Margin="192,280,0,0" Width="225" Height="57" BorderBrush="Navy" BorderThickness="2"
+                    Visibility="Hidden">
+                <Canvas Background="Blue">
+                    <Line X1="0" Y1="0" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                            Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                            Stroke="Navy" />
+                    <Line X1="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}" Y1="0" X2="0"
+                            Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                            Stroke="Navy" />
+                </Canvas>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
