@@ -26,11 +26,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '7.0.x'
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       #run: dotnet build --configuration Release --no-restore --property:OutputPath=..\release
-      run: dotnet msbuild -p:Configuration=Release -p:OutputPath=..\release
+      run: msbuild -p:Configuration=Release -p:OutputPath=..\release
     - name: Unit tests
       if: ${{ env.UNIT_TEST }}
       run: dotnet test --no-restore --verbosity normal
