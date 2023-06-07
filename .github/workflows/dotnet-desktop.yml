@@ -28,8 +28,15 @@ jobs:
         dotnet-version: '7.0.x'
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.1
+
+    - name: Install COM dependencies
+      run: |
+        regsvr32 PortLibrary\vbalExpBar6.ocx
+        regsvr32 PortLibrary\cPopMenu6.ocx
+        regsvr32 PortLibrary\timermm.dll
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       #run: dotnet build --configuration Release --no-restore --property:OutputPath=..\release
       run: msbuild -p:Configuration=Release -p:OutputPath=..\release
