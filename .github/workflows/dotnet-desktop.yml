@@ -34,6 +34,7 @@ jobs:
         regsvr32 PortLibrary\vbalExpBar6.ocx
         regsvr32 PortLibrary\cPopMenu6.ocx
         regsvr32 PortLibrary\timermm.dll
+        regsvr32 PortLibrary\SSubTmr6.dll
     - name: Install dependencies
       run: dotnet restore
 
