@@ -11,9 +11,10 @@ public partial class VolumeSlider : UserControl
 {
     public VolumeSlider()
     {
+        Background = Brushes.White;
+        Cursor = Cursors.Hand;
         InitializeComponent();
         GotFocus += UserControl_GotFocus;
-        Loaded += UserControl_Initialize;
         KeyDown += UserControl_KeyDown;
         LostFocus += UserControl_LostFocus;
         MouseDown += UserControl_MouseDown;
@@ -98,12 +99,6 @@ public partial class VolumeSlider : UserControl
     {
         HasFocus = true;
         UserControl_Paint();
-    }
-
-    private void UserControl_Initialize(object sender, RoutedEventArgs e)
-    {
-        Background = Brushes.White;
-        Cursor = Cursors.Hand;
     }
 
     private void UserControl_KeyDown(object sender, KeyEventArgs e) => UserControl_KeyDown((int)e.Key, 0);
@@ -258,7 +253,7 @@ public partial class VolumeSlider : UserControl
         {
             int r = 0, g = 0, b = 0;
             mColorUtils.SplitRGB(value, ref r, ref g, ref b);
-            ((SolidColorBrush)Background).Color = Color.FromRgb((byte)r, (byte)g, (byte)b);
+            Background = new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
         }
     }
 }

@@ -1893,7 +1893,7 @@ public partial class frmSappy : Window, ISubclass
 
     private void picStatusBar_Paint(object sender, DrawingContext e)
     {
-        cStatusBar.Draw();
+        cStatusBar?.Draw();
     }
 
     private void picTop_Paint(object sender, DrawingContext e)

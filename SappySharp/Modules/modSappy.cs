@@ -302,7 +302,7 @@ static partial class modSappy
     public static bool InitCommonControlsVB()
     {
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        tagInitCommonControlsEx iccex = null;
+        tagInitCommonControlsEx iccex = new();
         iccex.lngSize = Marshal.SizeOf(iccex);
         iccex.lngICC = ICC_USEREX_CLASSES;
         InitCommonControlsEx(ref iccex);
@@ -532,6 +532,7 @@ static partial class modSappy
         cRegistry myReg = new()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            Default = 0,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
             ValueType = cRegistry.ERegistryValueTypes.REG_DWORD
