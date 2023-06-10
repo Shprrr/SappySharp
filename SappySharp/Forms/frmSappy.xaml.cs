@@ -80,6 +80,7 @@ using System.Reflection;
 using SappySharp.UserControls;
 using System.Windows.Forms.Integration;
 using vbalExplorerBarLib6;
+using PortControlLibrary;
 using cPopMenu6;
 using stdole;
 using SSubTimer6;
@@ -108,9 +109,9 @@ public partial class frmSappy : Window, ISubclass
 
     public List<ChannelViewer> cvwChannel { get; private set; } = new();
 
-    public vbalExplorerBarCtl ebr { get; private set; }
+    public ExplorerBarCtl ebr { get; private set; }
 
-    public PopMenu cPop { get; private set; }
+    public PopMenuCtl cPop { get; private set; }
 
     // ______________
     // |  SAPPY 2006  |
@@ -472,7 +473,7 @@ public partial class frmSappy : Window, ISubclass
         {
             if (ItemNumber == TaskMenus[i])
             {
-                itm = ebr.Bars["Tasks"].Items[cPop.MenuKey[ItemNumber]];
+                itm = ebr.Bars["Tasks"].Items[cPop.get_MenuKey(ItemNumber)];
                 ebr_ItemClick(ref itm);
             }
         }
@@ -480,7 +481,7 @@ public partial class frmSappy : Window, ISubclass
 
     private void cPop_ItemHighlight(ref int ItemNumber, ref bool bEnabled, ref bool bSeparator)
     {
-        cStatusBar.PanelText("simple", cPop.HelpText[ItemNumber]);
+        cStatusBar.PanelText("simple", cPop.get_HelpText(ItemNumber));
         // cStatusBar.SimpleMode = True
         // cStatusBar.SimpleText = cPop.HelpText(ItemNumber)
         picStatusbar.Refresh();
@@ -620,18 +621,18 @@ public partial class frmSappy : Window, ISubclass
     {
         // To call an OCX control.
         WindowsFormsHost ebrHost = new();
-        ebr = new vbalExplorerBarCtl();
+        ebr = new ExplorerBarCtl();
         ebr.BarClick += ebr_BarClick;
         ebr.ItemClick += ebr_ItemClick;
-        ebrHost.Child = (System.Windows.Forms.Control)ebr;
+        ebrHost.Child = ebr;
         ebrContainer.Children.Add(ebrHost);
 
         WindowsFormsHost cPopHost = new();
-        cPop = new PopMenu();
-        cPop.Click += cPop_Click;
+        cPop = new PopMenuCtl();
+        cPop.PopMenuClick += cPop_Click;
         cPop.ItemHighlight += cPop_ItemHighlight;
         cPop.MenuExit += cPop_MenuExit;
-        cPopHost.Child = (System.Windows.Forms.Control)cPop;
+        cPopHost.Child = cPop;
         cPopContainer.Children.Add(cPopHost);
 
         int i = 0;
@@ -795,24 +796,24 @@ public partial class frmSappy : Window, ISubclass
         Trace("- Set menu icons and help");
         object hIml = imlImages.hIml;
         cPop.set_ImageList(ref hIml);
-        cPop.ItemIcon["mnuFileOpen"] = 0;
-        cPop.ItemIcon["mnuOutput(0)"] = 2;
-        cPop.ItemIcon["mnuOutput(1)"] = 3;
-        cPop.ItemIcon["mnuSeekPlaylist"] = 4;
-        // cPop.ItemIcon["mnuAutovance"] = 5
-        cPop.ItemIcon["mnuGBMode"] = 6;
-        cPop.ItemIcon["mnuHelpHelp"] = 7;
-        cPop.ItemIcon["mnuHelpOnline"] = 8;
-        cPop.ItemIcon["mnuImportLST"] = 20;
-        cPop.ItemIcon["mnuSelectMIDI"] = 22;
-        cPop.ItemIcon["mnuSettings"] = 24;
-        cPop.ItemIcon["mnuMidiMap"] = 23;
-        cPop.HelpText["mnuFileOpen"] = Properties.Resources._70;
-        cPop.HelpText["mnuFileExit"] = Properties.Resources._71;
-        cPop.HelpText["mnuOutput(0)"] = Properties.Resources._72;
-        cPop.HelpText["mnuOutput(1)"] = Properties.Resources._73;
-        cPop.HelpText["mnuHelpAbout"] = Properties.Resources._75;
-        cPop.HelpText["mnuHelpOnline"] = Properties.Resources._76;
+        cPop.set_ItemIcon("mnuFileOpen", 0);
+        cPop.set_ItemIcon("mnuOutput(0)", 2);
+        cPop.set_ItemIcon("mnuOutput(1)", 3);
+        cPop.set_ItemIcon("mnuSeekPlaylist", 4);
+        // cPsp.get_ItemIcon("mnuAutovance", )5
+        cPop.set_ItemIcon("mnuGBMode", 6);
+        cPop.set_ItemIcon("mnuHelpHelp", 7);
+        cPop.set_ItemIcon("mnuHelpOnline", 8);
+        cPop.set_ItemIcon("mnuImportLST", 20);
+        cPop.set_ItemIcon("mnuSelectMIDI", 22);
+        cPop.set_ItemIcon("mnuSettings", 24);
+        cPop.set_ItemIcon("mnuMidiMap", 23);
+        cPop.set_HelpText("mnuFileOpen", Properties.Resources._70);
+        cPop.set_HelpText("mnuFileExit", Properties.Resources._71);
+        cPop.set_HelpText("mnuOutput(0)", Properties.Resources._72);
+        cPop.set_HelpText("mnuOutput(1)", Properties.Resources._73);
+        cPop.set_HelpText("mnuHelpAbout", Properties.Resources._75);
+        cPop.set_HelpText("mnuHelpOnline", Properties.Resources._76);
 
         // Not setting any images for Japanese systems until further notice.
         if (Properties.Resources._10000 != "<JAPPLZ>")
@@ -872,7 +873,7 @@ public partial class frmSappy : Window, ISubclass
         ebr.Bars["Tasks"].Items["makemidi"].ToolTipText = Properties.Resources._80;
         for (i = 1; i <= ebr.Bars["Tasks"].Items.Count; i += 1)
         {
-            TaskMenus[i] = cPop.AddItem(ebr.Bars["Tasks"].Items[i].Text, ebr.Bars["Tasks"].Items[i].Key, ebr.Bars["Tasks"].Items[i].ToolTipText, lParentIndex: cPop.MenuIndex["mnuTasks"], lIconIndex: ebr.Bars["Tasks"].Items[i].IconIndex, bChecked: false, bEnabled: false);
+            TaskMenus[i] = cPop.AddItem(ebr.Bars["Tasks"].Items[i].Text, ebr.Bars["Tasks"].Items[i].Key, ebr.Bars["Tasks"].Items[i].ToolTipText, lParentIndex: cPop.get_MenuIndex("mnuTasks"), lIconIndex: ebr.Bars["Tasks"].Items[i].IconIndex, bChecked: false, bEnabled: false);
         }
         ebr.Bars["Tasks"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Tasks"].Index + " state");
         Trace("- Set up info bar");
@@ -1163,7 +1164,7 @@ public partial class frmSappy : Window, ISubclass
         cmdStop.IsEnabled = false;
         for (int i = 1; i <= 5; i += 1)
         {
-            cPop.Enabled[TaskMenus[i]] = false;
+            cPop.set_Enabled(TaskMenus[i], false);
         }
 
         FileOpen(99, myFile, OpenMode.Binary);
@@ -1235,7 +1236,7 @@ public partial class frmSappy : Window, ISubclass
         LoadSong(int.Parse(txtSong.Text));
         for (int i = 1; i <= 5; i += 1)
         {
-            cPop.Enabled[TaskMenus[i]] = true;
+            cPop.set_Enabled(TaskMenus[i], true);
         }
 
         mnuFileOpen.Tag = "";

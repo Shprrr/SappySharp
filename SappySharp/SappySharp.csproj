@@ -73,6 +73,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PortControlLibrary\PortControlLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SappySharp", "SappySharp\SappySharp.csproj", "{AF6AFAD9-BCC9-473E-A769-035C1D312735}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortControlLibrary", "PortControlLibrary\PortControlLibrary.csproj", "{7A3DC9A1-69F6-4DA0-9E6C-05BAC100676A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AF6AFAD9-BCC9-473E-A769-035C1D312735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF6AFAD9-BCC9-473E-A769-035C1D312735}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF6AFAD9-BCC9-473E-A769-035C1D312735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3DC9A1-69F6-4DA0-9E6C-05BAC100676A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3DC9A1-69F6-4DA0-9E6C-05BAC100676A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3DC9A1-69F6-4DA0-9E6C-05BAC100676A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3DC9A1-69F6-4DA0-9E6C-05BAC100676A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
