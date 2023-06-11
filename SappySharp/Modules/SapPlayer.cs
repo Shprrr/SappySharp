@@ -74,11 +74,9 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 
-
-
 static class SapPlayer
 {
-    public static string[,] NoiseWaves = new string[1, 9];
+    public static string[,] NoiseWaves = new string[2, 10];
     public static bool Details = false;
     public class SappyMasterTableEntry
     {

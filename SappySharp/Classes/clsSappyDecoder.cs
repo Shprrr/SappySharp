@@ -17,7 +17,6 @@ using static Microsoft.VisualBasic.FileSystem;
 using static Microsoft.VisualBasic.Financial;
 using static Microsoft.VisualBasic.Information;
 using static Microsoft.VisualBasic.Interaction;
-using static Microsoft.VisualBasic.Strings;
 using static Microsoft.VisualBasic.VBMath;
 using System.Collections.Generic;
 using System.Text;
@@ -491,7 +490,7 @@ public partial class clsSappyDecoder
                 }
                 c = ReadByte(1);
 
-                if (i == 7) VBWriteFile(7, Right("000000" + Hex(pc), 6) + vbTab + Hex(c));
+                if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + Hex(c));
                 if (pc == 0x11BE31)
                 {
                     VBWriteFile(7, "Warning!");
@@ -549,7 +548,7 @@ public partial class clsSappyDecoder
                         byte D = ReadByte(1);
                         byte pn = 0;
 
-                        if (i == 7) VBWriteFile(7, Right("000000" + Hex(pc), 6) + vbTab + "  " + Hex(D));
+                        if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "  " + Hex(D));
 
                         if (D >= 0x80)
                         {
@@ -566,14 +565,14 @@ public partial class clsSappyDecoder
                             lln[nc] = D;
                             pc++;
                             byte e = ReadByte(1);
-                            if (i == 7) VBWriteFile(7, Right("000000" + Hex(pc), 6) + vbTab + "    " + Hex(e));
+                            if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "    " + Hex(e));
                             byte F;
                             if (e < 0x80)
                             {
                                 llv[nc] = e;
                                 pc++;
                                 F = ReadByte(1);
-                                if (i == 7) VBWriteFile(7, Right("000000" + Hex(pc), 6) + vbTab + "      " + Hex(F));
+                                if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "      " + Hex(F));
                                 if (F >= 0x80)
                                 {
                                     F = lla[nc];
@@ -1005,8 +1004,8 @@ public partial class clsSappyDecoder
             System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
             msg = msg + " --- dumped by " + assemblyName.Name + " version " + assemblyName.Version.Major + "." + assemblyName.Version.Minor;
 
-            if (Len(msg) > 120) msg = Left(msg, 120);
-            BufferEvent(Chr(0xFF) + Chr(2) + Chr(Len(msg)) + msg, 0);
+            if (Strings.Len(msg) > 120) msg = Strings.Left(msg, 120);
+            BufferEvent(Chr(0xFF) + Chr(2) + Chr(Strings.Len(msg)) + msg, 0);
         }
 
         return;
@@ -1032,8 +1031,8 @@ public partial class clsSappyDecoder
         for (int i = 0; i <= 9; i += 1)
         {
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(0," + i + ")");
-            for (int j = 0; j <= sz; j += 1)
-            { // 2047 // 16383
+            for (int j = 0; j <= sz; j += 1) // 2047 // 16383
+            {
                 NoiseWaves[0, i] = NoiseWaves[0, i] + Chr((int)Int(Rnd() * 153)); // (255 * 0.6)))
             }
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(1," + i + ")");
@@ -1969,11 +1968,11 @@ public partial class clsSappyDecoder
     public int FlipLong(int Value)
     {
         string[] b = new string[4];
-        string s1 = Right("00000000" + Hex(Value), 8);
-        b[0] = Mid(s1, 1, 2);
-        b[1] = Mid(s1, 3, 2);
-        b[2] = Mid(s1, 5, 2);
-        b[3] = Mid(s1, 7, 2);
+        string s1 = Strings.Right("00000000" + Hex(Value), 8);
+        b[0] = Strings.Mid(s1, 1, 2);
+        b[1] = Strings.Mid(s1, 3, 2);
+        b[2] = Strings.Mid(s1, 5, 2);
+        b[3] = Strings.Mid(s1, 7, 2);
         string s2 = b[3] + b[2] + b[1] + b[0];
         return (int)Val("&H" + s2);
         // Dim b1 As Byte, b2 As Byte, b3 As Byte, b4 As Byte
@@ -2047,7 +2046,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Mid(tsi, ai / 2 + 1, 1) == "", 0, Asc(Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }
@@ -2090,7 +2089,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Mid(tsi, ai / 2 + 1, 1) == "", 0, Asc(Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }

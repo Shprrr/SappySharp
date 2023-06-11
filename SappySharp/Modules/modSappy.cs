@@ -521,6 +521,7 @@ static partial class modSappy
         cRegistry myReg = new()
         {
             ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            Default = null,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
             ValueType = cRegistry.ERegistryValueTypes.REG_SZ

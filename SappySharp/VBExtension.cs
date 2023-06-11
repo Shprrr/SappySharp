@@ -189,7 +189,46 @@ public static class VBExtension
     public static string CStr(object A) { return "" + A; }
     public static bool CBool(object A) { { return (A is System.IConvertible) ? ((System.IConvertible)A).ToBoolean(null) : false; } }
     public static decimal CCur(decimal A) { return A; }
-    //public static string Chr(int C) { return Chr((int)C); }
+    public static char Chr(int C)
+    {
+        if (C < -32768 || C > 65535)
+            throw new ArgumentOutOfRangeException(nameof(C));
+
+        if (C >= 0 && C <= 127)
+            return Convert.ToChar(C);
+
+        System.Text.Encoding enc;
+
+        enc = System.Text.Encoding.Default;
+
+        if (enc.IsSingleByte)
+            if (C < 0 || C > 255)
+                throw new InvalidOperationException();
+
+        System.Text.Decoder dec;
+        int CharCount;
+        char[] c = new char[2]; //Use 2 char array, but only return first Char if two returned
+        byte[] b = new byte[2];
+
+        dec = enc.GetDecoder();
+        if (C >= 0 && C <= 255)
+        {
+            b[0] = (byte)(C & 0xFF);
+            CharCount = dec.GetChars(b, 0, 1, c, 0);
+        }
+        else
+        {
+            //Bytes must be swapped in memory to HI/LO
+            b[0] = (byte)((C & 0xFF00) >> 8);
+            b[1] = (byte)(C & 0xFF);
+            CharCount = dec.GetChars(b, 0, 2, c, 0);
+        }
+
+        //VB6 ignored the lobyte if it hibyte was not a valid lead character
+        //CharCount will be zero if the hibyte was not a lead character
+
+        return c[0];
+    }
     //public static string Mid(string S, int F) { return Mid(S, (int)F); }
     //public static string Mid(string S, int F, int L) { return Mid(S, (int)F, (int)L); }
     //public static string Left(string S, int F) { return Left(S, (int)F); }

@@ -662,10 +662,10 @@ public partial class frmSappy : Window, ISubclass
         mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
 
         Trace("- Create duty cycle waves");
-        DutyCycleWave[0] = new string(Chr(0), 14) + new string(Chr(255), 2);
-        DutyCycleWave[1] = new string(Chr(0), 12) + new string(Chr(255), 4);
-        DutyCycleWave[2] = new string(Chr(0), 16) + new string(Chr(255), 16);
-        DutyCycleWave[3] = new string(Chr(0), 4) + new string(Chr(255), 12);
+        DutyCycleWave[0] = new string(VBExtension.Chr(0), 14) + new string(VBExtension.Chr(255), 2);
+        DutyCycleWave[1] = new string(VBExtension.Chr(0), 12) + new string(VBExtension.Chr(255), 4);
+        DutyCycleWave[2] = new string(VBExtension.Chr(0), 16) + new string(VBExtension.Chr(255), 16);
+        DutyCycleWave[3] = new string(VBExtension.Chr(0), 4) + new string(VBExtension.Chr(255), 12);
 
         Trace("- Create Sappy engine");
         SappyDecoder = new clsSappyDecoder();
