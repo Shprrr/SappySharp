@@ -555,7 +555,7 @@ public partial class cVBALImageList : IDisposable
     int m_HDC = 0;
     private bool _disposedValue;
 
-    public dynamic OwnerHDC
+    public int OwnerHDC
     {
         set => m_HDC = value;
     }

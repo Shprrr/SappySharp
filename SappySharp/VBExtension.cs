@@ -875,10 +875,23 @@ public static class VBExtension
 
     public static List<T> controlArray<T>(this Window Frm, string name) where T : FrameworkElement
     {
-        List<T> res = new List<T>();
+        List<T> res = new();
         Panel G = (Panel)Frm.Content;
-        foreach (var C in G.GetChildren().OfType<FrameworkElement>())
+        foreach (FrameworkElement C in G.GetChildren().OfType<FrameworkElement>())
+        {
+            if (C is MenuItem menuItem) res.AddRange(controlArray<T>(menuItem, name));
             if (C.Name.StartsWith(name + "_")) res.Add((T)C);
+        }
+        return res;
+    }
+    private static List<T> controlArray<T>(this ItemsControl element, string name) where T : FrameworkElement
+    {
+        List<T> res = new();
+        foreach (FrameworkElement C in element.Items.OfType<FrameworkElement>())
+        {
+            if (C is MenuItem menuItem) res.AddRange(controlArray<T>(menuItem, name));
+            if (C.Name.StartsWith(name + "_")) res.Add((T)C);
+        }
         return res;
     }
     public static List<FrameworkElement> controlArray(this Window Frm, string name)

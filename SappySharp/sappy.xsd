@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="sappy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="rom"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rom">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="playlist"/>
+        <xs:element minOccurs="0" ref="midimap"/>
+      </xs:sequence>
+      <xs:attribute name="code" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NCName">
+            <xs:length value="4"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="creator"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="screenshot" type="xs:NCName"/>
+      <xs:attribute name="songtable" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="tagger"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="playlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="song"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="steal" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="song">
+    <xs:complexType mixed="true">
+      <xs:attribute name="track" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="midimap">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="inst"/>
+        <xs:element maxOccurs="unbounded" ref="drum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="inst">
+    <xs:complexType>
+      <xs:attribute name="from" use="required" type="xs:integer"/>
+      <xs:attribute name="to" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="drum">
+    <xs:complexType>
+      <xs:attribute name="from" use="required"/>
+      <xs:attribute name="kit" type="xs:integer"/>
+      <xs:attribute name="to" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

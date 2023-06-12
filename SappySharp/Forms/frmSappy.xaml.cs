@@ -737,7 +737,7 @@ public partial class frmSappy : Window, ISubclass
         StdPicture stdPic = new();
         imlImages = new cVBALImageList
         {
-            OwnerHDC = this.hWnd(),
+            OwnerHDC = (int)this.hWnd(),
             ColourDepth = eilColourDepth.ILC_COLOR8,
             IconSizeX = 16,
             IconSizeY = 16
@@ -761,7 +761,7 @@ public partial class frmSappy : Window, ISubclass
         Trace("- Load status pics");
         imlStatusbar = new cVBALImageList
         {
-            OwnerHDC = this.hWnd(),
+            OwnerHDC = (int)this.hWnd(),
             ColourDepth = eilColourDepth.ILC_COLOR8,
             IconSizeX = 16,
             IconSizeY = 16
