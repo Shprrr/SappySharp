@@ -294,8 +294,7 @@ public partial class cNoStatusBar : IDisposable
     public int AddPanel(ENSBRPanelStyleConstants eStyle = ENSBRPanelStyleConstants.estbrStandard, string sText = "", int iImgIndex = -1, int lMinWidth = 64, bool bSpring = false, bool bFitContents = false, int lItemData = 0, string sKey = "", dynamic vKeyBefore = null)
     {
         int _AddPanel = 0;
-        int iIndex = 0;
-        int i = 0;
+        int iIndex;
 
         if (m_iPanelCount >= 0xFF)
         {
@@ -303,7 +302,7 @@ public partial class cNoStatusBar : IDisposable
             return _AddPanel;
         }
 
-        if (!IsMissing(vKeyBefore))
+        if (vKeyBefore != null)
         {
             // Determine if vKeyBefore is valid:
             iIndex = PanelIndex(vKeyBefore);
@@ -313,7 +312,7 @@ public partial class cNoStatusBar : IDisposable
                 m_iPanelCount++;
                 // TODO: (NOT SUPPORTED): ReDim Preserve m_tPanels(1 To m_iPanelCount) As tStatusPanel
                 m_tPanels.Add(new());
-                for (i = m_iPanelCount - 1; i >= iIndex + 1; i--)
+                for (int i = m_iPanelCount - 1; i >= iIndex + 1; i--)
                 {
                     m_tPanels[i] = m_tPanels[i - 1];
                 }
@@ -337,7 +336,7 @@ public partial class cNoStatusBar : IDisposable
         // Set up the info:
         if (bSpring)
         {
-            for (i = 1; i <= m_iPanelCount; i += 1)
+            for (int i = 1; i <= m_iPanelCount; i += 1)
             {
                 if (i != iIndex)
                 {

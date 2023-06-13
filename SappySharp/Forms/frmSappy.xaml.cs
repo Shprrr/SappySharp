@@ -310,7 +310,7 @@ public partial class frmSappy : Window, ISubclass
 
         loopsToGo = GetSettingI("Song Repeats");
         Playing = true;
-        cmdPlay.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(20))));
+        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(20)).ToBitmap()));
 
         if (GetSettingI("mIRC Now Playing") != 0)
         {
@@ -440,7 +440,7 @@ public partial class frmSappy : Window, ISubclass
 
         Playing = false;
         timPlay.IsEnabled = false;
-        cmdPlay.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(19))));
+        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
         for (int i = 0; i <= cvwChannel.Count - 1; i += 1)
         {
             cvwChannel[i].volume = "0";
@@ -611,9 +611,14 @@ public partial class frmSappy : Window, ISubclass
             return (IPictureDisp)GetIPictureDispFromPicture(image);
         }
 
-        public static System.Drawing.Image PictureDispToImage(IPictureDisp pictureDisp)
+        public static System.Drawing.Image PictureToImage(IPicture picture)
         {
-            return GetPictureFromIPicture(pictureDisp);
+            return GetPictureFromIPicture(picture);
+        }
+
+        public static System.Drawing.Icon PictureToIcon(IPicture picture)
+        {
+            return System.Drawing.Icon.FromHandle(picture.Handle);
         }
     }
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
@@ -754,10 +759,10 @@ public partial class frmSappy : Window, ISubclass
         //cmdNextSong.Icon = 17;
         //cmdStop.Icon = 18;
         //cmdPlay.Icon = 19;
-        cmdPrevSong.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(16))));
-        cmdNextSong.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(17))));
-        cmdStop.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(18))));
-        cmdPlay.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(19))));
+        cmdPrevSong.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(16)).ToBitmap()));
+        cmdNextSong.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(17)).ToBitmap()));
+        cmdStop.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(18)).ToBitmap()));
+        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
         Trace("- Load status pics");
         imlStatusbar = new cVBALImageList
         {
@@ -1930,7 +1935,7 @@ public partial class frmSappy : Window, ISubclass
     {
         Playing = false;
         timPlay.IsEnabled = false;
-        cmdPlay.setImage(ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)imlImages.ItemPicture(19))));
+        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
         mnuOutput[0].IsEnabled = true;
         mnuOutput[1].IsEnabled = true;
         mnuGBMode.IsEnabled = mnuOutput[0].IsChecked;

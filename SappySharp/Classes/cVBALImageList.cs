@@ -494,20 +494,13 @@ public partial class cVBALImageList : IDisposable
     [DllImport("kernel32", EntryPoint = "lstrlenA")]
     private static extern int lstrlen(string lpString);
 
-    class PictDesc
+    struct PictDesc
     {
         public int cbSizeofStruct;
         public int picType;
         public int hImage;
         public int xExt;
         public int yExt;
-    }
-    class Guid
-    {
-        public int Data1;
-        public int Data2;
-        public int Data3;
-        public byte[] Data4 = new byte[7];
     }
     [DllImport("olepro32.dll")]
     private static extern int OleCreatePictureIndirect(ref PictDesc lpPictDesc, ref Guid riid, int fPictureOwnsHandle, ref IPicture ipic);
@@ -974,7 +967,7 @@ public partial class cVBALImageList : IDisposable
                 int iOrigCount = ImageCount;
 
                 bool bOk = true;
-                if (!IsMissing(vKeyAfter))
+                if (vKeyAfter != null)
                 {
                     if (ImageCount > 0)
                     {
@@ -1177,7 +1170,7 @@ public partial class cVBALImageList : IDisposable
     {
         string sKey;
 
-        if (IsEmpty(vKey) || IsMissing(vKey))
+        if (vKey == null)
         {
             sKey = "";
         }
@@ -1192,17 +1185,17 @@ public partial class cVBALImageList : IDisposable
             int lI = m_sKey.Length;
             if (Err().Number == 0)
             {
-                if (lIndex > lI)
+                if (lIndex + 1 > lI)
                 {
-                    Array.Resize(ref m_sKey, lIndex);
+                    Array.Resize(ref m_sKey, lIndex + 1);
                 }
             }
             else
             {
-                Array.Resize(ref m_sKey, lIndex);
+                Array.Resize(ref m_sKey, lIndex + 1);
             }
 
-            for (lI = 0; lI <= m_sKey.Length; lI += 1)
+            for (lI = 0; lI < m_sKey.Length; lI += 1)
             {
                 if (lI != lIndex)
                 {
@@ -1233,7 +1226,7 @@ public partial class cVBALImageList : IDisposable
 
         if (m_hIml != 0)
         {
-            if (IsMissing(vStartKey))
+            if (vStartKey == null)
             {
                 iStart = 0;
             }
@@ -1241,7 +1234,7 @@ public partial class cVBALImageList : IDisposable
             {
                 iStart = ItemIndex(vStartKey);
             }
-            if (IsMissing(vEndKey))
+            if (vEndKey == null)
             {
                 iEnd = ImageCount - 1;
             }
@@ -1295,25 +1288,13 @@ public partial class cVBALImageList : IDisposable
 
         // This is all magic if you ask me:
         IPicture NewPic = null;
-        PictDesc PicConv = null;
-        Guid IGuid = null;
+        PictDesc PicConv = new();
+        Guid IGuid = typeof(IPicture).GUID; // Fill in magic IPicture GUID {7BF80980-BF32-101A-8BBB-00AA00300CAB}
 
         PicConv.cbSizeofStruct = Len(PicConv);
         PicConv.picType = vbPicTypeIcon;
         PicConv.hImage = hIcon;
 
-        // Fill in magic IPicture GUID {7BF80980-BF32-101A-8BBB-00AA00300CAB}
-        IGuid.Data1 = 0x7BF80980;
-        IGuid.Data2 = 0xBF32;
-        IGuid.Data3 = 0x101A;
-        IGuid.Data4[0] = 0x8B;
-        IGuid.Data4[1] = 0xBB;
-        IGuid.Data4[2] = 0x0;
-        IGuid.Data4[3] = 0xAA;
-        IGuid.Data4[4] = 0x0;
-        IGuid.Data4[5] = 0x30;
-        IGuid.Data4[6] = 0xC;
-        IGuid.Data4[7] = 0xAB;
         OleCreatePictureIndirect(ref PicConv, ref IGuid, 1, ref NewPic);
 
         return NewPic;
@@ -1324,18 +1305,13 @@ public partial class cVBALImageList : IDisposable
         if (hBmp == 0) return null;
 
         IPicture NewPic = null;
-        PictDesc tPicConv = null;
-        Guid IGuid = null;
+        PictDesc tPicConv = new();
+        Guid IGuid = new(0x20400, 0, 0, 0xC0, 0, 0, 0, 0, 0, 0, 0x46); // Fill in IDispatch Interface ID {00020400-0000-0000-C000-000000000046}
 
         // Fill PictDesc structure with necessary parts:
         tPicConv.cbSizeofStruct = Len(tPicConv);
         tPicConv.picType = vbPicTypeBitmap;
         tPicConv.hImage = hBmp;
-
-        // Fill in IDispatch Interface ID
-        IGuid.Data1 = 0x20400;
-        IGuid.Data4[0] = 0xC0;
-        IGuid.Data4[7] = 0x46;
 
         // Create a picture object:
         OleCreatePictureIndirect(ref tPicConv, ref IGuid, 1, ref NewPic);

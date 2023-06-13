@@ -173,7 +173,7 @@ public static class VBExtension
     public static int ScaleY(int Y, dynamic A, dynamic B) { return Y; }
 
     public static bool IsEmpty(object A) { return false; }
-    public static bool IsMissing(object A) { return false; }
+    public static bool IsMissing(object A) { throw new NotImplementedException(); }
     public static bool IsNull(object A) { return A == null || (A is System.DBNull); }
     public static bool IsNothing(object A) { return IsNull(A); }
     public static bool IsObject(object A) { return !IsNothing(A); }
