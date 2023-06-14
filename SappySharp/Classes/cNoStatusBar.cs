@@ -73,9 +73,7 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
-using System.Drawing;
-using Image = System.Windows.Controls.Image;
-using SystemColors = System.Drawing.SystemColors;
+using SappySharp.UserControls;
 
 namespace SappySharp.Classes;
 
@@ -106,7 +104,7 @@ public partial class cNoStatusBar : IDisposable
         public int x;
         public int y;
     }
-    class RECT
+    struct RECT
     {
         public int left;
         public int tOp;
@@ -186,7 +184,7 @@ public partial class cNoStatusBar : IDisposable
     , estbrRaisedBorder = SBT_POPOUT
     , estbrOwnerDraw = SBT_OWNERDRAW
     }
-    class tStatusPanel
+    struct tStatusPanel
     {
         public int lID;
         public string sKey;
@@ -204,14 +202,14 @@ public partial class cNoStatusBar : IDisposable
         public bool bState;
         public RECT tR;
     }
-    List<tStatusPanel> m_tPanels = new();
+    tStatusPanel[] m_tPanels = Array.Empty<tStatusPanel>(); // Index 0 is always empty. :(
     int m_iPanelCount = 0;
     bool m_bSizeGrip = false;
     int m_hIml = 0;
     int m_ptrVb6ImageList = 0;
     Image m_pic = null;
     int m_lIconSize = 0;
-    dynamic m_obj = null;
+    RenderingControl m_obj = null;
     int m_lLeft = 0;
     int m_lTop = 0;
     int m_lHeight = 0;
@@ -310,8 +308,7 @@ public partial class cNoStatusBar : IDisposable
             {
                 // ok. Insert a space:
                 m_iPanelCount++;
-                // TODO: (NOT SUPPORTED): ReDim Preserve m_tPanels(1 To m_iPanelCount) As tStatusPanel
-                m_tPanels.Add(new());
+                Array.Resize(ref m_tPanels, m_iPanelCount + 1);
                 for (int i = m_iPanelCount - 1; i >= iIndex + 1; i--)
                 {
                     m_tPanels[i] = m_tPanels[i - 1];
@@ -328,8 +325,7 @@ public partial class cNoStatusBar : IDisposable
         {
             // Insert a space at the end:
             m_iPanelCount++;
-            // TODO: (NOT SUPPORTED): ReDim Preserve m_tPanels(1 To m_iPanelCount) As tStatusPanel
-            m_tPanels.Add(new());
+            Array.Resize(ref m_tPanels, m_iPanelCount + 1);
             iIndex = m_iPanelCount;
         }
 
@@ -369,29 +365,24 @@ public partial class cNoStatusBar : IDisposable
 
     public void Draw()
     {
-        int i = 0;
-        int lHDC = 0;
         int lX = 0;
         int lY = 0;
         int hBr = 0;
-        RECT tR = null;
-        RECT tOR = null;
-        RECT tBR = null;
-        Font fntThis = null;
+        RECT tR = new();
+        RECT tBR = new();
         bool bEnd = false;
         int hTheme = 0;
         int hR = 0;
-        RECT rcContent = null;
+        RECT rcContent = new();
         bool bUseXpStyles = false;
-        bool bDoDefault = false;
-        bDoDefault = true;
+        bool bDoDefault = true;
 
-        GetClientRect(m_obj.hwnd, ref tR);
+        GetClientRect((int)m_obj.hWnd(), ref tR);
 
         if (m_bUseXpStyles)
         {
             bUseXpStyles = true;
-            hTheme = OpenThemeData(m_obj.hwnd, "Status");
+            hTheme = OpenThemeData((int)m_obj.hWnd(), "Status");
             if (hTheme == 0)
             {
                 bUseXpStyles = false;
@@ -399,7 +390,7 @@ public partial class cNoStatusBar : IDisposable
             else
             {
                 // draw the background for the status bar:
-                hR = DrawThemeBackground(hTheme, m_obj.hdc, 4, 0, ref tR, ref tR);
+                hR = DrawThemeBackground(hTheme, (int)m_obj.hWnd(), 4, 0, ref tR, ref tR);
                 if (hR != S_OK)
                 {
                     bUseXpStyles = false;
@@ -410,21 +401,21 @@ public partial class cNoStatusBar : IDisposable
         if (!bUseXpStyles)
         {
             hBr = GetSysColorBrush(COLOR_BTNFACE);
-            FillRect(m_obj.hdc, ref tR, hBr);
+            FillRect((int)m_obj.hWnd(), ref tR, hBr);
             DeleteObject(hBr);
         }
 
-        tOR = tR;
+        RECT tOR = tR;
 
         pResizeStatus();
-        lHDC = m_obj.hdc;
+        int lHDC = (int)m_obj.hWnd();
         if (m_bSimpleMode)
         {
             if (bUseXpStyles)
             {
-                hR = DrawThemeBackground(hTheme, m_obj.hdc, 2, 0, ref tR, ref tR);
-                hR = GetThemeBackgroundContentRect(hTheme, m_obj.hdc, 2, 0, ref tR, ref rcContent);
-                hR = DrawThemeText(hTheme, m_obj.hdc, 2, 0, " " + m_sSimpleText, -1, DT_VCENTER | DT_SINGLELINE, 0, ref rcContent);
+                hR = DrawThemeBackground(hTheme, (int)m_obj.hWnd(), 2, 0, ref tR, ref tR);
+                hR = GetThemeBackgroundContentRect(hTheme, (int)m_obj.hWnd(), 2, 0, ref tR, ref rcContent);
+                hR = DrawThemeText(hTheme, (int)m_obj.hWnd(), 2, 0, " " + m_sSimpleText, -1, DT_VCENTER | DT_SINGLELINE, 0, ref rcContent);
             }
             else
             {
@@ -433,8 +424,8 @@ public partial class cNoStatusBar : IDisposable
         }
         else
         {
-            int iPart = 0;
-            for (i = 1; i <= m_iPanelCount; i += 1)
+            int iPart;
+            for (int i = 1; i <= m_iPanelCount; i += 1)
             {
                 if (i == m_iPanelCount)
                 {
@@ -475,22 +466,22 @@ public partial class cNoStatusBar : IDisposable
                     }
                     else
                     {
-                        hR = DrawThemeBackground(hTheme, m_obj.hdc, iPart, 0, ref tBR, ref tBR);
+                        hR = DrawThemeBackground(hTheme, (int)m_obj.hWnd(), iPart, 0, ref tBR, ref tBR);
                         if ((m_tPanels[i].eStyle & ENSBRPanelStyleConstants.estbrOwnerDraw) == ENSBRPanelStyleConstants.estbrOwnerDraw)
                         {
                             OwnerDraw.Invoke(lHDC, tBR.left, tBR.tOp, tBR.Right, tBR.Bottom, bDoDefault);
                         }
                         if (bDoDefault)
                         {
-                            hR = GetThemeBackgroundContentRect(hTheme, m_obj.hdc, iPart, 0, ref tBR, ref rcContent);
+                            hR = GetThemeBackgroundContentRect(hTheme, (int)m_obj.hWnd(), iPart, 0, ref tBR, ref rcContent);
 
                             // Fails...
-                            // hR = DrawThemeIcon(hTheme, m_obj.hdc, 0, 0, tBR, m_hIml, m_tPanels[i].iImgIndex)
+                            // hR = DrawThemeIcon(hTheme, (int)m_obj.hWnd(), 0, 0, tBR, m_hIml, m_tPanels[i].iImgIndex)
                             lY = tBR.tOp + 2 + (tBR.Bottom - tBR.tOp - 2 - m_lIconSize) / 2;
                             lX = tBR.left + 2;
                             DrawIconEx(lHDC, lX, lY, m_tPanels[i].hIcon, m_lIconSize, m_lIconSize, 0, 0, DI_NORMAL);
                             rcContent.left = rcContent.left + m_lIconSize + 4;
-                            hR = DrawThemeText(hTheme, m_obj.hdc, 1, 0, " " + m_tPanels[i].sText, -1, DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS, 0, ref rcContent);
+                            hR = DrawThemeText(hTheme, (int)m_obj.hWnd(), 1, 0, " " + m_tPanels[i].sText, -1, DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS, 0, ref rcContent);
                         }
                     }
                 }
@@ -510,16 +501,16 @@ public partial class cNoStatusBar : IDisposable
                     }
                     else
                     {
-                        hR = DrawThemeBackground(hTheme, m_obj.hdc, iPart, 0, ref tBR, ref tBR);
+                        hR = DrawThemeBackground(hTheme, (int)m_obj.hWnd(), iPart, 0, ref tBR, ref tBR);
                         if ((m_tPanels[i].eStyle & ENSBRPanelStyleConstants.estbrOwnerDraw) == ENSBRPanelStyleConstants.estbrOwnerDraw)
                         {
                             OwnerDraw.Invoke(lHDC, tBR.left, tBR.tOp, tBR.Right, tBR.Bottom, bDoDefault);
                         }
                         if (bDoDefault)
                         {
-                            hR = GetThemeBackgroundContentRect(hTheme, m_obj.hdc, iPart, 0, ref tBR, ref rcContent);
+                            hR = GetThemeBackgroundContentRect(hTheme, (int)m_obj.hWnd(), iPart, 0, ref tBR, ref rcContent);
 
-                            hR = DrawThemeText(hTheme, m_obj.hdc, 1, 0, " " + m_tPanels[i].sText, -1, DT_VCENTER | DT_SINGLELINE, 0, ref rcContent);
+                            hR = DrawThemeText(hTheme, (int)m_obj.hWnd(), 1, 0, " " + m_tPanels[i].sText, -1, DT_VCENTER | DT_SINGLELINE, 0, ref rcContent);
                         }
                     }
                 }
@@ -528,7 +519,6 @@ public partial class cNoStatusBar : IDisposable
                     break;
                 }
             }
-
         }
 
         if (m_bSizeGrip)
@@ -537,26 +527,23 @@ public partial class cNoStatusBar : IDisposable
             {
                 tOR = tR;
                 tOR.left = tR.Right - (tR.Bottom - tR.tOp);
-                hR = DrawThemeBackground(hTheme, m_obj.hdc, 3, 0, ref tOR, ref tOR);
+                hR = DrawThemeBackground(hTheme, (int)m_obj.hWnd(), 3, 0, ref tOR, ref tOR);
             }
             else
             {
-                fntThis = new(m_obj.Font, System.Drawing.FontStyle.Regular);
-                //fntThis.Name = m_obj.Font.Name;
-                //fntThis.Size = m_obj.Font.Size;
-                //fntThis.Bold = m_obj.Font.Bold;
-                //fntThis.Italic = m_obj.Font.Italic;
-                //fntThis.Underline = m_obj.Font.Underline;
-                m_obj.Font.Name = "Marlett";
-                m_obj.Font.Size = fntThis.Size * 4 / 3;
-                m_obj.ForeColor = SystemColors.ControlLightLight;
+                FontFamily fontFamily = m_obj.FontFamily;
+                double fontSize = m_obj.FontSize;
+                m_obj.FontFamily = new("Marlett");
+                m_obj.FontSize = fontSize * 4 / 3;
+                m_obj.Foreground = SystemColors.ControlLightLightBrush;
                 OffsetRect(ref tOR, -2, -1);
                 DrawText(lHDC, "o", 1, ref tOR, DT_BOTTOM | DT_RIGHT | DT_SINGLELINE);
-                m_obj.ForeColor = SystemColors.ControlDark;
-                // OffsetRect tOR, 1, 0
+                m_obj.Foreground = SystemColors.ControlDarkBrush;
+                //OffsetRect(ref tOR, 1, 0);
                 DrawText(lHDC, "p", 1, ref tOR, DT_BOTTOM | DT_RIGHT | DT_SINGLELINE);
-                m_obj.Font = fntThis;
-                m_obj.ForeColor = SystemColors.WindowText;
+                m_obj.FontFamily = fontFamily;
+                m_obj.FontSize = fontSize;
+                m_obj.Foreground = SystemColors.WindowTextBrush;
             }
         }
 
@@ -582,8 +569,7 @@ public partial class cNoStatusBar : IDisposable
             m_iPanelCount--;
             if (m_iPanelCount > 0)
             {
-                // TODO: (NOT SUPPORTED): ReDim Preserve m_tPanels(1 To m_iPanelCount) As tStatusPanel
-                m_tPanels.RemoveAt(m_tPanels.Count - 1);
+                Array.Resize(ref m_tPanels, m_iPanelCount + 1);
             }
             Draw();
         }
@@ -641,7 +627,7 @@ public partial class cNoStatusBar : IDisposable
                 }
                 else
                 {
-                    RECT rc = null;
+                    RECT rc = new();
                     ImageList_GetImageRect(m_hIml, 0, ref rc);
                     m_lIconSize = rc.Bottom - rc.tOp;
                 }
@@ -649,17 +635,17 @@ public partial class cNoStatusBar : IDisposable
         }
     }
 
-    public void Create(dynamic objThis)
+    public void Create(RenderingControl objThis)
     {
-        RECT tR = null;
+        RECT tR = new();
 
         m_obj = objThis;
 
         // Check if required methods are supported:
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        int lHDC = m_obj.hdc;
-        int lWidth = m_obj.ScaleWidth;
-        int lHeight = m_obj.ScaleHeight;
+        int lHDC = (int)m_obj.hWnd();
+        int lWidth = (int)m_obj.Width;
+        int lHeight = (int)m_obj.Height;
         if (Err().Number != 0)
         {
             m_obj = null;
@@ -673,15 +659,20 @@ public partial class cNoStatusBar : IDisposable
         }
     }
 
-    public Font Font
+    public System.Drawing.Font Font
     {
-        get => m_obj.Font;
+        get => new(m_obj.FontFamily.ToString(), (float)m_obj.FontSize,
+            (m_obj.FontWeight > FontWeights.Regular ? System.Drawing.FontStyle.Bold : System.Drawing.FontStyle.Regular)
+            | (m_obj.FontStyle == FontStyles.Italic ? System.Drawing.FontStyle.Italic : System.Drawing.FontStyle.Regular));
         set
         {
             RECT tR = default;
-            m_obj.Font = value;
+            m_obj.FontFamily = new(value.FontFamily.ToString());
+            m_obj.FontSize = value.Size;
+            m_obj.FontWeight = value.Bold ? FontWeights.Bold : FontWeights.Regular;
+            m_obj.FontStyle = value.Italic ? FontStyles.Italic : FontStyles.Normal;
             // Get the height of the font and store:
-            DrawText(m_obj.hdc, "Xy", 2, ref tR, DT_CALCRECT);
+            DrawText((int)m_obj.hWnd(), "Xy", 2, ref tR, DT_CALCRECT);
             m_lHeight = tR.Bottom - tR.tOp + 10;
         }
     }
@@ -1007,7 +998,7 @@ public partial class cNoStatusBar : IDisposable
 
     private void pEvaluateIdealSize(int iStartPanel, int iEndPanel = -1)
     {
-        RECT tR = null;
+        RECT tR = new();
 
         if (m_iPanelCount > 0)
         {
@@ -1015,7 +1006,7 @@ public partial class cNoStatusBar : IDisposable
             {
                 iEndPanel = iStartPanel;
             }
-            int lHDC = m_obj.hdc;
+            int lHDC = (int)m_obj.hWnd();
             for (int i = iStartPanel; i <= iEndPanel; i += 1)
             {
                 DrawText(lHDC, m_tPanels[i].sText, Len(m_tPanels[i].sText), ref tR, DT_CALCRECT);
@@ -1029,7 +1020,7 @@ public partial class cNoStatusBar : IDisposable
     }
     private void pResizeStatus()
     {
-        RECT tR = null;
+        RECT tR = new();
         int i;
         int iSpringIndex = 0;
         int[] lpParts;
@@ -1037,12 +1028,12 @@ public partial class cNoStatusBar : IDisposable
         if (m_iPanelCount > 0)
         {
 
-            GetClientRect(m_obj.hwnd, ref tR);
+            GetClientRect((int)m_obj.hWnd(), ref tR);
             tR.left += m_lLeft;
             tR.tOp += m_lTop;
 
             // Initiallly set to minimum widths:
-            lpParts = new int[m_iPanelCount - 1];
+            lpParts = new int[m_iPanelCount];
             if (m_tPanels[1].bFit)
             {
                 lpParts[0] = m_tPanels[1].lIdealWidth;

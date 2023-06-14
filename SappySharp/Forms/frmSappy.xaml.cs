@@ -2083,12 +2083,10 @@ public partial class frmSappy : Window, ISubclass
 
     public void FixStatusBar()
     {
-        // TODO: (NOT SUPPORTED): On Error Resume Next
-        cStatusBar.RemovePanel("simple");
-        cStatusBar.RemovePanel("frame");
-        cStatusBar.RemovePanel("crud");
-        cStatusBar.RemovePanel("time");
-        // TODO: (NOT SUPPORTED): On Error GoTo 0
+        try { cStatusBar.RemovePanel("simple"); } catch (Exception) { }
+        try { cStatusBar.RemovePanel("frame"); } catch (Exception) { }
+        try { cStatusBar.RemovePanel("crud"); } catch (Exception) { }
+        try { cStatusBar.RemovePanel("time"); } catch (Exception) { }
         cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrNoBorders, "", bSpring: true, sKey: "simple");
         cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrStandard, "0", bSpring: false, sKey: "frame");
         cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrStandard, "0", 0, 24, false, sKey: "crud");
