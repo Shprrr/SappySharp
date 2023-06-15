@@ -719,10 +719,22 @@ public static class VBExtension
             new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
             System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
+        PixelFormat pixelFormat = bitmap.PixelFormat switch
+        {
+            System.Drawing.Imaging.PixelFormat.Format32bppArgb or System.Drawing.Imaging.PixelFormat.Format32bppRgb => PixelFormats.Bgr32,
+            System.Drawing.Imaging.PixelFormat.Format4bppIndexed => PixelFormats.Indexed4,
+            System.Drawing.Imaging.PixelFormat.Format8bppIndexed => PixelFormats.Indexed8,
+            _ => throw new NotImplementedException()
+        };
+
+        BitmapPalette palette = null;
+        if (pixelFormat == PixelFormats.Indexed4 || pixelFormat == PixelFormats.Indexed8)
+            palette = new BitmapPalette(bitmap.Palette.Entries.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList());
+
         var bitmapSource = BitmapSource.Create(
             bitmapData.Width, bitmapData.Height,
             bitmap.HorizontalResolution, bitmap.VerticalResolution,
-            PixelFormats.Bgr32, null,
+            pixelFormat, palette,
             bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
 
         bitmap.UnlockBits(bitmapData);

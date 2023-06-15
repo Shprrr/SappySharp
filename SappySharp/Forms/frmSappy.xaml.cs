@@ -801,24 +801,25 @@ public partial class frmSappy : Window, ISubclass
         Trace("- Set menu icons and help");
         object hIml = imlImages.hIml;
         cPop.set_ImageList(ref hIml);
-        cPop.set_ItemIcon("mnuFileOpen", 0);
-        cPop.set_ItemIcon("mnuOutput(0)", 2);
-        cPop.set_ItemIcon("mnuOutput(1)", 3);
-        cPop.set_ItemIcon("mnuSeekPlaylist", 4);
-        // cPsp.get_ItemIcon("mnuAutovance", )5
-        cPop.set_ItemIcon("mnuGBMode", 6);
-        cPop.set_ItemIcon("mnuHelpHelp", 7);
-        cPop.set_ItemIcon("mnuHelpOnline", 8);
-        cPop.set_ItemIcon("mnuImportLST", 20);
-        cPop.set_ItemIcon("mnuSelectMIDI", 22);
-        cPop.set_ItemIcon("mnuSettings", 24);
-        cPop.set_ItemIcon("mnuMidiMap", 23);
-        cPop.set_HelpText("mnuFileOpen", Properties.Resources._70);
-        cPop.set_HelpText("mnuFileExit", Properties.Resources._71);
-        cPop.set_HelpText("mnuOutput(0)", Properties.Resources._72);
-        cPop.set_HelpText("mnuOutput(1)", Properties.Resources._73);
-        cPop.set_HelpText("mnuHelpAbout", Properties.Resources._75);
-        cPop.set_HelpText("mnuHelpOnline", Properties.Resources._76);
+        // Commenting these COM instructions because it didn't work.
+        //cPop.set_ItemIcon("mnuFileOpen", 0);
+        //cPop.set_ItemIcon("mnuOutput(0)", 2);
+        //cPop.set_ItemIcon("mnuOutput(1)", 3);
+        //cPop.set_ItemIcon("mnuSeekPlaylist", 4);
+        //// cPop.get_ItemIcon("mnuAutovance", )5
+        //cPop.set_ItemIcon("mnuGBMode", 6);
+        //cPop.set_ItemIcon("mnuHelpHelp", 7);
+        //cPop.set_ItemIcon("mnuHelpOnline", 8);
+        //cPop.set_ItemIcon("mnuImportLST", 20);
+        //cPop.set_ItemIcon("mnuSelectMIDI", 22);
+        //cPop.set_ItemIcon("mnuSettings", 24);
+        //cPop.set_ItemIcon("mnuMidiMap", 23);
+        //cPop.set_HelpText("mnuFileOpen", Properties.Resources._70);
+        //cPop.set_HelpText("mnuFileExit", Properties.Resources._71);
+        //cPop.set_HelpText("mnuOutput(0)", Properties.Resources._72);
+        //cPop.set_HelpText("mnuOutput(1)", Properties.Resources._73);
+        //cPop.set_HelpText("mnuHelpAbout", Properties.Resources._75);
+        //cPop.set_HelpText("mnuHelpOnline", Properties.Resources._76);
 
         // Not setting any images for Japanese systems until further notice.
         if (Properties.Resources._10000 != "<JAPPLZ>")
@@ -860,43 +861,44 @@ public partial class frmSappy : Window, ISubclass
         color = GetPixelColor((BitmapSource)picSkin.Source, 6, 32);
         ebr.BackColorEnd = (uint)RGB(color.R, color.G, color.B);
         ebr.UseExplorerStyle = GetSettingI("Force Nice Bar") == 0;
-        ebr.Bars.Add("Tasks", Properties.Resources._50);
-        hIml = imlImages.hIml;
-        ebr.set_ImageList(ref hIml);
-        ebr.Bars["Tasks"].CanExpand = false;
-        ebr.Bars["Tasks"].State = EExplorerBarStates.eBarCollapsed;
-        Trace("- Add tasks");
-        ebr.Bars["Tasks"].Items.Add("taketrax", Properties.Resources._52, 9);
-        ebr.Bars["Tasks"].Items.Add("maketrax", Properties.Resources._53, 10);
-        ebr.Bars["Tasks"].Items.Add("takesamp", Properties.Resources._54, 11);
-        ebr.Bars["Tasks"].Items.Add("codetrax", Properties.Resources._55, 12);
-        ebr.Bars["Tasks"].Items.Add("makemidi", Properties.Resources._51, 2);
-        ebr.Bars["Tasks"].Items["taketrax"].ToolTipText = Properties.Resources._81;
-        ebr.Bars["Tasks"].Items["maketrax"].ToolTipText = Properties.Resources._82;
-        ebr.Bars["Tasks"].Items["takesamp"].ToolTipText = Properties.Resources._83;
-        ebr.Bars["Tasks"].Items["codetrax"].ToolTipText = Properties.Resources._84;
-        ebr.Bars["Tasks"].Items["makemidi"].ToolTipText = Properties.Resources._80;
-        for (i = 1; i <= ebr.Bars["Tasks"].Items.Count; i += 1)
-        {
-            TaskMenus[i] = cPop.AddItem(ebr.Bars["Tasks"].Items[i].Text, ebr.Bars["Tasks"].Items[i].Key, ebr.Bars["Tasks"].Items[i].ToolTipText, lParentIndex: cPop.get_MenuIndex("mnuTasks"), lIconIndex: ebr.Bars["Tasks"].Items[i].IconIndex, bChecked: false, bEnabled: false);
-        }
-        ebr.Bars["Tasks"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Tasks"].Index + " state");
-        Trace("- Set up info bar");
-        ebr.Bars.Add("Info", Properties.Resources._60);
-        ebr.Bars["Info"].CanExpand = false;
-        ebr.Bars["Info"].State = EExplorerBarStates.eBarCollapsed;
-        ebr.Bars["Info"].Items.Add("Game", Properties.Resources._61, IconIndex: 0);
-        ebr.Bars["Info"].Items.Add("Code", Properties.Resources._62, IconIndex: 1);
-        ebr.Bars["Info"].Items.Add("Creator", Properties.Resources._63, IconIndex: 0);
-        ebr.Bars["Info"].Items.Add("Tagger", Properties.Resources._64, IconIndex: 0);
-        ebr.Bars["Info"].Items.Add("SongTbl", "0x000000", IconIndex: 1);
-        ebr.Bars["Info"].Items.Add("Screen", IconIndex: 2);
-        ebr.Bars["Info"].Items["Game"].Bold = true;
-        ebr.Bars["Info"].Items["SongTbl"].SpacingAfter = 8;
-        object newControl = picScreenshot.Source;
-        ebr.Bars["Info"].Items["Screen"].let_Control(ref newControl);
-        ebr.Bars["Info"].Items["Screen"].SpacingAfter = 6;
-        ebr.Bars["Info"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
+        // Commenting these COM instructions because it didn't work.
+        //ebr.Bars.Add("Tasks", Properties.Resources._50);
+        //hIml = imlImages.hIml;
+        //ebr.set_ImageList(ref hIml);
+        //ebr.Bars["Tasks"].CanExpand = false;
+        //ebr.Bars["Tasks"].State = EExplorerBarStates.eBarCollapsed;
+        //Trace("- Add tasks");
+        //ebr.Bars["Tasks"].Items.Add("taketrax", Properties.Resources._52, 9);
+        //ebr.Bars["Tasks"].Items.Add("maketrax", Properties.Resources._53, 10);
+        //ebr.Bars["Tasks"].Items.Add("takesamp", Properties.Resources._54, 11);
+        //ebr.Bars["Tasks"].Items.Add("codetrax", Properties.Resources._55, 12);
+        //ebr.Bars["Tasks"].Items.Add("makemidi", Properties.Resources._51, 2);
+        //ebr.Bars["Tasks"].Items["taketrax"].ToolTipText = Properties.Resources._81;
+        //ebr.Bars["Tasks"].Items["maketrax"].ToolTipText = Properties.Resources._82;
+        //ebr.Bars["Tasks"].Items["takesamp"].ToolTipText = Properties.Resources._83;
+        //ebr.Bars["Tasks"].Items["codetrax"].ToolTipText = Properties.Resources._84;
+        //ebr.Bars["Tasks"].Items["makemidi"].ToolTipText = Properties.Resources._80;
+        //for (i = 1; i <= ebr.Bars["Tasks"].Items.Count; i += 1)
+        //{
+        //    TaskMenus[i] = cPop.AddItem(ebr.Bars["Tasks"].Items[i].Text, ebr.Bars["Tasks"].Items[i].Key, ebr.Bars["Tasks"].Items[i].ToolTipText, lParentIndex: cPop.get_MenuIndex("mnuTasks"), lIconIndex: ebr.Bars["Tasks"].Items[i].IconIndex, bChecked: false, bEnabled: false);
+        //}
+        //ebr.Bars["Tasks"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Tasks"].Index + " state");
+        //Trace("- Set up info bar");
+        //ebr.Bars.Add("Info", Properties.Resources._60);
+        //ebr.Bars["Info"].CanExpand = false;
+        //ebr.Bars["Info"].State = EExplorerBarStates.eBarCollapsed;
+        //ebr.Bars["Info"].Items.Add("Game", Properties.Resources._61, IconIndex: 0);
+        //ebr.Bars["Info"].Items.Add("Code", Properties.Resources._62, IconIndex: 1);
+        //ebr.Bars["Info"].Items.Add("Creator", Properties.Resources._63, IconIndex: 0);
+        //ebr.Bars["Info"].Items.Add("Tagger", Properties.Resources._64, IconIndex: 0);
+        //ebr.Bars["Info"].Items.Add("SongTbl", "0x000000", IconIndex: 1);
+        //ebr.Bars["Info"].Items.Add("Screen", IconIndex: 2);
+        //ebr.Bars["Info"].Items["Game"].Bold = true;
+        //ebr.Bars["Info"].Items["SongTbl"].SpacingAfter = 8;
+        //object newControl = picScreenshot.Source;
+        //ebr.Bars["Info"].Items["Screen"].let_Control(ref newControl);
+        //ebr.Bars["Info"].Items["Screen"].SpacingAfter = 6;
+        //ebr.Bars["Info"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
 
         Trace("- Create channel views");
         cvwChannel.Add(cvwChannelTemplate);
@@ -907,7 +909,7 @@ public partial class frmSappy : Window, ISubclass
             cvwChannel.Add(new ChannelViewer());
             cvwChannel[i].MuteChanged += (sender, e) => cvwChannel_MuteChanged(i);
             cvwChannel[i].Resize += (sender, e) => cvwChannel_Resize(i);
-            cvwChannel[i].Margin = new Thickness(cvwChannel[i - 1].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i - 1].Margin.Right, cvwChannel[i - 1].Margin.Bottom);
+            cvwChannel[i].Margin = new Thickness(cvwChannel[i - 1].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].ActualHeight, cvwChannel[i - 1].Margin.Right, cvwChannel[i - 1].Margin.Bottom);
             cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
             cvwChannel[i].Visibility = Visibility.Hidden;
