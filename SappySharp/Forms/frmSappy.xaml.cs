@@ -137,6 +137,7 @@ public partial class frmSappy : Window, ISubclass
     // ###########################################################################################
 
 
+    [StructLayout(LayoutKind.Sequential)]
     class RECT
     {
         public int left;
@@ -1043,17 +1044,11 @@ public partial class frmSappy : Window, ISubclass
 
         if (iMsg == WM_SIZING)
         {
-            RECT myRect = null;
-            dynamic dest = myRect;
-            dynamic source = lParam;
-            CopyMemory(ref dest, ref source, Marshal.SizeOf(myRect)); // get the Rect pointed to in lParam
-            myRect = dest;
+            RECT myRect = new();
+            Marshal.PtrToStructure(lParam, myRect);
             myRect.Right = myRect.left + mywidth; // fix width
             if (myRect.Bottom - myRect.tOp < 280) myRect.Bottom = myRect.tOp + 280; // limit height
-            dest = lParam;
-            source = myRect;
-            CopyMemory(ref dest, ref source, Marshal.SizeOf(myRect)); // put our edited Rect back in lParam
-            lParam = dest;
+            Marshal.StructureToPtr(myRect, lParam, true);
         }
 
         if (iMsg == WM_APPCOMMAND)

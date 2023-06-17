@@ -107,8 +107,6 @@ static partial class modSappy
     public static partial int BitBlt(int hDestDC, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int dwRop);
     [LibraryImport("gdi32.dll")]
     public static partial int StretchBlt(int hdc, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, int dwRop);
-    [DllImport("kernel32", EntryPoint = "RtlMoveMemory")]
-    public static extern void CopyMemory(ref dynamic Destination, ref dynamic Source, int Length);
     [DllImport("shell32.dll", EntryPoint = "ShellExecuteA")]
     public static extern int ShellExecute(int hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
     [LibraryImport("user32", EntryPoint = "SetWindowLongA")]
