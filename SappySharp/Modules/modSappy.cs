@@ -337,23 +337,26 @@ static partial class modSappy
     public static void SetCaptions(Window target)
     {
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        foreach (FrameworkElement ctl in target.Controls(true))
+        foreach (FrameworkElement ctl in target.getControls())
         {
-            if (ctl is not TextBlock or not ContentControl) continue;
+            if (ctl is not TextBlock and not ContentControl and not HeaderedItemsControl) continue;
 
             if ((string)ctl.Tag != "[NoLocal]")
             {
-                string oldText;
-                if (ctl is TextBlock)
-                    oldText = ctl.GetValue(TextBlock.TextProperty) as string;
-                else
-                    oldText = ctl.GetValue(ContentControl.ContentProperty) as string;
+                DependencyProperty textProperty = ctl switch
+                {
+                    TextBlock => TextBlock.TextProperty,
+                    HeaderedItemsControl => HeaderedItemsControl.HeaderProperty,
+                    ContentControl => ContentControl.ContentProperty,
+                    _ => throw new NotImplementedException()
+                };
+
+                string oldText = ctl.GetValue(textProperty) as string;
                 if (Left(oldText, 1) == "[")
                 {
                     int i = (int)Val(Mid(oldText, 2, 4));
-                    string newText = Resources.ResourceManager.GetString(i.ToString());
-                    ctl.SetValue(TextBlock.TextProperty, newText);
-                    ctl.SetValue(ContentControl.ContentProperty, newText);
+                    string newText = Resources.ResourceManager.GetString(i.ToString())?.Replace('&', '_');
+                    ctl.SetValue(textProperty, newText);
                 }
                 SetProperFont(ctl);
             }

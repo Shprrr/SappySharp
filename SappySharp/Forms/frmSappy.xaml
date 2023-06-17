@@ -17,7 +17,7 @@
                         Click="mnuOutput_Click" />
                 <Separator x:Name="mnuOptionsSep" />
                 <MenuItem x:Name="mnuSeekPlaylist" Header="[36]Seek by Playlist" Click="mnuSeekPlaylist_Click" />
-                <MenuItem x:Name="mnuAutovance" Header="[37]AutoAdvance" Visibility="Hidden" Click="mnuAutovance_Click" />
+                <MenuItem x:Name="mnuAutovance" Header="[37]AutoAdvance" Visibility="Collapsed" Click="mnuAutovance_Click" />
                 <MenuItem x:Name="mnuGBMode" Header="[33]Gameboy Mode" Click="mnuGBMode_Click" />
                 <Separator x:Name="mnuOptionsSep2" />
                 <MenuItem x:Name="mnuImportLST" Header="[35]Import LST file" Click="mnuImportLST_Click" />

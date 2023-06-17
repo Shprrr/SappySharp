@@ -722,13 +722,14 @@ public static class VBExtension
         PixelFormat pixelFormat = bitmap.PixelFormat switch
         {
             System.Drawing.Imaging.PixelFormat.Format32bppArgb or System.Drawing.Imaging.PixelFormat.Format32bppRgb => PixelFormats.Bgr32,
+            System.Drawing.Imaging.PixelFormat.Format1bppIndexed => PixelFormats.Indexed1,
             System.Drawing.Imaging.PixelFormat.Format4bppIndexed => PixelFormats.Indexed4,
             System.Drawing.Imaging.PixelFormat.Format8bppIndexed => PixelFormats.Indexed8,
             _ => throw new NotImplementedException()
         };
 
         BitmapPalette palette = null;
-        if (pixelFormat == PixelFormats.Indexed4 || pixelFormat == PixelFormats.Indexed8)
+        if (pixelFormat == PixelFormats.Indexed1 || pixelFormat == PixelFormats.Indexed4 || pixelFormat == PixelFormats.Indexed8)
             palette = new BitmapPalette(bitmap.Palette.Entries.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList());
 
         var bitmapSource = BitmapSource.Create(
@@ -1027,8 +1028,12 @@ public static class VBExtension
     public static IEnumerable<FrameworkElement> getControls(this Visual parent, bool recurse = true)
     {
         List<FrameworkElement> res = new List<FrameworkElement>();
-        foreach (var el in parent.GetChildren(recurse))
-            res.Add((FrameworkElement)el);
+        foreach (var el in parent.GetChildren(recurse).OfType<FrameworkElement>())
+        {
+            res.Add(el);
+            if(el is ItemsControl collection)
+                res.AddRange(collection.Items.OfType<FrameworkElement>());
+        }
         return res;
     }
     public static IEnumerable<Visual> GetChildren(this Visual parent, bool recurse = true)
