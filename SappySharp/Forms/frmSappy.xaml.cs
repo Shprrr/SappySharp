@@ -92,7 +92,7 @@ public partial class frmSappy : Window, ISubclass
     private static frmSappy _instance;
     public static frmSappy instance { set { _instance = null; } get { return _instance ??= new frmSappy(); } }
     public static void Load() { if (_instance == null) { dynamic A = instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
+    public void Unload() { Close(); _instance = null; }
     public frmSappy()
     {
         InitializeComponent();
