@@ -76,16 +76,12 @@ using static SappySharp.Classes.cRegistry;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Windows.Forms;
 
 namespace SappySharp.Classes;
 
 public partial class gCommonDialog
 {
-    public enum EErrorCommonDialog
-    {
-        eeBaseCommonDialog = 13450 // CommonDialog
-    }
-
     [DllImport("kernel32", EntryPoint = "lstrlenA")]
     private static extern int lstrlen(string lpString);
     [LibraryImport("kernel32")]
@@ -108,9 +104,8 @@ public partial class gCommonDialog
     private static extern void CopyMemoryStr(ref dynamic lpvDest, string lpvSource, int cbCopy);
 
     private const int MAX_PATH = 260;
-    private const int MAX_FILE = 260;
 
-    class OPENFILENAME
+    struct OPENFILENAME
     {
         public int lStructSize; // Filled with UDT size
         public int hWndOwner; // Tied to Owner
@@ -134,38 +129,8 @@ public partial class gCommonDialog
         public int lpTemplateName; // Ignored (good luck with templates)
     }
 
-    [DllImport("COMDLG32", EntryPoint = "GetOpenFileNameA")]
-    private static extern int GetOpenFileName(ref OPENFILENAME file);
-    [DllImport("COMDLG32", EntryPoint = "GetSaveFileNameA")]
-    private static extern int GetSaveFileName(ref OPENFILENAME file);
     [DllImport("COMDLG32", EntryPoint = "GetFileTitleA")]
     private static extern int GetFileTitle(string szFile, string szTitle, int cbBuf);
-
-    public enum EOpenFile
-    {
-        OFN_READONLY = 0x1
-    , OFN_OVERWRITEPROMPT = 0x2
-    , OFN_HIDEREADONLY = 0x4
-    , OFN_NOCHANGEDIR = 0x8
-    , OFN_SHOWHELP = 0x10
-    , OFN_ENABLEHOOK = 0x20
-    , OFN_ENABLETEMPLATE = 0x40
-    , OFN_ENABLETEMPLATEHANDLE = 0x80
-    , OFN_NOVALIDATE = 0x100
-    , OFN_ALLOWMULTISELECT = 0x200
-    , OFN_EXTENSIONDIFFERENT = 0x400
-    , OFN_PATHMUSTEXIST = 0x800
-    , OFN_FILEMUSTEXIST = 0x1000
-    , OFN_CREATEPROMPT = 0x2000
-    , OFN_SHAREAWARE = 0x4000
-    , OFN_NOREADONLYRETURN = 0x8000
-    , OFN_NOTESTFILECREATE = 0x10000
-    , OFN_NONETWORKBUTTON = 0x20000
-    , OFN_NOLONGNAMES = 0x40000
-    , OFN_EXPLORER = 0x80000
-    , OFN_NODEREFERENCELINKS = 0x100000
-    , OFN_LONGNAMES = 0x200000
-    }
 
     class TCHOOSECOLOR
     {
@@ -587,211 +552,58 @@ public partial class gCommonDialog
     }
 #endif
 
-    public bool VBGetOpenFileName(ref string Filename, ref string FileTitle, ref bool ReadOnly, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, ref string InitDir, ref string DlgTitle, ref string DefaultExt, ref int flags, bool FileMustExist = true, bool MultiSelect = false, bool HideReadOnly = false, int Owner = -1)
+    public bool VBGetOpenFileName(ref string Filename, ref string FileTitle, ref bool ReadOnly, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, string InitDir = null, string DlgTitle = null, string DefaultExt = null, bool FileMustExist = true, bool MultiSelect = false, bool HideReadOnly = false)
     {
-        bool _VBGetOpenFileName;
-
-        OPENFILENAME opfile = null;
-        string s = "";
-
         m_lApiReturn = 0;
         m_lExtendedError = 0;
 
-        opfile.lStructSize = Len(opfile);
-
-        // Add in specific flags and strip out non-VB flags
-
-        opfile.flags = (FileMustExist ? 1 : 0 * (int)EOpenFile.OFN_FILEMUSTEXIST) | (MultiSelect ? 1 : 0 * (int)EOpenFile.OFN_ALLOWMULTISELECT) | (ReadOnly ? 1 : 0 * (int)EOpenFile.OFN_READONLY) | (HideReadOnly ? 1 : 0 * (int)EOpenFile.OFN_HIDEREADONLY) | (flags & CInt(~((int)EOpenFile.OFN_ENABLEHOOK | (int)EOpenFile.OFN_ENABLETEMPLATE)));
-        // Owner can take handle of owning window
-        if (Owner != -1) opfile.hWndOwner = Owner;
-        // InitDir can take initial directory string
-        opfile.lpstrInitialDir = InitDir;
-        // DefaultExt can take default extension
-        opfile.lpstrDefExt = DefaultExt;
-        // DlgTitle can take dialog box title
-        opfile.lpstrTitle = DlgTitle;
-
-        // To make Windows-style filter, replace | and : with nulls
-        for (int i = 1; i <= Len(Filter); i += 1)
+        OpenFileDialog fileDialog = new()
         {
-            string ch = Mid(Filter, i, 1);
-            if (ch == "|" || ch == ":")
-            {
-                s += vbNullChar;
-            }
-            else
-            {
-                s += ch;
-            }
-        }
-        // Put double null at end
-        s = s + vbNullChar + vbNullChar;
-        opfile.lpstrFilter = s;
-        opfile.nFilterIndex = FilterIndex;
+            CheckFileExists = FileMustExist,
+            DefaultExt = DefaultExt,
+            ShowReadOnly = !HideReadOnly,
+            InitialDirectory = InitDir,
+            FileName = Filename,
+            Filter = Filter,
+            FilterIndex = FilterIndex,
+            Multiselect = MultiSelect,
+            ReadOnlyChecked = ReadOnly,
+            Title = DlgTitle
+        };
 
-        // Pad file and file title buffers to maximum path
-        s = Filename + new string('\0', MAX_PATH - Len(Filename));
-        opfile.lpstrFile = s;
-        opfile.nMaxFile = MAX_PATH;
-        s = FileTitle + new string('\0', MAX_FILE - Len(FileTitle));
-        opfile.lpstrFileTitle = s;
-        opfile.nMaxFileTitle = MAX_FILE;
-        // All other fields set to zero
+        bool result = fileDialog.ShowDialog() == DialogResult.OK;
 
-        m_lApiReturn = GetOpenFileName(ref opfile);
-        switch (m_lApiReturn)
-        {
-            case 1:
-                // Success
-                _VBGetOpenFileName = true;
-                Filename = StrZToStr(opfile.lpstrFile);
-                FileTitle = StrZToStr(opfile.lpstrFileTitle);
-                flags = opfile.flags;
-                // Return the filter index
-                FilterIndex = opfile.nFilterIndex;
-                // Look up the filter the user selected and return that
-                Filter = FilterLookup(opfile.lpstrFilter, FilterIndex);
-                if ((opfile.flags & (int)EOpenFile.OFN_READONLY) != 0) ReadOnly = true;
-                break;
-            case 0:
-                // Cancelled
-                _VBGetOpenFileName = false;
-                Filename = "";
-                FileTitle = "";
-                flags = 0;
-                FilterIndex = -1;
-                Filter = "";
-                break;
-            default:
-                // Extended error
-                m_lExtendedError = CommDlgExtendedError();
-                _VBGetOpenFileName = false;
-                Filename = "";
-                FileTitle = "";
-                flags = 0;
-                FilterIndex = -1;
-                Filter = "";
-                break;
-        }
-        return _VBGetOpenFileName;
+        Filename = fileDialog.FileName;
+        FileTitle = fileDialog.SafeFileName;
+        FilterIndex = fileDialog.FilterIndex;
+        ReadOnly = fileDialog.ReadOnlyChecked;
+
+        return result;
     }
-    private string StrZToStr(string s) => Left(s, lstrlen(s));
 
-    public bool VBGetSaveFileName(ref string Filename, ref string FileTitle, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, ref int flags, bool OverWritePrompt = true, string InitDir = null, string DlgTitle = null, string DefaultExt = null, int Owner = -1)
+    public bool VBGetSaveFileName(ref string Filename, ref string FileTitle, ref string Filter /*= "All (*.*)| *.*"*/, ref int FilterIndex, bool OverWritePrompt = true, string InitDir = null, string DlgTitle = null, string DefaultExt = null)
     {
-        bool _VBGetSaveFileName;
-
-        OPENFILENAME opfile = null;
-        string s = "";
-
         m_lApiReturn = 0;
         m_lExtendedError = 0;
 
-        opfile.lStructSize = Len(opfile);
-
-        // Add in specific flags and strip out non-VB flags
-        opfile.flags = (OverWritePrompt ? 1 : 0 * (int)EOpenFile.OFN_OVERWRITEPROMPT) | (int)EOpenFile.OFN_HIDEREADONLY | (flags & CInt(~((int)EOpenFile.OFN_ENABLEHOOK | (int)EOpenFile.OFN_ENABLETEMPLATE)));
-        // Owner can take handle of owning window
-        if (Owner != -1) opfile.hWndOwner = Owner;
-        // InitDir can take initial directory string
-        opfile.lpstrInitialDir = InitDir;
-        // DefaultExt can take default extension
-        opfile.lpstrDefExt = DefaultExt;
-        // DlgTitle can take dialog box title
-        opfile.lpstrTitle = DlgTitle;
-
-        // Make new filter with bars (|) replacing nulls and double null at end
-        for (int i = 1; i <= Len(Filter); i += 1)
+        SaveFileDialog fileDialog = new()
         {
-            string ch = Mid(Filter, i, 1);
-            if (ch == "|" || ch == ":")
-            {
-                s += vbNullChar;
-            }
-            else
-            {
-                s += ch;
-            }
-        }
-        // Put double null at end
-        s = s + vbNullChar + vbNullChar;
-        opfile.lpstrFilter = s;
-        opfile.nFilterIndex = FilterIndex;
+            DefaultExt = DefaultExt,
+            InitialDirectory = InitDir,
+            FileName = Filename,
+            Filter = Filter,
+            FilterIndex = FilterIndex,
+            OverwritePrompt = OverWritePrompt,
+            Title = DlgTitle
+        };
 
-        // Pad file and file title buffers to maximum path
-        s = Filename + new string('\0', MAX_PATH - Len(Filename));
-        opfile.lpstrFile = s;
-        opfile.nMaxFile = MAX_PATH;
-        s = FileTitle + new string('\0', MAX_FILE - Len(FileTitle));
-        opfile.lpstrFileTitle = s;
-        opfile.nMaxFileTitle = MAX_FILE;
-        // All other fields zero
+        bool result = fileDialog.ShowDialog() == DialogResult.OK;
 
-        m_lApiReturn = GetSaveFileName(ref opfile);
-        switch (m_lApiReturn)
-        {
-            case 1:
-                _VBGetSaveFileName = true;
-                Filename = StrZToStr(opfile.lpstrFile);
-                FileTitle = StrZToStr(opfile.lpstrFileTitle);
-                flags = opfile.flags;
-                // Return the filter index
-                FilterIndex = opfile.nFilterIndex;
-                // Look up the filter the user selected and return that
-                Filter = FilterLookup(opfile.lpstrFilter, FilterIndex);
-                break;
-            case 0:
-                // Cancelled:
-                _VBGetSaveFileName = false;
-                Filename = "";
-                FileTitle = "";
-                flags = 0;
-                FilterIndex = 0;
-                Filter = "";
-                break;
-            default:
-                // Extended error:
-                _VBGetSaveFileName = false;
-                m_lExtendedError = CommDlgExtendedError();
-                Filename = "";
-                FileTitle = "";
-                flags = 0;
-                FilterIndex = 0;
-                Filter = "";
-                break;
-        }
-        return _VBGetSaveFileName;
-    }
+        Filename = fileDialog.FileName;
+        FileTitle = System.IO.Path.GetFileName(fileDialog.FileName);
+        FilterIndex = fileDialog.FilterIndex;
 
-    private string FilterLookup(string sFilters, int iCur)
-    {
-        string _FilterLookup = "";
-        string s;
-        int iStart = 1;
-        if (sFilters == "") return _FilterLookup;
-        do
-        {
-            // Cut out both parts marked by null character
-            int iEnd = InStr(iStart, sFilters, vbNullChar);
-            if (iEnd == 0) return _FilterLookup;
-            iEnd = InStr(iEnd + 1, sFilters, vbNullChar);
-            if (iEnd != 0)
-            {
-                s = Mid(sFilters, iStart, iEnd - iStart);
-            }
-            else
-            {
-                s = Mid(sFilters, iStart);
-            }
-            iStart = iEnd + 1;
-            if (iCur == 1)
-            {
-                _FilterLookup = s;
-                return _FilterLookup;
-            }
-            iCur--;
-        } while (iCur != 0);
-        return _FilterLookup;
+        return result;
     }
 
     public string VBGetFileTitle(string sFile)
@@ -932,7 +744,7 @@ public partial class gCommonDialog
         // Initialize LOGFONT variable
         LOGFONT fnt = null;
         var PointsPerTwip = 1440 / 72;
-        fnt.lfHeight = (int)-(CurFont.Size * (PointsPerTwip / Screen.TwipsPerPixelY));
+        fnt.lfHeight = (int)-(CurFont.Size * (PointsPerTwip / VBExtension.Screen.TwipsPerPixelY));
         fnt.lfWeight = CurFont.Bold ? 700 : 400;
         fnt.lfItalic = (byte)(CurFont.Italic ? 1 : 0);
         fnt.lfUnderline = (byte)(CurFont.Underline ? 1 : 0);

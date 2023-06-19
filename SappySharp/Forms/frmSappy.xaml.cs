@@ -1143,20 +1143,17 @@ public partial class frmSappy : Window, ISubclass
         bool readOnly = false;
         int filterIndex = 1;
         string filter = Properties.Resources._2 + "|*.gba";
-        string initDir = null;
-        string dlgTitle = null;
-        string defaultExt = null;
-        int flags = 0;
-        if (cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
 
         skipABit:;
         FileClose(99);
 
         SongTbl = 0;
-        ebr.Bars["Tasks"].CanExpand = false;
-        // ebr.Bars["Tasks"].State = eBarCollapsed
-        ebr.Bars["Info"].CanExpand = false;
-        // ebr.Bars["Info"].State = eBarCollapsed
+        // Commenting these COM instructions because it didn't work.
+        //ebr.Bars["Tasks"].CanExpand = false;
+        //// ebr.Bars["Tasks"].State = eBarCollapsed
+        //ebr.Bars["Info"].CanExpand = false;
+        //// ebr.Bars["Info"].State = eBarCollapsed
         cbxSongs.IsEnabled = false;
         cmdPrevSong.IsEnabled = false;
         cmdNextSong.IsEnabled = false;
@@ -1164,10 +1161,11 @@ public partial class frmSappy : Window, ISubclass
         chkMute.IsEnabled = false;
         cmdPlay.IsEnabled = false;
         cmdStop.IsEnabled = false;
-        for (int i = 1; i <= 5; i += 1)
-        {
-            cPop.set_Enabled(TaskMenus[i], false);
-        }
+        // Commenting these COM instructions because it didn't work.
+        //for (int i = 1; i <= 5; i += 1)
+        //{
+        //    cPop.set_Enabled(TaskMenus[i], false);
+        //}
 
         FileOpen(99, myFile, OpenMode.Binary);
         FileGet(99, ref code, 0xAC + 1);
@@ -1724,11 +1722,7 @@ public partial class frmSappy : Window, ISubclass
         bool readOnly = false;
         int filterIndex = 1;
         string filter = "Sappy.LST|sappy.lst";
-        string initDir = null;
-        string dlgTitle = null;
-        string defaultExt = null;
-        int flags = 0;
-        if (cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
         string myDir = Left(myFile, Len(myFile) - Len(cc.VBGetFileTitle(myFile)));
 
         x.save(Left(xfile, Len(xfile) - 3) + "bak");
@@ -1865,11 +1859,7 @@ public partial class frmSappy : Window, ISubclass
         bool readOnly = false;
         int filterIndex = 1;
         string filter = Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG";
-        string initDir = null;
-        string dlgTitle = null;
-        string defaultExt = null;
-        int flags = 0;
-        if (cc.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == true)
+        if (cc.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex))
         {
             s = cc.VBGetFileTitle(s);
             picScreenshot.Source = new BitmapImage(new(s));
@@ -2098,8 +2088,7 @@ public partial class frmSappy : Window, ISubclass
         string fileTitle = lblSongName.Content + ".mid";
         string filter = "Type 0 MIDI (*.mid)|*.mid";
         int filterIndex = 1;
-        int flags = 0;
-        if (cc.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, ref flags, DefaultExt: "mid") == false) return;
+        if (!cc.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, DefaultExt: "mid")) return;
         WantToRecord = 1;
         WantToRecordTo = target;
         cmdPlay.setValue(true);

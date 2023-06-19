@@ -307,11 +307,7 @@ public partial class frmAssembler : Window
         bool readOnly = false;
         string filter = "MID2AGB output (*.s)|*.s";
         int filterIndex = 1;
-        string initDir = null;
-        string dlgTitle = null;
-        string defaultExt = null;
-        int flags = 0;
-        if (MyCC.VBGetOpenFileName(ref FileTit, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        if (!MyCC.VBGetOpenFileName(ref FileTit, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
         txtFile.Text = FileTit;
         // FileTit = MyCC.VBGetFileTitle(txtFile.Text)
         // FileDir = Left(txtFile, Len(txtFile) - Len(FileTit))
@@ -325,11 +321,7 @@ public partial class frmAssembler : Window
         bool readOnly = false;
         string filter = "GBA ROM files (*.gba)|*.gba";
         int filterIndex = 1;
-        string initDir = null;
-        string dlgTitle = null;
-        string defaultExt = null;
-        int flags = 0;
-        if (MyCC.VBGetOpenFileName(ref foo, ref fileTile, ref readOnly, ref filter, ref filterIndex, ref initDir, ref dlgTitle, ref defaultExt, ref flags) == false) return;
+        if (!MyCC.VBGetOpenFileName(ref foo, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
         txtROM.Text = foo;
     }
 }
