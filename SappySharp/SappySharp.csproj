@@ -20,15 +20,6 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
-    <COMReference Include="MSXML2">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>3</VersionMajor>
-      <Guid>f5078f18-c551-11d3-89b9-0000f81fe221</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="vbalExplorerBarLib6">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>1</VersionMinor>

@@ -74,7 +74,7 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 using System.Windows.Threading;
-using MSXML2;
+using System.Xml;
 
 namespace SappySharp.Forms;
 
@@ -155,27 +155,27 @@ public partial class frmMidiMapper : Window
 
         bool need = false;
 
-        IXMLDOMElement NewMap = frmSappy.instance.x.createElement("midimap");
+        XmlElement NewMap = frmSappy.instance.x.CreateElement("midimap");
 
         for (int i = 0; i <= 127; i += 1)
         {
             if (MidiMap[i] != i) // it's remapped
             {
                 need = true;
-                IXMLDOMElement NewInst = frmSappy.instance.x.createElement("inst");
-                IXMLDOMAttribute NewAtt = frmSappy.instance.x.createAttribute("from");
-                NewAtt.value = i;
-                NewInst.attributes.setNamedItem(NewAtt);
-                NewAtt = frmSappy.instance.x.createAttribute("to");
-                NewAtt.value = MidiMap[i];
-                NewInst.attributes.setNamedItem(NewAtt);
+                XmlElement NewInst = frmSappy.instance.x.CreateElement("inst");
+                XmlAttribute NewAtt = frmSappy.instance.x.CreateAttribute("from");
+                NewAtt.Value = i.ToString();
+                NewInst.Attributes.SetNamedItem(NewAtt);
+                NewAtt = frmSappy.instance.x.CreateAttribute("to");
+                NewAtt.Value = MidiMap[i].ToString();
+                NewInst.Attributes.SetNamedItem(NewAtt);
                 if (MidiTrans[i] != 0)
                 {
-                    NewAtt = frmSappy.instance.x.createAttribute("transpose");
-                    NewAtt.value = MidiTrans[i];
-                    NewInst.attributes.setNamedItem(NewAtt);
+                    NewAtt = frmSappy.instance.x.CreateAttribute("transpose");
+                    NewAtt.Value = MidiTrans[i].ToString();
+                    NewInst.Attributes.SetNamedItem(NewAtt);
                 }
-                NewMap.appendChild(NewInst);
+                NewMap.AppendChild(NewInst);
             }
         }
 
@@ -184,26 +184,26 @@ public partial class frmMidiMapper : Window
             if (DrumMap[i] != i) // it's remapped
             {
                 need = true;
-                IXMLDOMElement NewInst = frmSappy.instance.x.createElement("drum");
-                IXMLDOMAttribute NewAtt = frmSappy.instance.x.createAttribute("from");
-                NewAtt.value = i;
-                NewInst.attributes.setNamedItem(NewAtt);
-                NewAtt = frmSappy.instance.x.createAttribute("to");
-                NewAtt.value = DrumMap[i];
-                NewInst.attributes.setNamedItem(NewAtt);
-                NewMap.appendChild(NewInst);
+                XmlElement NewInst = frmSappy.instance.x.CreateElement("drum");
+                XmlAttribute NewAtt = frmSappy.instance.x.CreateAttribute("from");
+                NewAtt.Value = i.ToString();
+                NewInst.Attributes.SetNamedItem(NewAtt);
+                NewAtt = frmSappy.instance.x.CreateAttribute("to");
+                NewAtt.Value = DrumMap[i].ToString();
+                NewInst.Attributes.SetNamedItem(NewAtt);
+                NewMap.AppendChild(NewInst);
             }
         }
 
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        frmSappy.instance.MidiMapsDaddy.removeChild(frmSappy.instance.MidiMapNode);
+        frmSappy.instance.MidiMapsDaddy.RemoveChild(frmSappy.instance.MidiMapNode);
         // TODO: (NOT SUPPORTED): On Error GoTo 0
         if (need)
         {
-            frmSappy.instance.MidiMapsDaddy.appendChild(NewMap);
+            frmSappy.instance.MidiMapsDaddy.AppendChild(NewMap);
         }
 
-        frmSappy.instance.x.save(frmSappy.instance.xfile);
+        frmSappy.instance.x.Save(frmSappy.instance.xfile);
         frmSappy.instance.LoadGameFromXML(ref frmSappy.instance.gamecode);
         Unload();
     }
@@ -430,20 +430,20 @@ public partial class frmMidiMapper : Window
 
         if (frmSappy.instance.MidiMapNode != null)
         {
-            foreach (IXMLDOMElement n4 in frmSappy.instance.MidiMapNode.childNodes)
+            foreach (XmlElement n4 in frmSappy.instance.MidiMapNode.ChildNodes)
             {
-                if (n4.baseName == "inst")
+                if (n4.Name == "inst")
                 {
-                    int i = n4.getAttribute("from");
-                    MidiMap[i] = n4.getAttribute("to");
+                    int i = int.Parse(n4.GetAttribute("from"));
+                    MidiMap[i] = int.Parse(n4.GetAttribute("to"));
                     // TODO: (NOT SUPPORTED): On Error Resume Next
-                    MidiTrans[i] = n4.getAttribute("transpose");
+                    MidiTrans[i] = int.Parse(n4.GetAttribute("transpose"));
                     // TODO: (NOT SUPPORTED): On Error GoTo 0
                 }
-                if (n4.baseName == "drum")
+                if (n4.Name == "drum")
                 {
-                    int i = n4.getAttribute("from");
-                    DrumMap[i] = n4.getAttribute("to");
+                    int i = int.Parse(n4.GetAttribute("from"));
+                    DrumMap[i] = int.Parse(n4.GetAttribute("to"));
                 }
             }
         }

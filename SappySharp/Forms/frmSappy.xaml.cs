@@ -74,7 +74,6 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 using System.Windows.Threading;
-using MSXML2;
 using SappySharp.Classes;
 using System.Reflection;
 using SappySharp.UserControls;
@@ -84,6 +83,7 @@ using PortControlLibrary;
 using cPopMenu6;
 using stdole;
 using SSubTimer6;
+using System.Xml;
 
 namespace SappySharp.Forms;
 
@@ -175,8 +175,8 @@ public partial class frmSappy : Window, ISubclass
     private static int[] DrumMap = new int[127];
     private static int[] BleedingEars = new int[127];
     private static int BECnt = 0;
-    public IXMLDOMElement MidiMapNode = null;
-    public IXMLDOMElement MidiMapsDaddy = null;
+    public XmlElement MidiMapNode = null;
+    public XmlElement MidiMapsDaddy = null;
 
     private static tSongHeader SongHead;
     private static int SongHeadOrg = 0;
@@ -192,8 +192,8 @@ public partial class frmSappy : Window, ISubclass
     public cVBALImageList imlImages = null;
     public cVBALImageList imlStatusbar = null;
     public static cNoStatusBar cStatusBar = null;
-    public IXMLDOMDocument2 x = new DOMDocument();
-    public IXMLDOMElement rootNode = null;
+    public XmlDocument x = new();
+    public XmlElement rootNode = null;
 
     public const int WM_SIZING = 0x214;
     public static int mywidth = 0;
@@ -1335,24 +1335,19 @@ public partial class frmSappy : Window, ISubclass
 
     public void LoadGameFromXML(ref string gamecode, string newxfile = "")
     {
-        int i = 0;
-        int j = 0;
-        int Icon = 0;
-        int picon = 0;
-
         if (newxfile == "") newxfile = xfile;
         Trace("Loading from " + newxfile + "...");
-        x = new DOMDocument26();
-        x.load(newxfile);
-        x.preserveWhiteSpace = true;
-        if (x.parseError.errorCode != 0)
+        x = new();
+        x.Load(newxfile);
+        x.PreserveWhitespace = true;
+        //if (x.parseError.errorCode != 0)
+        //{
+        //    MsgBox(Replace(Replace(Properties.Resources._208, "$ERROR", x.parseError.reason), "$CAUSE", x.parseError.srcText));
+        //    End();
+        //}
+        foreach (XmlElement n1 in x.ChildNodes)
         {
-            MsgBox(Replace(Replace(Properties.Resources._208, "$ERROR", x.parseError.reason), "$CAUSE", x.parseError.srcText));
-            End();
-        }
-        foreach (IXMLDOMElement n1 in x.childNodes)
-        {
-            if (n1.baseName == "sappy")
+            if (n1.Name == "sappy")
             {
                 rootNode = n1;
                 break;
@@ -1368,9 +1363,9 @@ public partial class frmSappy : Window, ISubclass
         // Set picScreenshot.Picture = Nothing
         picScreenshot.Source = ConvertBitmap(Properties.Resources.NOPIC);
         cbxSongs.Clear();
-        for (j = 0; j <= 255; j += 1)
+        for (int j = 0; j <= 255; j += 1)
         {
-            for (i = 0; i <= 1024; i += 1)
+            for (int i = 0; i <= 1024; i += 1)
             {
                 playlist[j].SongName[i] = "";
                 playlist[j].SongNo[i] = 0;
@@ -1381,7 +1376,7 @@ public partial class frmSappy : Window, ISubclass
         playlist[0].SongName[0] = Properties.Resources._109;
         playlist[0].SongNo[0] = 1;
         NumPLs = 1;
-        for (i = 0; i <= 127; i += 1)
+        for (int i = 0; i <= 127; i += 1)
         {
             MidiMap[i] = i;
             MidiMapTrans[i] = 0;
@@ -1391,106 +1386,106 @@ public partial class frmSappy : Window, ISubclass
         BECnt = 0;
         MidiMapNode = null;
         MidiMapsDaddy = null;
-        foreach (IXMLDOMElement n1 in rootNode.childNodes)
+        foreach (XmlElement n1 in rootNode.ChildNodes)
         {
-            if (n1.baseName == "rom")
+            if (n1.Name == "rom")
             {
                 NumPLs = 0;
-                foreach (IXMLDOMAttribute n3 in n1.attributes)
+                foreach (XmlAttribute n3 in n1.Attributes)
                 {
-                    if (n3.baseName == "code")
+                    if (n3.Name == "code")
                     {
-                        if (LCase(n3.value) != LCase(gamecode))
+                        if (LCase(n3.Value) != LCase(gamecode))
                         {
                             goto BrotherMaynard;
                         }
-                        ebr.Bars["Info"].Items["Code"].Text = "Gamecode " + UCase(n3.text);
-                        gamecode = UCase(n3.text);
+                        ebr.Bars["Info"].Items["Code"].Text = "Gamecode " + UCase(n3.InnerText);
+                        gamecode = UCase(n3.InnerText);
                     }
-                    if (n3.baseName == "name")
+                    if (n3.Name == "name")
                     {
-                        ebr.Bars["Info"].Items["Game"].Text = n3.text;
+                        ebr.Bars["Info"].Items["Game"].Text = n3.InnerText;
                     }
-                    if (n3.baseName == "creator")
+                    if (n3.Name == "creator")
                     {
-                        ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._65 + n3.text;
+                        ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._65 + n3.InnerText;
                     }
-                    if (n3.baseName == "tagger")
+                    if (n3.Name == "tagger")
                     {
-                        ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._66 + n3.text;
+                        ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._66 + n3.InnerText;
                     }
-                    if (n3.baseName == "songtable")
+                    if (n3.Name == "songtable")
                     {
-                        SongTbl = (int)Val("&H" + FixHex(n3.text, 6));
-                        if (Val("&H" + FixHex(n3.text, 6)) != Val("&H" + FixHex(n3.text, 6) + "&"))
+                        SongTbl = (int)Val("&H" + FixHex(n3.InnerText, 6));
+                        if (Val("&H" + FixHex(n3.InnerText, 6)) != Val("&H" + FixHex(n3.InnerText, 6) + "&"))
                         {
-                            MsgBox("Song pointer in an unsupported location. " + Hex(Val("&H" + FixHex(n3.text, 6) + "&")) + " is read as " + Hex(Val("&H" + FixHex(n3.text, 6))) + ".");
+                            MsgBox("Song pointer in an unsupported location. " + Hex(Val("&H" + FixHex(n3.InnerText, 6) + "&")) + " is read as " + Hex(Val("&H" + FixHex(n3.InnerText, 6))) + ".");
                             return;
                         }
                         ebr.Bars["Info"].Items["SongTbl"].Text = Properties.Resources._67 + "0x" + Hex(SongTbl);
                     }
-                    if (n3.baseName == "screenshot")
+                    if (n3.Name == "screenshot")
                     {
                         // TODO: (NOT SUPPORTED): On Error Resume Next
-                        picScreenshot.Tag = n3.value;
-                        picScreenshot.Source = new BitmapImage(new(n3.value));
+                        picScreenshot.Tag = n3.Value;
+                        picScreenshot.Source = new BitmapImage(new(n3.Value));
                         // TODO: (NOT SUPPORTED): On Error GoTo 0
                     }
                 }
 
                 // TODO: (NOT SUPPORTED): On Error GoTo BrotherMaynard
                 MidiMapsDaddy = n1;
-                foreach (IXMLDOMElement n2 in n1.childNodes)
+                foreach (XmlElement n2 in n1.ChildNodes)
                 {
-                    if (n2.baseName == "playlist")
+                    if (n2.Name == "playlist")
                     {
-                        if (n2.getAttribute("steal") != "")
+                        if (n2.GetAttribute("steal") != "")
                         {
-                            cbxSongs.AddItem((string)n2.getAttribute("name"), 9999);//, 13, 13
+                            cbxSongs.AddItem(n2.GetAttribute("name"), 9999);//, 13, 13
                             playlist[NumPLs].NumSongs = 0;
-                            foreach (IXMLDOMElement s1 in rootNode.childNodes)
+                            foreach (XmlElement s1 in rootNode.ChildNodes)
                             {
-                                if (s1.baseName == "rom" && s1.getAttribute("code") == n2.getAttribute("steal"))
+                                if (s1.Name == "rom" && s1.GetAttribute("code") == n2.GetAttribute("steal"))
                                 {
-                                    foreach (IXMLDOMElement s2 in s1.childNodes)
+                                    foreach (XmlElement s2 in s1.ChildNodes)
                                     {
-                                        if (s2.baseName == "playlist" && s2.getAttribute("name") == n2.getAttribute("name"))
+                                        if (s2.Name == "playlist" && s2.GetAttribute("name") == n2.GetAttribute("name"))
                                         {
-                                            foreach (IXMLDOMElement s4 in s2.childNodes)
+                                            foreach (XmlElement s4 in s2.ChildNodes)
                                             {
-                                                if (s4.baseName == "song")
+                                                if (s4.Name == "song")
                                                 {
-                                                    playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = s4.text;
-                                                    playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = Val("&H" + FixHex(s4.getAttribute("track"), 4));
+                                                    playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = s4.InnerText;
+                                                    playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = (int)Val("&H" + FixHex(s4.GetAttribute("track"), 4));
                                                     playlist[NumPLs].NumSongs = playlist[NumPLs].NumSongs + 1;
-                                                    cbxSongs.AddItem(s4.text, (int)Val("&H" + FixHex(s4.getAttribute("track"), 4)));//, 14, 14, 1
+                                                    cbxSongs.AddItem(s4.InnerText, (int)Val("&H" + FixHex(s4.GetAttribute("track"), 4)));//, 14, 14, 1
                                                 } // stealing song
                                             } // stealing playlist children
                                             goto StolenIt;
                                         } // stealing playlist
                                     } // stealing rom children
-                                    MsgBox("Couldn't find playlist \"" + n2.getAttribute("name") + "\" for gamecode \"" + n2.getAttribute("steal") + "\".");
+                                    MsgBox("Couldn't find playlist \"" + n2.GetAttribute("name") + "\" for gamecode \"" + n2.GetAttribute("steal") + "\".");
                                 } // stealing rom
                             } // stealing library
                             NumPLs++;
                         }
                         else
                         {
-                            cbxSongs.AddItem((string)n2.getAttribute("name"), 9999);//, 13, 13
-                            picon = 14;
-                            if (n2.getAttribute("icon") == "1") picon = 25;
+                            cbxSongs.AddItem(n2.GetAttribute("name"), 9999);//, 13, 13
+                            int picon = 14;
+                            if (n2.GetAttribute("icon") == "1") picon = 25;
                             playlist[NumPLs].NumSongs = 0;
-                            foreach (IXMLDOMElement n4 in n2.childNodes)
+                            foreach (XmlElement n4 in n2.ChildNodes)
                             {
-                                if (n4.baseName == "song")
+                                if (n4.Name == "song")
                                 {
-                                    Icon = picon;
-                                    if (n4.getAttribute("icon") == "0") Icon = 14;
-                                    if (n4.getAttribute("icon") == "1") Icon = 25;
-                                    playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = n4.text;
-                                    playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = Val("&H" + FixHex(n4.getAttribute("track"), 4));
+                                    int Icon = picon;
+                                    if (n4.GetAttribute("icon") == "0") Icon = 14;
+                                    if (n4.GetAttribute("icon") == "1") Icon = 25;
+                                    playlist[NumPLs].SongName[playlist[NumPLs].NumSongs] = n4.InnerText;
+                                    playlist[NumPLs].SongNo[playlist[NumPLs].NumSongs] = (int)Val("&H" + FixHex(n4.GetAttribute("track"), 4));
                                     playlist[NumPLs].NumSongs = playlist[NumPLs].NumSongs + 1;
-                                    cbxSongs.AddItem(n4.text, (int)Val("&H" + FixHex(n4.getAttribute("track"), 4)));//, Icon, Icon, 1
+                                    cbxSongs.AddItem(n4.InnerText, (int)Val("&H" + FixHex(n4.GetAttribute("track"), 4)));//, Icon, Icon, 1
                                 } // song
                             } // playlist songs
                             NumPLs++;
@@ -1500,38 +1495,38 @@ public partial class frmSappy : Window, ISubclass
 
                 StolenIt:;
                     // We could get other tags here, like MidiMap.
-                    if (n2.baseName == "midimap")
+                    if (n2.Name == "midimap")
                     {
                         MidiMapNode = n2;
-                        foreach (IXMLDOMElement n4 in n2.childNodes)
+                        foreach (XmlElement n4 in n2.ChildNodes)
                         {
-                            if (n4.baseName == "inst")
+                            if (n4.Name == "inst")
                             {
-                                i = n4.getAttribute("from");
-                                MidiMap[i] = n4.getAttribute("to");
+                                int i = int.Parse(n4.GetAttribute("from"));
+                                MidiMap[i] = int.Parse(n4.GetAttribute("to"));
                                 // TODO: (NOT SUPPORTED): On Error Resume Next
-                                MidiMapTrans[i] = n4.getAttribute("transpose");
+                                MidiMapTrans[i] = int.Parse(n4.GetAttribute("transpose"));
                                 // TODO: (NOT SUPPORTED): On Error GoTo 0
                             } // inst
                         } // midimap children
                     } // midimap
 
-                    if (n2.baseName == "bleedingears")
+                    if (n2.Name == "bleedingears")
                     {
-                        foreach (IXMLDOMElement n4 in n2.childNodes)
+                        foreach (XmlElement n4 in n2.ChildNodes)
                         {
-                            if (n4.baseName == "inst")
+                            if (n4.Name == "inst")
                             {
-                                foreach (IXMLDOMAttribute n3 in n4.attributes)
+                                foreach (XmlAttribute n3 in n4.Attributes)
                                 {
-                                    if (n3.baseName == "id")
+                                    if (n3.Name == "id")
                                     {
-                                        BleedingEars[BECnt] = n3.value;
+                                        BleedingEars[BECnt] = int.Parse(n3.Value);
                                         BECnt++;
                                     }
-                                    if (n3.baseName == "from")
+                                    if (n3.Name == "from")
                                     {
-                                        for (i = n3.value; i <= n4.getAttribute("to"); i += 1)
+                                        for (int i = int.Parse(n3.Value); i <= int.Parse(n4.GetAttribute("to")); i += 1)
                                         {
                                             BleedingEars[BECnt] = i;
                                             BECnt++;
@@ -1558,41 +1553,39 @@ public partial class frmSappy : Window, ISubclass
     {
         string gamename = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (12)
         FileGet(99, ref gamename, 0xA1);
-        IXMLDOMElement n1 = x.createElement("rom");
+        XmlElement n1 = x.CreateElement("rom");
 
-        n1.setAttribute("code", gamecode);
-        n1.setAttribute("name", gamename);
-        n1.setAttribute("songtable", "0x" + Hex(SongTbl)); // FixHex(SongTbl, 6)
+        n1.SetAttribute("code", gamecode);
+        n1.SetAttribute("name", gamename);
+        n1.SetAttribute("songtable", "0x" + Hex(SongTbl)); // FixHex(SongTbl, 6)
 
-        IXMLDOMElement n3 = x.createElement("playlist");
-        IXMLDOMAttribute n4 = x.createAttribute("name");
-        n4.text = "Main";
-        n3.attributes.setNamedItem(n4);
-        n1.appendChild(n3);
+        XmlElement n3 = x.CreateElement("playlist");
+        XmlAttribute n4 = x.CreateAttribute("name");
+        n4.InnerText = "Main";
+        n3.Attributes.SetNamedItem(n4);
+        n1.AppendChild(n3);
 
-        rootNode.insertBefore(n1, null);
-        x.save(xfile);
+        rootNode.InsertBefore(n1, null);
+        x.Save(xfile);
     }
 
     private void SaveNewRomHeader(string att, string nV)
     {
-        string axe = "";
-
-        axe = xfile;
+        string axe = xfile;
         if (Dir(gamecode + ".xml") != "") axe = gamecode + ".xml";
         if (Dir(AppContext.BaseDirectory + "\\" + gamecode + ".xml") != "") axe = AppContext.BaseDirectory + "\\" + gamecode + ".xml";
         Trace("Saving to " + axe + "...");
-        x = new DOMDocument26();
-        x.load(axe);
-        x.preserveWhiteSpace = true;
-        if (x.parseError.errorCode != 0)
+        x = new();
+        x.Load(axe);
+        x.PreserveWhitespace = true;
+        //if (x.parseError.errorCode != 0)
+        //{
+        //    MsgBox(Replace(Replace(Properties.Resources._208, "$ERROR", x.parseError.reason), "$CAUSE", x.parseError.srcText));
+        //    End();
+        //}
+        foreach (XmlElement n1 in x.ChildNodes)
         {
-            MsgBox(Replace(Replace(Properties.Resources._208, "$ERROR", x.parseError.reason), "$CAUSE", x.parseError.srcText));
-            End();
-        }
-        foreach (IXMLDOMElement n1 in x.childNodes)
-        {
-            if (n1.baseName == "sappy")
+            if (n1.Name == "sappy")
             {
                 rootNode = n1;
                 break;
@@ -1600,14 +1593,14 @@ public partial class frmSappy : Window, ISubclass
         }
 
 
-        foreach (IXMLDOMElement n1 in rootNode.childNodes)
+        foreach (XmlElement n1 in rootNode.ChildNodes)
         {
-            if (n1.baseName == "rom" && n1.getAttribute("code") == gamecode)
+            if (n1.Name == "rom" && n1.GetAttribute("code") == gamecode)
             {
-                n1.setAttribute(att, nV);
+                n1.SetAttribute(att, nV);
             }
         }
-        x.save(axe);
+        x.Save(axe);
     }
 
     private void FindMST()
@@ -1725,7 +1718,7 @@ public partial class frmSappy : Window, ISubclass
         if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
         string myDir = Left(myFile, Len(myFile) - Len(cc.VBGetFileTitle(myFile)));
 
-        x.save(Left(xfile, Len(xfile) - 3) + "bak");
+        x.Save(Left(xfile, Len(xfile) - 3) + "bak");
 
         FileOpen(96, myFile, OpenMode.Input);
         do
@@ -1743,23 +1736,23 @@ public partial class frmSappy : Window, ISubclass
             {
                 if (e == "sapphire")
                 {
-                    IXMLDOMElement myNewRom = x.createElement("rom");
-                    myNewRom.setAttribute("code", c); // 181205 update: OOPS!
-                    myNewRom.setAttribute("name", n);
-                    myNewRom.setAttribute("songtable", "0x" + Hex(s) + "");
+                    XmlElement myNewRom = x.CreateElement("rom");
+                    myNewRom.SetAttribute("code", c); // 181205 update: OOPS!
+                    myNewRom.SetAttribute("name", n);
+                    myNewRom.SetAttribute("songtable", "0x" + Hex(s) + "");
                     if (p == "blank")
                     {
-                        IXMLDOMElement myNewList = x.createElement("playlist");
-                        myNewList.setAttribute("name", "No playlist");
-                        myNewRom.appendChild(myNewList);
+                        XmlElement myNewList = x.CreateElement("playlist");
+                        myNewList.SetAttribute("name", "No playlist");
+                        myNewRom.AppendChild(myNewList);
                     }
                     else
                     {
                         if (Dir(myDir + p + ".lst") == "")
                         {
-                            IXMLDOMElement myNewList = x.createElement("playlist");
-                            myNewList.setAttribute("name", "404");
-                            myNewRom.appendChild(myNewList);
+                            XmlElement myNewList = x.CreateElement("playlist");
+                            myNewList.SetAttribute("name", "404");
+                            myNewRom.AppendChild(myNewList);
                         }
                         else
                         {
@@ -1768,8 +1761,8 @@ public partial class frmSappy : Window, ISubclass
                             {
                                 string y = LineInput(95);
                                 if (y == "ENDFILE") break;
-                                IXMLDOMElement myNewList = x.createElement("playlist");
-                                myNewList.setAttribute("name", y);
+                                XmlElement myNewList = x.CreateElement("playlist");
+                                myNewList.SetAttribute("name", y);
                                 do
                                 {
                                     y = LineInput(95);
@@ -1777,25 +1770,25 @@ public partial class frmSappy : Window, ISubclass
                                     {
                                         if (y != "END")
                                         {
-                                            IXMLDOMElement myNewSong = x.createElement("song");
-                                            myNewSong.setAttribute("track", Val("&H" + Left(y, 4)));
-                                            myNewSong.text = Mid(y, 6);
-                                            myNewList.appendChild(myNewSong);
+                                            XmlElement myNewSong = x.CreateElement("song");
+                                            myNewSong.SetAttribute("track", Val("&H" + Left(y, 4)).ToString());
+                                            myNewSong.InnerText = Mid(y, 6);
+                                            myNewList.AppendChild(myNewSong);
                                         }
                                     }
                                 } while (!(y == "END"));
-                                myNewRom.appendChild(myNewList);
+                                myNewRom.AppendChild(myNewList);
                             } while (true);
 
                             FileClose(95);
                         }
                     }
-                    rootNode.appendChild(myNewRom);
+                    rootNode.AppendChild(myNewRom);
                 }
             }
         SkipThisShit:;
         } while (true);
-        x.save(xfile);
+        x.Save(xfile);
         FileClose(96);
         IncessantNoises("TaskComplete");
 
