@@ -14,7 +14,7 @@ internal static class VBFileSystem
     public static FileStream File99;
 
     public static void FileClose(FileStream fs) => fs?.Close();
-    public static bool EOF(FileStream fs) => fs.Length >= fs.Position;
+    public static bool EOF(FileStream fs) => fs.Position >= fs.Length;
 
     public static void ChDir(string path) => Microsoft.VisualBasic.FileSystem.ChDir(path);
     public static string Dir(string path) => Microsoft.VisualBasic.FileSystem.Dir(path);

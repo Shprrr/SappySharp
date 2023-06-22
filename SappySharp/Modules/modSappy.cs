@@ -314,7 +314,7 @@ static partial class modSappy
 
     // Given a value and the padding length, returns a padded Hex value.
 
-    public static string FixHex(dynamic s, int i)
+    public static string FixHex(string s, int i)
     {
         string Bleh = Replace(s, "0x", "&H");
         if (Left(Bleh, 2) != "&H")
@@ -326,6 +326,7 @@ static partial class modSappy
         _FixHex = Replace(_FixHex, "H", "");
         return _FixHex;
     }
+    public static string FixHex(int s, int i) => Right("00000000" + s.ToString("X8"), i);
 
     // -------------------------------
     // SetCaptions

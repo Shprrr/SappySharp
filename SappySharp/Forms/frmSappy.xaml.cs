@@ -1327,7 +1327,7 @@ public partial class frmSappy : Window, ISubclass
               "|" + cc.VBGetFileTitle(myFile) +
               "|" + gamecode +
               "|" + txtSong +
-              "|" + ebr.Bars["Info"].Items["Game"].Text +
+              "|" + /*ebr.Bars["Info"].Items["Game"].Text +*/ //TODO: Commenting these COM instructions because it didn't work.
               "|" + n + IIf(SappyDecoder.outputtype == SongOutputTypes.sotMIDI, " (midi)", "");
 
         if (Playing == true)
