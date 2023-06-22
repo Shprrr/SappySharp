@@ -1,4 +1,23 @@
 <sappy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="sappy.xsd">
+	<rom code="KWJ6" name="Kawa's Jukebox 2006" songtable="0x3ED0" screenshot="kawajuke.jpg" creator="Kyoufu Kawa" tagger="Kyoufu Kawa">
+		<playlist name="Main">
+			<song track="1">Keitaro's Theme</song>
+			<song track="2">Monkey Island 2</song>
+			<song track="3">Toon Machine</song>
+			<song track="4">Canon</song>
+			<song track="5">Grabbag</song>
+			<song track="6">At Doom's Gate</song>
+			<song track="7">Kitchen Ace</song>
+			<song track="8">I Sawed the Demons</song>
+			<song track="9">Azumanga Daioh</song>
+			<song track="10">Lemmings</song>
+			<song track="11">Ninja Gaiden</song>
+			<song track="12">Kawa's Comin'</song>
+			<song track="13">Zero Wing Medley</song>
+			<song track="14">Sonic Invincibility</song>
+			<song track="15">Dschinghis Khan Medley</song>
+		</playlist>
+	</rom>
 	<rom code="BDTE" name="River City Ransom" songtable="0x2C6084" screenshot="rcr.jpg" creator="Atlus" tagger="Kyoufu Kawa">
 		<playlist name="Main">
 			<song track="1">Introduction</song>
@@ -854,9 +873,6 @@
 		<playlist name="Main"/>
 	</rom>
 	<rom code="A2CE" name="CASTLEVANIA2" songtable="0x27CD38">
-		<playlist name="Main"/>
-	</rom>
-	<rom code="KWJ6" name="KAWAJUKE 2K6" songtable="0x3EDC">
 		<playlist name="Main"/>
 	</rom>
 	<rom code="BE8E" name="Fire Emblem Sacred Stones" songtable="0x224470" screenshot="fe8.jpg">

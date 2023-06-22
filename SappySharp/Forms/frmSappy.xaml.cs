@@ -13,7 +13,7 @@ using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
 using static Microsoft.VisualBasic.DateAndTime;
 using static Microsoft.VisualBasic.ErrObject;
-using static Microsoft.VisualBasic.FileSystem;
+using static SappySharp.VBFileSystem;
 using static Microsoft.VisualBasic.Financial;
 using static Microsoft.VisualBasic.Information;
 using static Microsoft.VisualBasic.Interaction;
@@ -83,6 +83,7 @@ using PortControlLibrary;
 using cPopMenu6;
 using stdole;
 using SSubTimer6;
+using System.IO;
 using System.Xml;
 
 namespace SappySharp.Forms;
@@ -146,13 +147,15 @@ public partial class frmSappy : Window, ISubclass
         public int Bottom;
     }
 
-    struct tSongHeader
+    [StructLayout(LayoutKind.Sequential)]
+    private struct tSongHeader
     {
         public byte NumTracks;
         public byte NumBlocks;
         public byte Priority;
         public byte Reverb;
         public int VoiceGroup;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32, ArraySubType = UnmanagedType.I4)]
         public int[] Tracks = new int[32];
 
         public tSongHeader()
@@ -160,7 +163,7 @@ public partial class frmSappy : Window, ISubclass
         }
     }
 
-    class tPlaylist
+    private class tPlaylist
     {
         public int NumSongs;
         public string[] SongName = new string[1024];
@@ -315,9 +318,9 @@ public partial class frmSappy : Window, ISubclass
 
         if (GetSettingI("mIRC Now Playing") != 0)
         {
-            FileOpen(43, Assembly.GetExecutingAssembly().Location + "\\sappy.stt", OpenMode.Output);
-            Print(43, songinfo);
-            FileClose(43);
+            File43 = File.OpenWrite(Assembly.GetExecutingAssembly().Location + "\\sappy.stt");
+            File43.Write(songinfo);
+            FileClose(File43);
         }
 
         if (GetSettingI("MSN Now Playing") != 0)
@@ -451,10 +454,10 @@ public partial class frmSappy : Window, ISubclass
         // TODO: (NOT SUPPORTED): On Error Resume Next
         if (GetSetting("mIRC Now Playing") != null)
         {
-            FileOpen(44, Assembly.GetExecutingAssembly().Location + "\\sappy.stt", OpenMode.Output);
+            File44 = File.OpenWrite(Assembly.GetExecutingAssembly().Location + "\\sappy.stt");
             AssemblyName assemblyName = Application.ResourceAssembly.GetName();
-            Print(44, assemblyName.Version.Major + "." + assemblyName.Version.Minor + " | | | | Not running | ");
-            FileClose(44);
+            File44.Write(assemblyName.Version.Major + "." + assemblyName.Version.Minor + " | | | | Not running | ");
+            FileClose(File44);
         }
 
         if (GetSettingI("MSN Now Playing") != 0) ShutMSN();
@@ -713,10 +716,10 @@ public partial class frmSappy : Window, ISubclass
             Trace("- Oh shit...");
             if (MsgBox(Replace(Properties.Resources._204, "$XML", xfile), vbYesNo) == vbYes)
             {
-                FileOpen(4, xfile, OpenMode.Output);
-                Print(4, "<sappy xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://helmetedrodent.kickassgamers.com/sappy.xsd\">");
-                Print(4, "</sappy>");
-                FileClose(4);
+                File4 = File.OpenWrite(xfile);
+                File4.Write("<sappy xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://helmetedrodent.kickassgamers.com/sappy.xsd\">");
+                File4.Write("</sappy>");
+                FileClose(File4);
             }
             else
             {
@@ -802,7 +805,7 @@ public partial class frmSappy : Window, ISubclass
         Trace("- Set menu icons and help");
         object hIml = imlImages.hIml;
         cPop.set_ImageList(ref hIml);
-        // Commenting these COM instructions because it didn't work.
+        //TODO: Commenting these COM instructions because it didn't work.
         //cPop.set_ItemIcon("mnuFileOpen", 0);
         //cPop.set_ItemIcon("mnuOutput(0)", 2);
         //cPop.set_ItemIcon("mnuOutput(1)", 3);
@@ -862,7 +865,7 @@ public partial class frmSappy : Window, ISubclass
         color = GetPixelColor((BitmapSource)picSkin.Source, 6, 32);
         ebr.BackColorEnd = (uint)RGB(color.R, color.G, color.B);
         ebr.UseExplorerStyle = GetSettingI("Force Nice Bar") == 0;
-        // Commenting these COM instructions because it didn't work.
+        //TODO: Commenting these COM instructions because it didn't work.
         //ebr.Bars.Add("Tasks", Properties.Resources._50);
         //hIml = imlImages.hIml;
         //ebr.set_ImageList(ref hIml);
@@ -996,16 +999,16 @@ public partial class frmSappy : Window, ISubclass
         SappyDecoder = null;
         Trace("- Killing menu subclass");
         cPop.UnsubclassMenu();
-        FileClose(99);
+        FileClose(File99);
         Trace("- Saving window height");
         WriteSettingI("Window Height", (int)Height);
         if (GetSettingI("mIRC Now Playing") != 0)
         {
             Trace("- Updating mIRC information");
-            FileOpen(42, AppContext.BaseDirectory + "\\sappy.stt", OpenMode.Output);
+            File42 = File.OpenWrite(AppContext.BaseDirectory + "\\sappy.stt");
             AssemblyName assemblyName = Application.ResourceAssembly.GetName();
-            Print(42, assemblyName.Version.Major + "." + assemblyName.Version.Minor + " | | | | Not running | ");
-            FileClose(42);
+            File42.Write(assemblyName.Version.Major + "." + assemblyName.Version.Minor + " | | | | Not running | ");
+            FileClose(File42);
         }
         Trace("- Detaching messages");
         GSubclass gSubclass = new();
@@ -1136,7 +1139,6 @@ public partial class frmSappy : Window, ISubclass
     private void mnuFileOpen_Click()
     {
         gCommonDialog cc = new();
-        string code = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (4)
 
         if ((string)mnuFileOpen.Tag == "BrotherMaynard") goto skipABit;
         string fileTile = null;
@@ -1146,10 +1148,10 @@ public partial class frmSappy : Window, ISubclass
         if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
 
         skipABit:;
-        FileClose(99);
+        FileClose(File99);
 
         SongTbl = 0;
-        // Commenting these COM instructions because it didn't work.
+        //TODO: Commenting these COM instructions because it didn't work.
         //ebr.Bars["Tasks"].CanExpand = false;
         //// ebr.Bars["Tasks"].State = eBarCollapsed
         //ebr.Bars["Info"].CanExpand = false;
@@ -1161,18 +1163,19 @@ public partial class frmSappy : Window, ISubclass
         chkMute.IsEnabled = false;
         cmdPlay.IsEnabled = false;
         cmdStop.IsEnabled = false;
-        // Commenting these COM instructions because it didn't work.
+        //TODO: Commenting these COM instructions because it didn't work.
         //for (int i = 1; i <= 5; i += 1)
         //{
         //    cPop.set_Enabled(TaskMenus[i], false);
         //}
 
-        FileOpen(99, myFile, OpenMode.Binary);
-        FileGet(99, ref code, 0xAC + 1);
+        File99 = File.Open(myFile, FileMode.Open);
+        File99.Seek(0xAC, SeekOrigin.Begin);
+        File99.Read(out string code, 4);
         if (Asc(Mid(code, 1, 1)) == 0)
         {
             MsgBox(Properties.Resources._209);
-            FileClose(99);
+            FileClose(File99);
             return;
         }
         DontLoadDude = true;
@@ -1190,13 +1193,13 @@ public partial class frmSappy : Window, ISubclass
             {
                 // Autoscan don't like Golden Sun games :P
                 MsgBox(Properties.Resources._110, vbExclamation);
-                FileClose(99);
+                FileClose(File99);
                 return;
             }
             if (MsgBox(Replace(Properties.Resources._205, "$CODE", gamecode), vbOKCancel | vbInformation) == vbCancel)
             {
                 mnuFileOpen.Tag = "";
-                FileClose(99);
+                FileClose(File99);
                 return;
             }
             cStatusBar.PanelText("simple", Properties.Resources._105);
@@ -1204,10 +1207,10 @@ public partial class frmSappy : Window, ISubclass
             FindMST();
             cStatusBar.PanelText("simple", "");
             picStatusbar.Refresh();
-            if (SongTbl == 0)
-            { // still?
+            if (SongTbl == 0) // still?
+            {
                 MsgBox(Properties.Resources._206);
-                FileClose(99);
+                FileClose(File99);
                 return;
             }
             MsgBox(Replace(Properties.Resources._207, "$TBL", Hex(SongTbl)));
@@ -1221,10 +1224,11 @@ public partial class frmSappy : Window, ISubclass
         if (axe != "") cStatusBar.PanelText("simple", Properties.Resources._111);
         // TODO: (NOT SUPPORTED): On Error GoTo 0
 
-        ebr.Bars["Tasks"].CanExpand = true;
-        // ebr.Bars["Tasks"].State = eBarExpanded
-        ebr.Bars["Info"].CanExpand = true;
-        // ebr.Bars["Info"].State = eBarExpanded
+        //TODO: Commenting these COM instructions because it didn't work.
+        //ebr.Bars["Tasks"].CanExpand = true;
+        //// ebr.Bars["Tasks"].State = eBarExpanded
+        //ebr.Bars["Info"].CanExpand = true;
+        //// ebr.Bars["Info"].State = eBarExpanded
         cbxSongs.IsEnabled = true;
         cmdPrevSong.IsEnabled = true;
         cmdNextSong.IsEnabled = true;
@@ -1234,10 +1238,11 @@ public partial class frmSappy : Window, ISubclass
         cmdStop.IsEnabled = true;
         txtSong.Text = playlist[0].SongNo[0].ToString();
         LoadSong(int.Parse(txtSong.Text));
-        for (int i = 1; i <= 5; i += 1)
-        {
-            cPop.set_Enabled(TaskMenus[i], true);
-        }
+        //TODO: Commenting these COM instructions because it didn't work.
+        //for (int i = 1; i <= 5; i += 1)
+        //{
+        //    cPop.set_Enabled(TaskMenus[i], true);
+        //}
 
         mnuFileOpen.Tag = "";
 
@@ -1253,18 +1258,18 @@ public partial class frmSappy : Window, ISubclass
 
     public void LoadSong(int i)
     {
-        int l = 0;
-
         // TODO: (NOT SUPPORTED): On Error GoTo hell
 
-        FileGet(99, ref l, SongTbl + i * 8 + 1);
+        File99.Seek(SongTbl + i * 8, SeekOrigin.Begin);
+        byte[] buffer = new byte[sizeof(int)];
+        File99.Read(buffer, 0, buffer.Length);
+        int l = BitConverter.ToInt32(buffer, 0);
         l -= 0x8000000;
         SongHeadOrg = l;
-        ValueType sh = SongHead;
-        FileGet(99, ref sh, l + 1);
-        SongHead = (tSongHeader)sh;
+        File99.Seek(l, SeekOrigin.Begin);
+        File99.Read(out SongHead);
 
-        for (int k = 0; k <= 32; k += 1)
+        for (int k = 0; k < 32; k += 1)
         {
             cvwChannel[k].Visibility = Visibility.Hidden;
         }
@@ -1355,28 +1360,28 @@ public partial class frmSappy : Window, ISubclass
         }
 
         // TODO: (NOT SUPPORTED): On Error Resume Next
-        ebr.Bars["Info"].Items["Code"].Text = Properties.Resources._61;
-        ebr.Bars["Info"].Items["Game"].Text = Properties.Resources._62;
-        ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._63;
-        ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._64;
-        ebr.Bars["Info"].Items["SongTbl"].Text = "0x000000";
+        //TODO: Commenting these COM instructions because it didn't work.
+        //ebr.Bars["Info"].Items["Code"].Text = Properties.Resources._61;
+        //ebr.Bars["Info"].Items["Game"].Text = Properties.Resources._62;
+        //ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._63;
+        //ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._64;
+        //ebr.Bars["Info"].Items["SongTbl"].Text = "0x000000";
         // Set picScreenshot.Picture = Nothing
         picScreenshot.Source = ConvertBitmap(Properties.Resources.NOPIC);
         cbxSongs.Clear();
-        for (int j = 0; j <= 255; j += 1)
+        for (int j = 0; j < 255; j += 1)
         {
-            for (int i = 0; i <= 1024; i += 1)
+            playlist[j] = new();
+            for (int i = 0; i < 1024; i += 1)
             {
                 playlist[j].SongName[i] = "";
-                playlist[j].SongNo[i] = 0;
             }
-            playlist[0].NumSongs = 0;
         }
         playlist[0].NumSongs = 1;
         playlist[0].SongName[0] = Properties.Resources._109;
         playlist[0].SongNo[0] = 1;
         NumPLs = 1;
-        for (int i = 0; i <= 127; i += 1)
+        for (int i = 0; i < 127; i += 1)
         {
             MidiMap[i] = i;
             MidiMapTrans[i] = 0;
@@ -1399,21 +1404,22 @@ public partial class frmSappy : Window, ISubclass
                         {
                             goto BrotherMaynard;
                         }
-                        ebr.Bars["Info"].Items["Code"].Text = "Gamecode " + UCase(n3.InnerText);
-                        gamecode = UCase(n3.InnerText);
+                        //TODO: Commenting these COM instructions because it didn't work.
+                        //ebr.Bars["Info"].Items["Code"].Text = "Gamecode " + UCase(n3.InnerText);
+                        //gamecode = UCase(n3.InnerText);
                     }
-                    if (n3.Name == "name")
-                    {
-                        ebr.Bars["Info"].Items["Game"].Text = n3.InnerText;
-                    }
-                    if (n3.Name == "creator")
-                    {
-                        ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._65 + n3.InnerText;
-                    }
-                    if (n3.Name == "tagger")
-                    {
-                        ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._66 + n3.InnerText;
-                    }
+                    //if (n3.Name == "name")
+                    //{
+                    //    ebr.Bars["Info"].Items["Game"].Text = n3.InnerText;
+                    //}
+                    //if (n3.Name == "creator")
+                    //{
+                    //    ebr.Bars["Info"].Items["Creator"].Text = Properties.Resources._65 + n3.InnerText;
+                    //}
+                    //if (n3.Name == "tagger")
+                    //{
+                    //    ebr.Bars["Info"].Items["Tagger"].Text = Properties.Resources._66 + n3.InnerText;
+                    //}
                     if (n3.Name == "songtable")
                     {
                         SongTbl = (int)Val("&H" + FixHex(n3.InnerText, 6));
@@ -1422,13 +1428,13 @@ public partial class frmSappy : Window, ISubclass
                             MsgBox("Song pointer in an unsupported location. " + Hex(Val("&H" + FixHex(n3.InnerText, 6) + "&")) + " is read as " + Hex(Val("&H" + FixHex(n3.InnerText, 6))) + ".");
                             return;
                         }
-                        ebr.Bars["Info"].Items["SongTbl"].Text = Properties.Resources._67 + "0x" + Hex(SongTbl);
+                        //ebr.Bars["Info"].Items["SongTbl"].Text = Properties.Resources._67 + "0x" + Hex(SongTbl);
                     }
                     if (n3.Name == "screenshot")
                     {
                         // TODO: (NOT SUPPORTED): On Error Resume Next
                         picScreenshot.Tag = n3.Value;
-                        picScreenshot.Source = new BitmapImage(new(n3.Value));
+                        picScreenshot.Source = new BitmapImage(new(new Uri("file://" + AppDomain.CurrentDomain.BaseDirectory), n3.Value));
                         // TODO: (NOT SUPPORTED): On Error GoTo 0
                     }
                 }
@@ -1551,8 +1557,8 @@ public partial class frmSappy : Window, ISubclass
 
     private void SaveBareBonesGameToXML()
     {
-        string gamename = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (12)
-        FileGet(99, ref gamename, 0xA1);
+        File99.Seek(0xA0, SeekOrigin.Begin);
+        File99.Read(out string gamename, 12);
         XmlElement n1 = x.CreateElement("rom");
 
         n1.SetAttribute("code", gamecode);
@@ -1607,20 +1613,20 @@ public partial class frmSappy : Window, ISubclass
     {
         // Thumbcode to find:
         // 400B 4018 8388 5900 C918 8900 8918 0A68 0168 101C 00F0 ---- 01BC 0047 MPlayTBL SongTBL
-        int anArm = 0;
-        int aPointer = 0;
         int off = 0;
         int match = 0;
         MousePointer = 11;
-        Seek(99, 1);
+        File99.Seek(0, SeekOrigin.Begin);
         do
         {
-            if (Seek(99) % 0x10000 == 1)
+            if ((File99.Position + 1) % 0x10000 == 1)
             {
-                cStatusBar.PanelText("frame", "0x" + Hex(Seek(99) - 1));
+                cStatusBar.PanelText("frame", "0x" + Hex(File99.Position));
                 picStatusbar.Refresh();
             }
-            FileGet(99, ref anArm);
+            byte[] buffer = new byte[sizeof(int)];
+            File99.Read(buffer, 0, buffer.Length);
+            int anArm = BitConverter.ToInt32(buffer);
             if (match == 0)
             {
                 if (anArm == 0x18400B40) match = 1; else match = 0;
@@ -1651,7 +1657,7 @@ public partial class frmSappy : Window, ISubclass
                 if (anArm == 0x4700BC01)
                 {
                     match = 7;
-                    off = (int)Seek(99);
+                    off = (int)File99.Position;
                 }
                 else
                 {
@@ -1660,15 +1666,15 @@ public partial class frmSappy : Window, ISubclass
             }
             if (match == 7) // mPlayTBL
             {
-                Seek(99, off);
-                FileGet(99, ref aPointer);
-                FileGet(99, ref aPointer);
+                File99.Seek(off, SeekOrigin.Begin);
+                File99.Read(buffer, 0, buffer.Length); int aPointer = BitConverter.ToInt32(buffer);
+                File99.Read(buffer, 0, buffer.Length); aPointer = BitConverter.ToInt32(buffer);
                 SongTbl = aPointer - 0x8000000;
                 MousePointer = 0;
                 return;
             }
             DoEvents();
-        } while (!EOF(99));
+        } while (!EOF(File99));
         MousePointer = 0;
     }
 
@@ -1702,14 +1708,6 @@ public partial class frmSappy : Window, ISubclass
     {
         gCommonDialog cc = new();
         string myFile = "";
-        string c = "";
-        string n = "";
-        string e = "";
-        string p = "";
-        string m = "";
-        string s = "";
-        string F = "";
-        string l = "";
 
         string fileTile = null;
         bool readOnly = false;
@@ -1720,76 +1718,77 @@ public partial class frmSappy : Window, ISubclass
 
         x.Save(Left(xfile, Len(xfile) - 3) + "bak");
 
-        FileOpen(96, myFile, OpenMode.Input);
-        do
+        using (StreamReader File96 = File.OpenText(myFile))
         {
-            Input(96, ref c); // code
-            if (c == "ENDFILE") break;
-            Input(96, ref n); // name
-            Input(96, ref e); // engine
-            Input(96, ref p); // playlist
-            Input(96, ref m); // map
-            Input(96, ref s); // songlist
-            Input(96, ref F); // first
-            Input(96, ref l); // last
-            if (c != "****" && Right(c, 1) != "ÿ")
+            do
             {
-                if (e == "sapphire")
+                string c = File96.ReadLine(); // code
+                if (c == "ENDFILE") break;
+                string n = File96.ReadLine(); // name
+                string e = File96.ReadLine(); // engine
+                string p = File96.ReadLine(); // playlist
+                string m = File96.ReadLine(); // map
+                string s = File96.ReadLine(); // songlist
+                string F = File96.ReadLine(); // first
+                string l = File96.ReadLine(); // last
+                if (c != "****" && Right(c, 1) != "ÿ")
                 {
-                    XmlElement myNewRom = x.CreateElement("rom");
-                    myNewRom.SetAttribute("code", c); // 181205 update: OOPS!
-                    myNewRom.SetAttribute("name", n);
-                    myNewRom.SetAttribute("songtable", "0x" + Hex(s) + "");
-                    if (p == "blank")
+                    if (e == "sapphire")
                     {
-                        XmlElement myNewList = x.CreateElement("playlist");
-                        myNewList.SetAttribute("name", "No playlist");
-                        myNewRom.AppendChild(myNewList);
-                    }
-                    else
-                    {
-                        if (Dir(myDir + p + ".lst") == "")
+                        XmlElement myNewRom = x.CreateElement("rom");
+                        myNewRom.SetAttribute("code", c); // 181205 update: OOPS!
+                        myNewRom.SetAttribute("name", n);
+                        myNewRom.SetAttribute("songtable", "0x" + Hex(s) + "");
+                        if (p == "blank")
                         {
                             XmlElement myNewList = x.CreateElement("playlist");
-                            myNewList.SetAttribute("name", "404");
+                            myNewList.SetAttribute("name", "No playlist");
                             myNewRom.AppendChild(myNewList);
                         }
                         else
                         {
-                            FileOpen(95, myDir + p + ".lst", OpenMode.Input);
-                            do
+                            if (Dir(myDir + p + ".lst") == "")
                             {
-                                string y = LineInput(95);
-                                if (y == "ENDFILE") break;
                                 XmlElement myNewList = x.CreateElement("playlist");
-                                myNewList.SetAttribute("name", y);
-                                do
-                                {
-                                    y = LineInput(95);
-                                    if (y != "ENDFILE")
-                                    {
-                                        if (y != "END")
-                                        {
-                                            XmlElement myNewSong = x.CreateElement("song");
-                                            myNewSong.SetAttribute("track", Val("&H" + Left(y, 4)).ToString());
-                                            myNewSong.InnerText = Mid(y, 6);
-                                            myNewList.AppendChild(myNewSong);
-                                        }
-                                    }
-                                } while (!(y == "END"));
+                                myNewList.SetAttribute("name", "404");
                                 myNewRom.AppendChild(myNewList);
-                            } while (true);
-
-                            FileClose(95);
+                            }
+                            else
+                            {
+                                using (StreamReader File95 = File.OpenText(myDir + p + ".lst"))
+                                {
+                                    do
+                                    {
+                                        string y = File95.ReadLine();
+                                        if (y == "ENDFILE") break;
+                                        XmlElement myNewList = x.CreateElement("playlist");
+                                        myNewList.SetAttribute("name", y);
+                                        do
+                                        {
+                                            y = File95.ReadLine();
+                                            if (y != "ENDFILE")
+                                            {
+                                                if (y != "END")
+                                                {
+                                                    XmlElement myNewSong = x.CreateElement("song");
+                                                    myNewSong.SetAttribute("track", Val("&H" + Left(y, 4)).ToString());
+                                                    myNewSong.InnerText = Mid(y, 6);
+                                                    myNewList.AppendChild(myNewSong);
+                                                }
+                                            }
+                                        } while (!(y == "END"));
+                                        myNewRom.AppendChild(myNewList);
+                                    } while (true);
+                                }
+                            }
                         }
+                        rootNode.AppendChild(myNewRom);
                     }
-                    rootNode.AppendChild(myNewRom);
                 }
-            }
-        SkipThisShit:;
-        } while (true);
-        x.Save(xfile);
-        FileClose(96);
+            SkipThisShit:;
+            } while (true);
+            x.Save(xfile);
+        }
         IncessantNoises("TaskComplete");
 
         LoadGameFromXML(ref gamecode);
