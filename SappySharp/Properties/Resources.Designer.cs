@@ -115,7 +115,36 @@ namespace SappySharp.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Sappy 2006\n----------\nBy Kyoufu Kawa\n\nBased on the original player\nby Andrew Lim (DJ Bouche)\n\nContains portions of the following\ntools previously written by Kawa:\n\ Maple (sound dumper and songtable scanner)\n\ Juicer (track dumper/inserter)\n\nThis product includes software\ndeveloped by vbAccelerator.\n\n\nThanks and greetings to:\n\ Drag     \n\ Tony     \n\ Rick     \n\ Matt     \n\ Prime    \n\ Someguy  \n\ Jeff     \n\ Sakaki   \n\ Hapi-san \n\ Shii     \n\ Kotoko   \n\ Coke Lite\nand Mr. McM [le reste de la chaîne a été tronqué]&quot;;.
+        ///   Recherche une chaîne localisée semblable à Sappy 2006
+        ///----------
+        ///By Kyoufu Kawa
+        ///
+        ///Based on the original player
+        ///by Andrew Lim (DJ Bouche)
+        ///
+        ///Contains portions of the following
+        ///tools previously written by Kawa:
+        ///\ Maple (sound dumper and songtable scanner)
+        ///\ Juicer (track dumper/inserter)
+        ///
+        ///This product includes software
+        ///developed by vbAccelerator.
+        ///
+        ///
+        ///Thanks and greetings to:
+        ///\ Drag     
+        ///\ Tony     
+        ///\ Rick     
+        ///\ Matt     
+        ///\ Prime    
+        ///\ Someguy  
+        ///\ Jeff     
+        ///\ Sakaki   
+        ///\ Hapi-san 
+        ///\ Shii     
+        ///\ Kotoko   
+        ///\ Coke Lite
+        ///and Mr. McM [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string _1001 {
             get {
@@ -223,7 +252,14 @@ namespace SappySharp.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The auto-detector does not work on &quot;Golden Sun&quot; games.\n\nThese include:\n&quot;Golden Sun&quot;\n&quot;Golden Sun - The Lost Age&quot;\n&quot;Mario Golf Advance Tour&quot;\n\nSorry for the inconveniance..
+        ///   Recherche une chaîne localisée semblable à The auto-detector does not work on &quot;Golden Sun&quot; games.
+        ///
+        ///These include:
+        ///&quot;Golden Sun&quot;
+        ///&quot;Golden Sun - The Lost Age&quot;
+        ///&quot;Mario Golf Advance Tour&quot;
+        ///
+        ///Sorry for the inconveniance..
         /// </summary>
         internal static string _110 {
             get {
@@ -412,7 +448,9 @@ namespace SappySharp.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The game you loaded (gamecode $CODE) is not known.\n\nWould you like to scan for the song table now?.
+        ///   Recherche une chaîne localisée semblable à The game you loaded (gamecode $CODE) is not known.
+        ///
+        ///Would you like to scan for the song table now?.
         /// </summary>
         internal static string _205 {
             get {
@@ -439,7 +477,12 @@ namespace SappySharp.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Error in the XML file!\n\n$ERROR\n$CAUSE\n\nPlease correct this error and try again..
+        ///   Recherche une chaîne localisée semblable à Error in the XML file!
+        ///
+        ///$ERROR
+        ///$CAUSE
+        ///
+        ///Please correct this error and try again..
         /// </summary>
         internal static string _208 {
             get {

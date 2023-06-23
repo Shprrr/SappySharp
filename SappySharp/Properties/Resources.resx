@@ -136,7 +136,47 @@
     <value>&lt;USPLZ&gt;</value>
   </data>
   <data name="1001" xml:space="preserve">
-    <value>Sappy 2006\n----------\nBy Kyoufu Kawa\n\nBased on the original player\nby Andrew Lim (DJ Bouche)\n\nContains portions of the following\ntools previously written by Kawa:\n\ Maple (sound dumper and songtable scanner)\n\ Juicer (track dumper/inserter)\n\nThis product includes software\ndeveloped by vbAccelerator.\n\n\nThanks and greetings to:\n\ Drag     \n\ Tony     \n\ Rick     \n\ Matt     \n\ Prime    \n\ Someguy  \n\ Jeff     \n\ Sakaki   \n\ Hapi-san \n\ Shii     \n\ Kotoko   \n\ Coke Lite\nand Mr. McMahon.\n\nQuote of the Update:                                 \n&lt;FyNXeR&gt; Pardon my spelling... but I'm from Sweden   \n&lt;sumbody&gt; pardon my accent, i am from southeast asia \n&lt;DrMonkey&gt; pardon my shotgun, i'm from west virginia \n\nhttp://helmetedrodent.kickassgamers.com\nhttp://board.acmlm.org                 \nhttp://www.vbaccelerator.com           \n\n&lt;logos&gt;</value>
+    <value>Sappy 2006
+----------
+By Kyoufu Kawa
+
+Based on the original player
+by Andrew Lim (DJ Bouche)
+
+Contains portions of the following
+tools previously written by Kawa:
+\ Maple (sound dumper and songtable scanner)
+\ Juicer (track dumper/inserter)
+
+This product includes software
+developed by vbAccelerator.
+
+
+Thanks and greetings to:
+\ Drag     
+\ Tony     
+\ Rick     
+\ Matt     
+\ Prime    
+\ Someguy  
+\ Jeff     
+\ Sakaki   
+\ Hapi-san 
+\ Shii     
+\ Kotoko   
+\ Coke Lite
+and Mr. McMahon.
+
+Quote of the Update:                                 
+&lt;FyNXeR&gt; Pardon my spelling... but I'm from Sweden   
+&lt;sumbody&gt; pardon my accent, i am from southeast asia 
+&lt;DrMonkey&gt; pardon my shotgun, i'm from west virginia 
+
+http://helmetedrodent.kickassgamers.com
+http://board.acmlm.org                 
+http://www.vbaccelerator.com           
+
+&lt;logos&gt;</value>
   </data>
   <data name="1002" xml:space="preserve">
     <value>About</value>
@@ -172,7 +212,14 @@
     <value>&amp;Open</value>
   </data>
   <data name="110" xml:space="preserve">
-    <value>The auto-detector does not work on "Golden Sun" games.\n\nThese include:\n"Golden Sun"\n"Golden Sun - The Lost Age"\n"Mario Golf Advance Tour"\n\nSorry for the inconveniance.</value>
+    <value>The auto-detector does not work on "Golden Sun" games.
+
+These include:
+"Golden Sun"
+"Golden Sun - The Lost Age"
+"Mario Golf Advance Tour"
+
+Sorry for the inconveniance.</value>
   </data>
   <data name="111" xml:space="preserve">
     <value>Loaded from seperate XML file.</value>
@@ -235,7 +282,9 @@
     <value>Cannot find $XML. Create a new, blank version now?</value>
   </data>
   <data name="205" xml:space="preserve">
-    <value>The game you loaded (gamecode $CODE) is not known.\n\nWould you like to scan for the song table now?</value>
+    <value>The game you loaded (gamecode $CODE) is not known.
+
+Would you like to scan for the song table now?</value>
   </data>
   <data name="206" xml:space="preserve">
     <value>Couldn't find the song table. This game probably doesn't use M4A at all, or at least a different version.</value>
@@ -244,7 +293,12 @@
     <value>Found the song table at 0x$TBL. Saving bare bones entry to XML file for quick reloading...</value>
   </data>
   <data name="208" xml:space="preserve">
-    <value>Error in the XML file!\n\n$ERROR\n$CAUSE\n\nPlease correct this error and try again.</value>
+    <value>Error in the XML file!
+
+$ERROR
+$CAUSE
+
+Please correct this error and try again.</value>
   </data>
   <data name="209" xml:space="preserve">
     <value>Invalid gamecode - it's all zeroes!</value>
