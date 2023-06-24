@@ -165,7 +165,7 @@ public partial class frmAbout : Window
         //picScroller.BackColor = Properties.Resources.CREDITSFONT.GetPixel(1, 1); //TODO: To review
         y = (int)picScroller.Height;
 
-        for (int i = 0; i <= 128; i += 1)
+        for (int i = 0; i < 128; i += 1)
         {
             lines[i] = "";
         }

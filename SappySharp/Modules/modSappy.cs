@@ -426,7 +426,7 @@ static partial class modSappy
         myReg.SectionKey = "AppEvents\\Schemes\\Apps\\Sappy2k5\\Sappy2k5-" + n + "\\.current";
         myReg.ValueKey = "";
         myReg.ValueType = cRegistry.ERegistryValueTypes.REG_SZ;
-        sndPlaySound(myReg.Value, SND_ASYNC);
+        sndPlaySound(myReg.Value.ToString(), SND_ASYNC);
         // Dim s As String
         // s = GetSetting("Incessant Sound Override")
         // If s = " 1" Then Exit Sub
@@ -483,18 +483,17 @@ static partial class modSappy
         ghData.Free();
     }
 
-    public static void DrawSkin(dynamic Victim)
+    public static void DrawSkin(FrameworkElement Victim)
     {
-        Victim.ScaleMode = 3;
-        BitBlt(Victim.hdc, 0, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 0, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, 0, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 2, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 4, vbSrcCopy);
-        StretchBlt(Victim.hdc, 0, 2, 2, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin.hWnd(), 6, 6, 2, 2, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, 2, Victim.ScaleWidth - 4, Victim.ScaleHeight - 4, (int)frmSappy.instance.picSkin.hWnd(), 0, 0, 6, 62, vbSrcCopy);
-        StretchBlt(Victim.hdc, Victim.ScaleWidth - 2, 2, 2, Victim.Height - 4, (int)frmSappy.instance.picSkin.hWnd(), 6, 8, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, 0, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 10, vbSrcCopy);
-        StretchBlt(Victim.hdc, 2, Victim.ScaleHeight - 2, Victim.ScaleWidth - 4, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
-        BitBlt(Victim.hdc, Victim.ScaleWidth - 2, Victim.ScaleHeight - 2, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 14, vbSrcCopy);
+        BitBlt((int)Victim.hWnd(), 0, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 0, vbSrcCopy);
+        StretchBlt((int)Victim.hWnd(), 2, 0, (int)(Victim.Width - 4), 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 2, 2, 2, vbSrcCopy);
+        BitBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 4, vbSrcCopy);
+        StretchBlt((int)Victim.hWnd(), 0, 2, 2, (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 6, 6, 2, 2, vbSrcCopy);
+        StretchBlt((int)Victim.hWnd(), 2, 2, (int)(Victim.Width - 4), (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 0, 0, 6, 62, vbSrcCopy);
+        StretchBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), 2, 2, (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 6, 8, 2, 2, vbSrcCopy);
+        BitBlt((int)Victim.hWnd(), 0, (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 10, vbSrcCopy);
+        StretchBlt((int)Victim.hWnd(), 2, (int)(Victim.Height - 2), (int)(Victim.Width - 4), 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
+        BitBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 14, vbSrcCopy);
     }
 
     public static void SetAllSkinButtons(Window Victim)
@@ -540,7 +539,7 @@ static partial class modSappy
             ValueKey = name,
             ValueType = cRegistry.ERegistryValueTypes.REG_DWORD
         };
-        return myReg.Value;
+        return (int)myReg.Value;
     }
     public static void WriteSetting(string name, dynamic Value)
     {

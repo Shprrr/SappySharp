@@ -341,7 +341,7 @@ public partial class clsSappyDecoder
         Console.WriteLine("StopSong()");
         CloseFile(1);
         CloseFile(2);
-        EventProcessor.Enabled = false;
+        if (EventProcessor != null) EventProcessor.Enabled = false;
         FSOUND_Close();
         MidiClose();
 

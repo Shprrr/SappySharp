@@ -1026,6 +1026,7 @@ public partial class frmSappy : Window, ISubclass
             }
         }
         Trace("- Will I dream?");
+        Application.Current.Shutdown();
     }
 
     public EMsgResponse MsgResponse
