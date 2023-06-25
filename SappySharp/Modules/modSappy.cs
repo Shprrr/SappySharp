@@ -75,6 +75,7 @@ using static SappySharp.Classes.cVBALImageList;
 using System.Diagnostics;
 using SappySharp.Properties;
 using SappySharp.Classes;
+using Microsoft.Win32;
 
 static partial class modSappy
 {
@@ -422,11 +423,11 @@ static partial class modSappy
 
         if (GetSettingI("Incessant Sound Override") != 0) return;
 
-        myReg.ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER;
+        myReg.ClassKey = RegistryHive.CurrentUser;
         myReg.SectionKey = "AppEvents\\Schemes\\Apps\\Sappy2k5\\Sappy2k5-" + n + "\\.current";
         myReg.ValueKey = "";
-        myReg.ValueType = cRegistry.ERegistryValueTypes.REG_SZ;
-        sndPlaySound(myReg.Value.ToString(), SND_ASYNC);
+        myReg.ValueType = RegistryValueKind.String;
+        sndPlaySound(myReg.Value, SND_ASYNC);
         // Dim s As String
         // s = GetSetting("Incessant Sound Override")
         // If s = " 1" Then Exit Sub
@@ -521,11 +522,11 @@ static partial class modSappy
     {
         cRegistry myReg = new()
         {
-            ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            ClassKey = RegistryHive.CurrentUser,
             Default = null,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
-            ValueType = cRegistry.ERegistryValueTypes.REG_SZ
+            ValueType = RegistryValueKind.String
         };
         return myReg.Value;
     }
@@ -533,11 +534,11 @@ static partial class modSappy
     {
         cRegistry myReg = new()
         {
-            ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            ClassKey = RegistryHive.CurrentUser,
             Default = 0,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
-            ValueType = cRegistry.ERegistryValueTypes.REG_DWORD
+            ValueType = RegistryValueKind.DWord
         };
         return (int)myReg.Value;
     }
@@ -545,10 +546,10 @@ static partial class modSappy
     {
         _ = new cRegistry()
         {
-            ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            ClassKey = RegistryHive.CurrentUser,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
-            ValueType = cRegistry.ERegistryValueTypes.REG_SZ,
+            ValueType = RegistryValueKind.String,
             Value = Value
         };
     }
@@ -556,10 +557,10 @@ static partial class modSappy
     {
         _ = new cRegistry()
         {
-            ClassKey = cRegistry.ERegistryClassConstants.HKEY_CURRENT_USER,
+            ClassKey = RegistryHive.CurrentUser,
             SectionKey = "Software\\Helmeted Rodent\\Sappy 2006",
             ValueKey = name,
-            ValueType = cRegistry.ERegistryValueTypes.REG_DWORD,
+            ValueType = RegistryValueKind.DWord,
             Value = Int(Value)
         };
     }
