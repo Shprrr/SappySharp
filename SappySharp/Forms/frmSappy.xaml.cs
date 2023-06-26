@@ -85,6 +85,7 @@ using stdole;
 using SSubTimer6;
 using System.IO;
 using System.Xml;
+using System.Windows.Interop;
 
 namespace SappySharp.Forms;
 
@@ -668,7 +669,7 @@ public partial class frmSappy : Window, ISubclass
 
         Trace("- Set dimensions");
         cbxSongs.Height = 330;
-        mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
+        mywidth = (int)Width; // remember for wmSize subclass
 
         Trace("- Create duty cycle waves");
         DutyCycleWave[0] = new string(VBExtension.Chr(0), 14) + new string(VBExtension.Chr(255), 2);
@@ -846,9 +847,9 @@ public partial class frmSappy : Window, ISubclass
         };
         picSkin.Source = ConvertBitmap(skin);
         regset = GetSetting("Skin Hue");
-        if (regset != "") hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.5m;
+        if (regset != null) hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.5m;
         regset = GetSetting("Skin Saturation");
-        if (regset != "") sat = (decimal)Val(Replace(regset, ",", ".")); else sat = 0.4m;
+        if (regset != null) sat = (decimal)Val(Replace(regset, ",", ".")); else sat = 0.4m;
         Colorize(picSkin, hue, sat);
 
         // Dim woogy As Control
@@ -2045,7 +2046,7 @@ public partial class frmSappy : Window, ISubclass
         {
             ebrContainer.Visibility = Visibility.Hidden;
             Width = ClassicWidth;
-            mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
+            mywidth = (int)Width; // remember for wmSize subclass
             picTop.Move(0);
             picChannels.Move(0);
             cbxSongs.Height = 330 / Screen.TwipsPerPixelY;
@@ -2054,7 +2055,7 @@ public partial class frmSappy : Window, ISubclass
         {
             ebrContainer.Visibility = Visibility.Visible;
             Width = FullWidth;
-            mywidth = (int)(Width / Screen.TwipsPerPixelX); // remember for wmSize subclass
+            mywidth = (int)Width; // remember for wmSize subclass
             picTop.Move(ebrContainer.Width);
             picChannels.Move(ebrContainer.Width);
             cbxSongs.Height = 330 / Screen.TwipsPerPixelY;
@@ -2109,6 +2110,21 @@ public partial class frmSappy : Window, ISubclass
         // End With
         // WantToRecord = 1
         // cmdPlay.value = True
+    }
+
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowLongA")]
+    private static partial int GetWindowLong(IntPtr hWnd, int nIndex);
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongA")]
+    private static partial int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+    private const int GWL_STYLE = -16;
+    private const int WS_MAXIMIZEBOX = 0x10000;
+
+    private void Window_SourceInitialized(object sender, EventArgs e)
+    {
+        nint hwnd = new WindowInteropHelper((Window)sender).Handle;
+        int value = GetWindowLong(hwnd, GWL_STYLE);
+        _ = SetWindowLong(hwnd, GWL_STYLE, value & ~WS_MAXIMIZEBOX);
     }
 
     // Private Property Get InIDE() As Boolean

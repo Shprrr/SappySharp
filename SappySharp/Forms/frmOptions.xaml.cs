@@ -239,11 +239,11 @@ public partial class frmOptions : Window
         int skinno;
         // skinno = GetSettingI("Skin")
         string regset = GetSetting("Skin");
-        if (regset != "") skinno = (int)Val(regset); else skinno = 0;
+        if (regset != null) skinno = (int)Val(regset); else skinno = 0;
         regset = GetSetting("Skin Hue");
-        if (regset != "") hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.4m;
+        if (regset != null) hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.4m;
         regset = GetSetting("Skin Saturation");
-        if (regset != "") sat = (decimal)Val(Replace(regset, ",", ".")); else sat = 0.4m;
+        if (regset != null) sat = (decimal)Val(Replace(regset, ",", ".")); else sat = 0.4m;
 
         // TODO: (NOT SUPPORTED): On Error GoTo 0
 

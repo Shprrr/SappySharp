@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
         xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Sappy" Height="440" Width="495"
-        Loaded="Form_Load" Unloaded="Form_Unload" SizeChanged="Form_Resize">
+        Loaded="Form_Load" Unloaded="Form_Unload" SizeChanged="Form_Resize" SourceInitialized="Window_SourceInitialized">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="mnuFile" Header="[10]File">
