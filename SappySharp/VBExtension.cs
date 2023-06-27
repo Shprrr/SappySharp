@@ -745,6 +745,10 @@ public static class VBExtension
 
     public static Color GetPixelColor(BitmapSource bitmap, int x, int y)
     {
+        // Convert bitmap in a format to be able to get color of a pixel.
+        if (bitmap.Format != PixelFormats.Bgra32)
+            bitmap = new FormatConvertedBitmap(bitmap, PixelFormats.Bgra32, null, 0);
+
         Color color;
         var bytesPerPixel = (bitmap.Format.BitsPerPixel + 7) / 8;
         var bytes = new byte[bytesPerPixel];
@@ -763,7 +767,7 @@ public static class VBExtension
         // handle other required formats
         else
         {
-            color = Colors.Black;
+            throw new NotSupportedException();
         }
 
         return color;
@@ -1031,7 +1035,7 @@ public static class VBExtension
         foreach (var el in parent.GetChildren(recurse).OfType<FrameworkElement>())
         {
             res.Add(el);
-            if(el is ItemsControl collection)
+            if (el is ItemsControl collection)
                 res.AddRange(collection.Items.OfType<FrameworkElement>());
         }
         return res;

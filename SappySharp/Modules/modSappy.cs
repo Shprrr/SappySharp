@@ -219,11 +219,6 @@ static partial class modSappy
     public static string ProperFont = "";
     public static int ProperFontS = 0;
 
-    [LibraryImport("gdi32.dll")]
-    public static partial int SetPixel(int hdc, int x, int y, int crColor);
-    [LibraryImport("gdi32.dll")]
-    public static partial int GetPixel(int hdc, int x, int y);
-
     public static void MainStart()
     {
         System.Reflection.AssemblyName assemblyName = Application.ResourceAssembly.GetName();

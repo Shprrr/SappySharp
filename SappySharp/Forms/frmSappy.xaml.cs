@@ -850,7 +850,7 @@ public partial class frmSappy : Window, ISubclass
         if (regset != null) hue = (decimal)Val(Replace(regset, ",", ".")); else hue = 3.5m;
         regset = GetSetting("Skin Saturation");
         if (regset != null) sat = (decimal)Val(Replace(regset, ",", ".")); else sat = 0.4m;
-        Colorize(picSkin, hue, sat);
+        picSkin.Source = Colorize((BitmapSource)picSkin.Source, hue, sat);
 
         // Dim woogy As Control
         // For Each woogy In Me.Controls

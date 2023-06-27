@@ -73,7 +73,8 @@
                 <Label x:Name="Label1" Margin="8,35,0,0" Padding="2,2,2,2" Width="57" Height="17" VerticalAlignment="Top"
                         HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[90]Table" />
             </usercontrols:RenderingControl>
-            <Image x:Name="picSkin" Margin="280,288,0,0" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <Image x:Name="picSkin" Margin="280,288,0,0" Width="25" Height="25" Stretch="None" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" Visibility="Hidden" />
             <usercontrols:RenderingControl x:Name="picStatusbar" Margin="0,423,0,0" Width="495" Height="17"
                     VerticalAlignment="Top" HorizontalAlignment="Left" Rendering="picStatusBar_Paint"
                     MouseDoubleClick="picStatusbar_DblClick" MouseMove="picStatusbar_MouseMove" />
@@ -102,8 +103,8 @@
             </Grid>
             <DockPanel x:Name="ebrContainer" Margin="0,0,0,0" Width="170" Height="423" VerticalAlignment="Top"
                     HorizontalAlignment="Left">
-                <Image x:Name="picScreenshot" Margin="24,304,0,0" Width="122" Height="82" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" MouseLeftButtonDown="picScreenshot_DblClick" />
+            <Image x:Name="picScreenshot" Margin="24,304,0,0" Width="122" Height="82" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseLeftButtonDown="picScreenshot_DblClick" />
             </DockPanel>
             <DockPanel x:Name="cPopContainer" Margin="200,288,0,0" Width="0" Height="0" VerticalAlignment="Top"
                     HorizontalAlignment="Left" />

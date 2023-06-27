@@ -82,7 +82,7 @@ static partial class mColorUtils
 
     public static void RGBToHLS(int r, int g, int b, ref decimal h, ref decimal s, ref decimal l)
     {
-        decimal rR = r / 255; decimal rG = g / 255; decimal rB = b / 255;
+        decimal rR = r / 255m; decimal rG = g / 255m; decimal rB = b / 255m;
         decimal Max = Maximum(rR, rG, rB);
         decimal Min = Minimum(rR, rG, rB);
         l = (Max + Min) / 2;
@@ -260,7 +260,34 @@ static partial class mColorUtils
         int lBlue = (lColor & 0xFF0000) / 0x100 / 0x100;
     }
 
-    public static void Colorize(Image Victim, decimal hue, decimal sat = 1)
+    [StructLayout(LayoutKind.Explicit)]
+    public struct PixelColor
+    {
+        // 32 bit BGRA 
+        [FieldOffset(0), System.Diagnostics.DebuggerDisplay("{ColorBGRA,h}")] public uint ColorBGRA;
+        // 8 bit components
+        [FieldOffset(0)] public byte Blue;
+        [FieldOffset(1)] public byte Green;
+        [FieldOffset(2)] public byte Red;
+        [FieldOffset(3)] public byte Alpha;
+    }
+    public static void CopyPixels(this BitmapSource source, PixelColor[] pixels)
+    {
+        int height = source.PixelHeight;
+        int width = source.PixelWidth;
+        byte[] pixelBytes = new byte[height * width * 4];
+        source.CopyPixels(pixelBytes, width * 4, 0);
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                pixels[y * width + x] = new PixelColor
+                {
+                    Blue = pixelBytes[(y * width + x) * 4 + 0],
+                    Green = pixelBytes[(y * width + x) * 4 + 1],
+                    Red = pixelBytes[(y * width + x) * 4 + 2],
+                    Alpha = pixelBytes[(y * width + x) * 4 + 3],
+                };
+    }
+    public static BitmapSource Colorize(BitmapSource source, decimal hue, decimal sat = 1)
     {
         int r = 0;
         int g = 0;
@@ -269,20 +296,28 @@ static partial class mColorUtils
         decimal l = 0;
         decimal s = 0;
 
-        for (int X = 0; X <= Victim.Width; X += 1)
+        if (source.Format != PixelFormats.Bgra32)
+            source = new FormatConvertedBitmap(source, PixelFormats.Bgra32, null, 0);
+
+        WriteableBitmap writeable = new(source);
+        PixelColor[] pixels = new PixelColor[writeable.PixelWidth * writeable.PixelHeight];
+        writeable.CopyPixels(pixels);
+        for (int X = 0; X < writeable.PixelWidth; X++)
         {
-            for (int Y = 0; Y <= Victim.Height; Y += 1)
+            for (int Y = 0; Y < writeable.PixelHeight; Y++)
             {
-                // c = Victim.point(x, y)
-                int C = GetPixel((int)Victim.hWnd(), X, Y);
-                SplitRGB(C, ref r, ref g, ref b);
+                PixelColor C = pixels[Y * writeable.PixelWidth + X];
+                SplitRGB((int)C.ColorBGRA, ref r, ref g, ref b);
                 RGBToHLS(r, g, b, ref h, ref s, ref l);
                 HLSToRGB(hue, sat, l, ref r, ref g, ref b);
-                C = RGB(r, g, b);
-                SetPixel((int)Victim.hWnd(), X, Y, C);
-                // Victim.PSet (x, y), c
+                C.Red = (byte)r;
+                C.Green = (byte)g;
+                C.Blue = (byte)b;
+                pixels[Y * writeable.PixelWidth + X] = C;
             }
         }
+        writeable.WritePixels(new Int32Rect(0, 0, writeable.PixelWidth, writeable.PixelHeight), pixels, writeable.BackBufferStride, 0);
+        return writeable;
     }
 
     public static int ChangeBrightness(int lColor, decimal iDelta)

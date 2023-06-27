@@ -74,6 +74,7 @@ using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
 using stdole;
+using SappySharp.UserControls;
 
 namespace SappySharp.Forms;
 
@@ -81,13 +82,13 @@ public partial class frmOptions : Window
 {
     private static frmOptions _instance;
     public static frmOptions instance { set { _instance = null; } get { return _instance ??= new frmOptions(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmOptions.instance; } }
+    public static void Load() { if (_instance == null) { dynamic A = instance; } }
     public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmOptions() { InitializeComponent(); }
 
     public List<Image> picPage { get => VBExtension.controlArray<Image>(this, "picPage"); }
 
-    public List<Image> picSkin { get => VBExtension.controlArray<Image>(this, "picSkin"); }
+    public List<RenderingControl> picSkin { get => VBExtension.controlArray<RenderingControl>(this, "picSkin"); }
 
     // ______________
     // |  SAPPY 2006  |
@@ -159,7 +160,7 @@ public partial class frmOptions : Window
         frmSappy.instance.FixStatusBar();
         frmSappy.instance.ebr.UseExplorerStyle = !chkNiceBar.IsChecked.GetValueOrDefault();
         frmSappy.instance.picSkin.Source = picSkin[0].Source;
-        Colorize(frmSappy.instance.picSkin, (decimal)HScroll1.Value / 10, (decimal)HScroll2.Value / 10);
+        Colorize((BitmapSource)frmSappy.instance.picSkin.Source, (decimal)HScroll1.Value / 10, (decimal)HScroll2.Value / 10);
         frmSappy.instance.RedrawSkin();
         frmSappy.instance.ebr.Redraw = false;
         Color color = GetPixelColor((BitmapSource)frmSappy.instance.picSkin.Source, 6, 16);
@@ -338,7 +339,7 @@ public partial class frmOptions : Window
         //WriteSettingI("Settings Page", MSNList1.SelectedIndex);
     }
 
-    private void picSkin_Click(object sender, MouseButtonEventArgs e) { picSkin_Click(picSkin.IndexOf((Image)sender)); }
+    private void picSkin_Click(object sender, MouseButtonEventArgs e) { picSkin_Click(picSkin.IndexOf((RenderingControl)sender)); }
     private void picSkin_Click(int Index)
     {
         shpSkinSel.Move(picSkin[Index].Margin.Left - 3);
@@ -347,7 +348,7 @@ public partial class frmOptions : Window
 
     private void picSkin_Rendering(object sender, DrawingContext e)
     {
-        picSkin_Paint(picSkin.IndexOf((Image)sender));
+        picSkin_Paint(picSkin.IndexOf((RenderingControl)sender));
     }
     private void picSkin_Paint(int Index)
     {
