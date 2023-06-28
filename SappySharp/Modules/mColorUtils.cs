@@ -271,21 +271,21 @@ static partial class mColorUtils
         [FieldOffset(2)] public byte Red;
         [FieldOffset(3)] public byte Alpha;
     }
-    public static void CopyPixels(this BitmapSource source, PixelColor[] pixels)
+    public static void CopyPixels(this BitmapSource source, PixelColor[] pixels) => CopyPixels(source, pixels, 0, 0, source.PixelWidth, source.PixelHeight);
+    public static void CopyPixels(this BitmapSource source, PixelColor[] pixels, int x, int y, int width, int height)
     {
-        int height = source.PixelHeight;
-        int width = source.PixelWidth;
         byte[] pixelBytes = new byte[height * width * 4];
-        source.CopyPixels(pixelBytes, width * 4, 0);
-        for (int y = 0; y < height; y++)
-            for (int x = 0; x < width; x++)
-                pixels[y * width + x] = new PixelColor
-                {
-                    Blue = pixelBytes[(y * width + x) * 4 + 0],
-                    Green = pixelBytes[(y * width + x) * 4 + 1],
-                    Red = pixelBytes[(y * width + x) * 4 + 2],
-                    Alpha = pixelBytes[(y * width + x) * 4 + 3],
-                };
+        source.CopyPixels(new Int32Rect(x, y, width, height), pixelBytes, width * 4, 0);
+        for (int i = 0; i < width * height; i++)
+        {
+            pixels[i] = new PixelColor
+            {
+                Blue = pixelBytes[i * 4 + 0],
+                Green = pixelBytes[i * 4 + 1],
+                Red = pixelBytes[i * 4 + 2],
+                Alpha = pixelBytes[i * 4 + 3],
+            };
+        }
     }
     public static BitmapSource Colorize(BitmapSource source, decimal hue, decimal sat = 1)
     {
@@ -335,5 +335,20 @@ static partial class mColorUtils
         if (l > 1) l = 1;
         HLSToRGB(h, s, l, ref r, ref g, ref b);
         return RGB(r, g, b);
+    }
+
+    public static void BitBlt(this WriteableBitmap bitmap, int x, int y, int width, int height, BitmapSource source, int sourceX, int sourceY)
+    {
+        PixelColor[] pixels = new PixelColor[width * height];
+        source.CopyPixels(pixels, sourceX, sourceY, width, height);
+        bitmap.WritePixels(new Int32Rect(x, y, width, height), pixels, width * 4, 0);
+    }
+
+    public static void StretchBlt(this WriteableBitmap bitmap, int x, int y, int width, int height, BitmapSource source, int sourceX, int sourceY, int sourceWidth, int sourceHeight)
+    {
+        PixelColor[] pixels = new PixelColor[width * height];
+        TransformedBitmap transformed = new(new CroppedBitmap(source, new Int32Rect(sourceX, sourceY, sourceWidth, sourceHeight)), new ScaleTransform((double)width / sourceWidth, (double)height / sourceHeight));
+        transformed.CopyPixels(pixels);
+        bitmap.WritePixels(new Int32Rect(x, y, width, height), pixels, width * 4, 0);
     }
 }

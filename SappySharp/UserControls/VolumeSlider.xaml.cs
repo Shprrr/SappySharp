@@ -235,8 +235,8 @@ public partial class VolumeSlider : UserControl
 
     private void UserControl_Resize(object sender, SizeChangedEventArgs e)
     {
-        Width = 975;
-        Height = 375;
+        Width = 975 / VBExtension.Screen.TwipsPerPixelX;
+        Height = 375 / VBExtension.Screen.TwipsPerPixelY;
     }
 
     /// <summary>

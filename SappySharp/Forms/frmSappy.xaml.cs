@@ -143,9 +143,9 @@ public partial class frmSappy : Window, ISubclass
     class RECT
     {
         public int left;
-        public int tOp;
-        public int Right;
-        public int Bottom;
+        public int top;
+        public int right;
+        public int bottom;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -230,8 +230,6 @@ public partial class frmSappy : Window, ISubclass
 
     [LibraryImport("winmm.dll")]
     private static partial int midiOutGetNumDevs();
-    [LibraryImport("gdi32.dll")]
-    private static partial int GetPixel(int hdc, int x, int y);
 
     // Private WithEvents HookedDialog As cCommonDialog
     // Private m_bInIDE As Boolean
@@ -1051,8 +1049,8 @@ public partial class frmSappy : Window, ISubclass
         {
             RECT myRect = new();
             Marshal.PtrToStructure(lParam, myRect);
-            myRect.Right = myRect.left + mywidth; // fix width
-            if (myRect.Bottom - myRect.tOp < 280) myRect.Bottom = myRect.tOp + 280; // limit height
+            myRect.right = myRect.left + mywidth; // fix width
+            if (myRect.bottom - myRect.top < 280) myRect.bottom = myRect.top + 280; // limit height
             Marshal.StructureToPtr(myRect, lParam, true);
         }
 
@@ -1883,7 +1881,7 @@ public partial class frmSappy : Window, ISubclass
         cStatusBar?.Draw();
     }
 
-    private void picTop_Paint(object sender, DrawingContext e)
+    private void picTop_Paint(object sender, RoutedEventArgs e)
     {
         RedrawSkin();
     }
@@ -2023,21 +2021,24 @@ public partial class frmSappy : Window, ISubclass
         RECT panelRect = new()
         {
             left = 0,
-            tOp = 0,
-            Right = (int)picTop.Width,
-            Bottom = (int)picTop.Height
+            top = 0,
+            right = (int)picTop.Width,
+            bottom = (int)picTop.Height
         };
-        BitBlt((int)picTop.hWnd(), panelRect.left, panelRect.tOp, 2, 2, (int)picSkin.hWnd(), 6, 0, vbSrcCopy);
-        StretchBlt((int)picTop.hWnd(), panelRect.left + 2, panelRect.tOp, panelRect.Right - 4, 2, (int)picSkin.hWnd(), 6, 2, 2, 2, vbSrcCopy);
-        BitBlt((int)picTop.hWnd(), panelRect.left + panelRect.Right - 2, panelRect.tOp, 2, 2, (int)picSkin.hWnd(), 6, 4, vbSrcCopy);
-        StretchBlt((int)picTop.hWnd(), panelRect.left, panelRect.tOp + 2, 2, panelRect.Bottom - 4, (int)picSkin.hWnd(), 6, 6, 2, 2, vbSrcCopy);
-        StretchBlt((int)picTop.hWnd(), panelRect.left + 2, panelRect.tOp + 2, panelRect.Right - 4, panelRect.Bottom - 4, (int)picSkin.hWnd(), 0, 0, 6, 62, vbSrcCopy);
-        StretchBlt((int)picTop.hWnd(), panelRect.left + panelRect.Right - 2, panelRect.tOp + 2, 2, panelRect.Bottom - 4, (int)picSkin.hWnd(), 6, 8, 2, 2, vbSrcCopy);
-        BitBlt((int)picTop.hWnd(), panelRect.left, panelRect.tOp + panelRect.Bottom - 2, 2, 2, (int)picSkin.hWnd(), 6, 10, vbSrcCopy);
-        StretchBlt((int)picTop.hWnd(), panelRect.left + 2, panelRect.tOp + panelRect.Bottom - 2, panelRect.Right - 4, 2, (int)picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
-        BitBlt((int)picTop.hWnd(), panelRect.left + panelRect.Right - 2, panelRect.tOp + panelRect.Bottom - 2, 2, 2, (int)picSkin.hWnd(), 6, 14, vbSrcCopy);
-        // TODO: (NOT SUPPORTED): On Error Resume Next
-        VolumeSlider1.BackColor = GetPixel((int)picSkin.hWnd(), 5, 42);
+
+        WriteableBitmap bitmap = new((int)picTop.Width, (int)picTop.Height, 72, 72, PixelFormats.Bgra32, null);
+        bitmap.BitBlt(panelRect.left, panelRect.top, 2, 2, (BitmapSource)picSkin.Source, 6, 0);
+        bitmap.StretchBlt(panelRect.left + 2, panelRect.top, panelRect.right - 4, 2, (BitmapSource)picSkin.Source, 6, 2, 2, 2);
+        bitmap.BitBlt(panelRect.left + panelRect.right - 2, panelRect.top, 2, 2, (BitmapSource)picSkin.Source, 6, 4);
+        bitmap.StretchBlt(panelRect.left, panelRect.top + 2, 2, panelRect.bottom - 4, (BitmapSource)picSkin.Source, 6, 6, 2, 2);
+        bitmap.StretchBlt(panelRect.left + 2, panelRect.top + 2, panelRect.right - 4, panelRect.bottom - 4, (BitmapSource)picSkin.Source, 0, 0, 6, 62);
+        bitmap.StretchBlt(panelRect.left + panelRect.right - 2, panelRect.top + 2, 2, panelRect.bottom - 4, (BitmapSource)picSkin.Source, 6, 8, 2, 2);
+        bitmap.BitBlt(panelRect.left, panelRect.top + panelRect.bottom - 2, 2, 2, (BitmapSource)picSkin.Source, 6, 10);
+        bitmap.StretchBlt(panelRect.left + 2, panelRect.top + panelRect.bottom - 2, panelRect.right - 4, 2, (BitmapSource)picSkin.Source, 6, 12, 2, 2);
+        bitmap.BitBlt(panelRect.left + panelRect.right - 2, panelRect.top + panelRect.bottom - 2, 2, 2, (BitmapSource)picSkin.Source, 6, 14);
+        picTop.Source = bitmap;
+        Color color = GetPixelColor((BitmapSource)picSkin.Source, 5, 42);
+        VolumeSlider1.BackColor = RGB(color.R, color.G, color.B);
     }
 
     public void HandleClassicMode()
@@ -2047,7 +2048,7 @@ public partial class frmSappy : Window, ISubclass
             ebrContainer.Visibility = Visibility.Hidden;
             Width = ClassicWidth;
             mywidth = (int)Width; // remember for wmSize subclass
-            picTop.Move(0);
+            panelTop.Move(0);
             picChannels.Move(0);
             cbxSongs.Height = 330 / Screen.TwipsPerPixelY;
         }
@@ -2056,7 +2057,7 @@ public partial class frmSappy : Window, ISubclass
             ebrContainer.Visibility = Visibility.Visible;
             Width = FullWidth;
             mywidth = (int)Width; // remember for wmSize subclass
-            picTop.Move(ebrContainer.Width);
+            panelTop.Move(ebrContainer.Width);
             picChannels.Move(ebrContainer.Width);
             cbxSongs.Height = 330 / Screen.TwipsPerPixelY;
         }
