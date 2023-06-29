@@ -2,8 +2,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:SappySharp.UserControls"
-        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-
-    </Grid>
+        d:DataContext="{d:DesignInstance Type=local:VolumeSlider}" mc:Ignorable="d" x:Name="vs" Width="65" Height="25"
+        d:Background="AliceBlue">
+    <Canvas>
+        <Path Stroke="{Binding ElementName=vs, Path=Foreground}">
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="5, 18" IsClosed="True">
+                        <LineSegment Point="55, 18" />
+                        <LineSegment Point="55, 2" />
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+        <Button Background="{Binding ElementName=vs, Path=Background}" Canvas.Left="{Binding ElementName=vs, Path=Value}"
+                d:Canvas.Left="40" Canvas.Top="0" Width="10" Height="20" />
+    </Canvas>
 </UserControl>
