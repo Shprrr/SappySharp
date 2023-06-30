@@ -14,16 +14,15 @@ public partial class VolumeSlider : UserControl, INotifyPropertyChanged
         Background = Brushes.White;
         Cursor = Cursors.Hand;
         InitializeComponent();
-        KeyDown += UserControl_KeyDown;
-        MouseDown += UserControl_MouseDown;
-        MouseMove += UserControl_MouseMove;
-        MouseUp += UserControl_MouseUp;
+        PreviewKeyDown += UserControl_KeyDown;
+        PreviewMouseDown += UserControl_MouseDown;
+        PreviewMouseMove += UserControl_MouseMove;
+        PreviewMouseUp += UserControl_MouseUp;
         SizeChanged += UserControl_Resize;
     }
 
-    private int mValue;
-    private bool Dragging;
-    private int DragOrigin;
+    private int _value;
+    private bool _dragging;
 
     public delegate void ChangeEventHandler(int newValue);
     public event ChangeEventHandler Change;
@@ -31,73 +30,75 @@ public partial class VolumeSlider : UserControl, INotifyPropertyChanged
 
     public int Value
     {
-        get => mValue;
+        get => _value;
         set
         {
             if (value < 0) value = 0;
             if (value > 50) value = 50;
-            mValue = value;
-            Change?.Invoke(mValue);
+            _value = value;
+            Change?.Invoke(_value);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
         }
     }
 
-    private void UserControl_KeyDown(object sender, KeyEventArgs e) => UserControl_KeyDown((int)e.Key, 0);
-    private void UserControl_KeyDown(int KeyCode, int Shift)
+    private void UserControl_KeyDown(object sender, KeyEventArgs e)
     {
-        if (KeyCode == 37) //left
+        if (e.Key == Key.Left)
         {
-            if (mValue == 0) return;
-            mValue--;
-            Change?.Invoke(mValue);
+            if (Value == 0) return;
+            Value--;
+            Change?.Invoke(Value);
+            e.Handled = true;
         }
-        if (KeyCode == 39) //right
+        if (e.Key == Key.Right)
         {
-            if (mValue == 50) return;
-            mValue++;
-            Change?.Invoke(mValue);
+            if (Value == 50) return;
+            Value++;
+            Change?.Invoke(Value);
+            e.Handled = true;
         }
-        if (KeyCode == 38) //up
+        if (e.Key == Key.Up)
         {
-            mValue += 10;
-            if (mValue > 50) mValue = 50;
-            Change?.Invoke(mValue);
+            Value += 10;
+            if (Value > 50) Value = 50;
+            Change?.Invoke(Value);
+            e.Handled = true;
         }
-        if (KeyCode == 40) //down
+        if (e.Key == Key.Down)
         {
-            mValue -= 10;
-            if (mValue < 0) mValue = 0;
-            Change?.Invoke(mValue);
+            Value -= 10;
+            if (Value < 0) Value = 0;
+            Change?.Invoke(Value);
+            e.Handled = true;
         }
     }
 
     private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) => VBExtension.CallMouseButton(e, this, UserControl_MouseDown);
     private void UserControl_MouseDown(int Button, int Shift, double x, double y)
     {
-        mTrace.Trace("VolSlider_MouseDown -> X: " + x + ", mValue: " + mValue);
-        if (x < mValue || x > mValue) mValue = (int)(x - 5);
-        Dragging = true;
-        DragOrigin = (int)(x - mValue);
+        mTrace.Trace("VolSlider_MouseDown -> X: " + x + ", mValue: " + Value);
+        if (x < Value || x > Value) Value = (int)(x - 5);
+        _dragging = true;
         UserControl_MouseMove(Button, Shift, x, y);
     }
 
     private void UserControl_MouseMove(object sender, MouseEventArgs e) => VBExtension.CallMouseMove(e, this, UserControl_MouseMove);
     private void UserControl_MouseMove(int Button, int Shift, double x, double y)
     {
-        ForceCursor = x >= mValue && x <= mValue + 10;
+        ForceCursor = x >= Value && x <= Value + 10;
 
-        if (!Dragging) return;
+        if (!_dragging) return;
         ForceCursor = true;
-        mValue = (int)(x - 5);
-        if (mValue > 50) mValue = 50;
-        if (mValue < 0) mValue = 0;
-        Change?.Invoke(mValue);
+        Value = (int)(x - 5);
+        if (Value > 50) Value = 50;
+        if (Value < 0) Value = 0;
+        Change?.Invoke(Value);
     }
 
     private void UserControl_MouseUp(object sender, MouseButtonEventArgs e) => VBExtension.CallMouseButton(e, this, UserControl_MouseUp);
     private void UserControl_MouseUp(int Button, int Shift, double x, double y)
     {
-        Dragging = false;
+        _dragging = false;
     }
 
     private void UserControl_Resize(object sender, SizeChangedEventArgs e)
