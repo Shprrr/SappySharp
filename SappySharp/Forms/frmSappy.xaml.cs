@@ -313,7 +313,7 @@ public partial class frmSappy : Window, ISubclass
 
         loopsToGo = GetSettingI("Song Repeats");
         Playing = true;
-        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(20)).ToBitmap()));
+        cmdPlay.setImage(imlImages.ItemPicture(20).ToImageSource());
 
         if (GetSettingI("mIRC Now Playing") != 0)
         {
@@ -443,7 +443,7 @@ public partial class frmSappy : Window, ISubclass
 
         Playing = false;
         timPlay.IsEnabled = false;
-        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
+        cmdPlay.setImage(imlImages.ItemPicture(19).ToImageSource());
         for (int i = 0; i <= cvwChannel.Count - 1; i += 1)
         {
             cvwChannel[i].volume = "0";
@@ -624,8 +624,7 @@ public partial class frmSappy : Window, ISubclass
             return System.Drawing.Icon.FromHandle(picture.Handle);
         }
     }
-    private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
-    private void Form_Load()
+    private void Form_Load(object sender, RoutedEventArgs e)
     {
         // To call an OCX control.
         WindowsFormsHost ebrHost = new();
@@ -648,7 +647,7 @@ public partial class frmSappy : Window, ISubclass
 
         Trace("frmSappy/Form_Load()");
         Trace("- Set icon");
-        SetIcon((int)this.hWnd(), "APP", true);
+        Icon = Properties.Resources.APP.ToImageSource();
 
         // Trace "- DoomClock"
         // Dim y As Integer
@@ -762,10 +761,10 @@ public partial class frmSappy : Window, ISubclass
         //cmdNextSong.Icon = 17;
         //cmdStop.Icon = 18;
         //cmdPlay.Icon = 19;
-        cmdPrevSong.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(16)).ToBitmap()));
-        cmdNextSong.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(17)).ToBitmap()));
-        cmdStop.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(18)).ToBitmap()));
-        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
+        cmdPrevSong.setImage(imlImages.ItemPicture(16).ToImageSource());
+        cmdNextSong.setImage(imlImages.ItemPicture(17).ToImageSource());
+        cmdStop.setImage(imlImages.ItemPicture(18).ToImageSource());
+        cmdPlay.setImage(imlImages.ItemPicture(19).ToImageSource());
         Trace("- Load status pics");
         imlStatusbar = new cVBALImageList
         {
@@ -1258,7 +1257,8 @@ public partial class frmSappy : Window, ISubclass
 
     public void LoadSong(int i)
     {
-        // TODO: (NOT SUPPORTED): On Error GoTo hell
+        // TODO: (NOT SUPPORTED): On Error Return
+        if (File99 == null || !File99.CanRead) return;
 
         File99.Seek(SongTbl + i * 8, SeekOrigin.Begin);
         byte[] buffer = new byte[sizeof(int)];
@@ -1334,8 +1334,6 @@ public partial class frmSappy : Window, ISubclass
         {
             cmdPlay_Click();
         }
-
-    hell:;
     }
 
     public void LoadGameFromXML(ref string gamecode, string newxfile = "")
@@ -1914,7 +1912,7 @@ public partial class frmSappy : Window, ISubclass
     {
         Playing = false;
         timPlay.IsEnabled = false;
-        cmdPlay.setImage(ConvertBitmap(AxHostConverter.PictureToIcon(imlImages.ItemPicture(19)).ToBitmap()));
+        cmdPlay.setImage(imlImages.ItemPicture(19).ToImageSource());
         mnuOutput[0].IsEnabled = true;
         mnuOutput[1].IsEnabled = true;
         mnuGBMode.IsEnabled = mnuOutput[0].IsChecked;

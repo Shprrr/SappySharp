@@ -110,49 +110,15 @@ static partial class modSappy
     public static partial int StretchBlt(int hdc, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, int dwRop);
     [DllImport("shell32.dll", EntryPoint = "ShellExecuteA")]
     public static extern int ShellExecute(int hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
-    [LibraryImport("user32", EntryPoint = "SetWindowLongA")]
-    public static partial int SetWindowLong(int hwnd, int nIndex, int dwNewLong);
-    [LibraryImport("user32")]
-    public static partial int SetWindowPos(int hwnd, int hWndInsertAfter, int x, int y, int cX, int cY, int wFlags);
-    [LibraryImport("user32", EntryPoint = "GetWindowLongA")]
-    public static partial int GetWindowLong(int hwnd, int nIndex);
-    [DllImport("kernel32.dll", EntryPoint = "GetComputerNameA")]
-    public static extern int GetComputerName(string lpBuffer, ref int nSize);
-    [DllImport("kernel32.dll", EntryPoint = "GetWindowsDirectoryA")]
-    public static extern int GetWindowsDirectory(string lpBuffer, int nSize);
-    [DllImport("advapi32.dll", EntryPoint = "GetUserNameA")]
-    public static extern int GetUserName(string lpBuffer, ref int nSize);
-    [LibraryImport("kernel32.dll")]
-    public static partial int GetVersion();
     [DllImport("COMCTL32.DLL")]
     public static extern bool InitCommonControlsEx(ref tagInitCommonControlsEx iccex);
-    [DllImport("user32", EntryPoint = "LoadImageA")]
-    public static extern int LoadImageAsString(IntPtr hInst, string lpsz, int uType, int cxDesired, int cyDesired, int fuLoad);
     [LibraryImport("user32", EntryPoint = "SendMessageA")]
     public static partial int SendMessageLong(int hwnd, int wMsg, int wParam, int lParam);
-    [LibraryImport("user32")]
-    public static partial int GetWindow(int hwnd, int wCmd);
-    [LibraryImport("user32")]
-    public static partial int GetSystemMetrics(int nIndex);
-    [LibraryImport("kernel32")]
-    public static partial int GetUserDefaultLCID();
-    [DllImport("user32.dll")]
-    public static extern int FillRect(int hdc, ref RECT lpRect, int hBrush);
 
     [LibraryImport("user32", EntryPoint = "SendMessageA")]
     private static partial int SendMessage(int hwnd, int wMsg, int wParam, int lParam);
-    [DllImport("user32", EntryPoint = "FindWindowA")]
-    private static extern int FindWindow(string lpClassName, string lpWindowName);
     [DllImport("user32", EntryPoint = "FindWindowExA")]
     private static extern int FindWindowEx(int hWnd1, int hWnd2, string lpsz1, string lpsz2);
-
-    public class RECT
-    {
-        public int left;
-        public int tOp;
-        public int Right;
-        public int Bottom;
-    }
 
     class COPYDATASTRUCT
     {
@@ -234,55 +200,6 @@ static partial class modSappy
         if (ProperFontS == 0) ProperFontS = 8;
         Trace("On to the main form...");
         //new frmSappy().Show(); // Called by App.xaml
-    }
-
-    // -------------------------------
-    // SetIcon
-    // -------
-
-    // Replaces the given window's icon with one loaded from a resource file, and loaded -properly-
-    // as to include proper scaling and shadows. VB6 doesn't quite cut it.
-    // Does not work in IDE mode, wherein it turns the icon into a generic Windows app icon.
-
-    // Found on vbAccellerator.
-
-    public static void SetIcon(int hwnd, string sIconResName, bool bSetAsAppIcon = true)
-    {
-        int lhWndTop = 0;
-
-        if (bSetAsAppIcon)
-        {
-            // Find VB's hidden parent window:
-            int lhWnd = hwnd;
-            lhWndTop = lhWnd;
-            while (!(lhWnd == 0))
-            {
-                lhWnd = GetWindow(lhWnd, GW_OWNER);
-                if (!(lhWnd == 0))
-                {
-                    lhWndTop = lhWnd;
-                }
-            }
-        }
-
-        int cX = GetSystemMetrics(SM_CXICON);
-        int cY = GetSystemMetrics(SM_CYICON);
-        nint hInstance = Process.GetCurrentProcess().Handle;
-        int hIconLarge = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
-        if (bSetAsAppIcon)
-        {
-            SendMessageLong(lhWndTop, WM_SETICON, ICON_BIG, hIconLarge);
-        }
-        SendMessageLong(hwnd, WM_SETICON, ICON_BIG, hIconLarge);
-
-        cX = GetSystemMetrics(SM_CXSMICON);
-        cY = GetSystemMetrics(SM_CYSMICON);
-        int hIconSmall = LoadImageAsString(hInstance, sIconResName, IMAGE_ICON, cX, cY, LR_SHARED);
-        if (bSetAsAppIcon)
-        {
-            SendMessageLong(lhWndTop, WM_SETICON, ICON_SMALL, hIconSmall);
-        }
-        SendMessageLong(hwnd, WM_SETICON, ICON_SMALL, hIconSmall);
     }
 
     // -------------------------------
@@ -382,8 +299,8 @@ static partial class modSappy
                 ctl.FontFamily = new("MS Gothic"); // ChrW(&HFF2D) + ChrW(&HFF33) + ChrW(&H20) + ChrW(&HFF30) + ChrW(&H30B4) + ChrW(&H30B7) + ChrW(&H30C3) + ChrW(&H30AF)
                 ctl.FontSize = 9;
             }
-            else
-            { // If (LoadResString(10000)) = "<NLPLZ>" Then
+            else // If (LoadResString(10000)) = "<NLPLZ>" Then
+            {
                 ctl.FontFamily = new(ProperFont); // "Lucida Sans Unicode" '"Comic Sans MS"
                 ctl.FontSize = ProperFontS;
             }
@@ -490,15 +407,6 @@ static partial class modSappy
         BitBlt((int)Victim.hWnd(), 0, (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 10, vbSrcCopy);
         StretchBlt((int)Victim.hWnd(), 2, (int)(Victim.Height - 2), (int)(Victim.Width - 4), 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
         BitBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 14, vbSrcCopy);
-    }
-
-    public static void SetAllSkinButtons(Window Victim)
-    {
-        // Dim ct As Control
-        // For Each ct In Victim.Controls
-        // If TypeName(ct) = "SkinButton" Then ct.SkinDC = frmSappy.picSkin.hdc
-        // Next
-        Trace("Stop calling SetAllSkinButtons! You don't have to do that anymore! --> Victim: " + Victim.Name);
     }
 
     public static string InputBox(string Prompt, ref string Title, string Default)

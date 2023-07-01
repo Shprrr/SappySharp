@@ -658,7 +658,6 @@ public partial class cVBALImageList : IDisposable
                 DrawState(hdc, 0, 0, hIcon, 0, xPixels, yPixels, m_lIconSizeX, m_lIconSizeY, DST_ICON | DSS_DISABLED);
                 // Clear up the icon:
                 DestroyIcon(hIcon);
-
             }
             else
             {

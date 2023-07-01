@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.VisualBasic;
+using stdole;
 //using Microsoft.VisualBasic.PowerPacks.Printing.Compatibility.VB6;
 //using static System.Drawing.Printing.PrinterSettings;
 using static Microsoft.VisualBasic.Constants;
@@ -407,46 +408,25 @@ public static class VBExtension
         }
         catch { return null; }
     }
-    public static BitmapSource setImage(this Button Cmd, BitmapSource value)
+    public static ImageSource setImage(this Button Cmd, ImageSource value)
     {
         try
         {
             if (Cmd.Content is string)
             {
-                string caption = Cmd.Content.ToString();
-                Canvas C = new Canvas();
-                Cmd.Content = C;
-                C.Width = Cmd.Width;
-                C.Height = Cmd.Height;
-                Label L = new Label();
-                L.Content = caption;
-                C.Children.Add(L);
-                L.FontSize = 12d;
-                L.Padding = new Thickness(0);
-                L.Width = L.MeasureString(caption).Width;
-                L.Height = L.MeasureString(caption).Height;
-                Canvas.SetLeft(L, (Cmd.Width - L.Width) / 2);
-                Canvas.SetTop(L, Cmd.Height - L.Height - 10);
-                Image I = new Image();
-                C.Children.Add(I);
-                I.Width = Cmd.Width - 10;
-                I.Height = Cmd.Height - L.Height - 12;
-                I.Stretch = System.Windows.Media.Stretch.Uniform;
-                I.Source = value;
-                Canvas.SetLeft(I, (Cmd.Width - I.Width) / 2);
-                Canvas.SetTop(I, 0);
+                Cmd.Content = new Image { Source = value };
                 return value;
             }
-            else if (Cmd.Content is Panel)
+            else if (Cmd.Content is Panel panel)
             {
-                Image I = (Image)((Panel)Cmd.Content).ControlOf(typeof(Image), 0);
+                Image I = (Image)panel.ControlOf(typeof(Image), 0);
                 if (I == null) return null;
                 I.Source = value;
                 return value;
             }
-            else if (Cmd.Content is Image)
+            else if (Cmd.Content is Image image)
             {
-                ((Image)Cmd.Content).Source = value;
+                image.Source = value;
                 return value;
             }
         }
@@ -771,6 +751,31 @@ public static class VBExtension
         }
 
         return color;
+    }
+
+    public static ImageSource ToImageSource(this System.Drawing.Icon icon) => Imaging.CreateBitmapSourceFromHIcon(
+        icon.Handle,
+        Int32Rect.Empty,
+        BitmapSizeOptions.FromEmptyOptions());
+
+    public static ImageSource ToImageSource(this IPicture icon)
+    {
+        BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHIcon(
+                icon.Handle,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+        mColorUtils.PixelColor[] pixels = new mColorUtils.PixelColor[bitmapSource.PixelWidth * bitmapSource.PixelHeight];
+        bitmapSource.CopyPixels(pixels);
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            if (pixels[i].ColorBGRA == 0xFFFF00FF)
+                pixels[i].Alpha = 0;
+        }
+
+        WriteableBitmap iconSource = new(bitmapSource);
+        iconSource.WritePixels(new Int32Rect(0, 0, bitmapSource.PixelWidth, bitmapSource.PixelHeight), pixels, iconSource.BackBufferStride, 0);
+        return iconSource;
     }
 
     public class ComboboxItem
