@@ -236,7 +236,7 @@ public partial class frmMakeTrax : Window
         txtLog.SelectionStart = Len(txtLog.Text);
     }
 
-    private void Picture1_Paint(object sender, DrawingContext e)
+    private void Picture1_Paint(object sender, RoutedEventArgs e)
     {
         DrawSkin(Picture1);
     }

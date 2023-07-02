@@ -6,14 +6,14 @@
     <Grid>
         <TextBox x:Name="txtLog" Margin="8,272,0,0" Padding="2,2,2,2" Width="401" Height="217" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Lucida Console" FontSize="8.25" />
-        <usercontrols:RenderingControl x:Name="Picture1" Margin="216,128,0,0" Width="193" Height="97" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}"
-                Rendering="Picture1_Paint" />
-        <Label x:Name="Label10" Margin="220,146,0,0" Padding="2,2,2,2" Width="185" Height="75" VerticalAlignment="Top"
-                HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
-                Content="[2006]The second track will be saved right after the first track. Headers are copied." />
-        <Label x:Name="Label9" Margin="220,130,0,0" Padding="2,2,2,2" Width="185" Height="17" VerticalAlignment="Top"
-                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[2005]Track offsets" />
+        <Grid x:Name="Picture1" Margin="216,128,0,0" Width="193" Height="97" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Loaded="Picture1_Paint">
+            <TextBlock x:Name="Label10" Margin="4,18,0,0" Padding="2,2,2,2" Width="185" Height="75" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" TextWrapping="Wrap"
+                    Text="[2006]The second track will be saved right after the first track. Headers are copied." />
+            <Label x:Name="Label9" Margin="4,2,0,0" Padding="2,2,2,2" Width="185" Height="17" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[2005]Track offsets" />
+        </Grid>
         <TextBox x:Name="txtVoicegroup" Margin="320,104,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" />
         <TextBox x:Name="txtTrack" Margin="320,80,0,0" Padding="2,2,2,2" Width="89" Height="19" VerticalAlignment="Top"

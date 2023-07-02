@@ -216,10 +216,10 @@ public partial class frmTakeTrax : Window
     private void Form_Load()
     {
         SetCaptions(this);
-        Content = Properties.Resources._3000;
+        Title = Properties.Resources._3000;
     }
 
-    private void Picture1_Paint(object sender, DrawingContext e)
+    private void Picture1_Paint(object sender, RoutedEventArgs e)
     {
         DrawSkin(Picture1);
     }

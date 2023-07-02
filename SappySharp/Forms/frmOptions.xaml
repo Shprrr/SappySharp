@@ -7,14 +7,14 @@
         <Grid x:Name="picPage_3" Margin="128,96,0,0" Width="393" Height="89" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ComboBox x:Name="cbxPresets" Margin="240,56,0,0" Padding="2,2,2,2" Width="145" Height="22" VerticalAlignment="Top"
                     HorizontalAlignment="Left" SelectionChanged="cbxPresets_Click" />
-            <usercontrols:RenderingControl x:Name="picSkin_2" Margin="136,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
-            <usercontrols:RenderingControl x:Name="picSkin_1" Margin="112,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
+            <Image x:Name="picSkin_2" Margin="136,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Loaded="picSkin_Rendering" />
+            <Image x:Name="picSkin_1" Margin="112,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Loaded="picSkin_Rendering" />
             <Image x:Name="picSkinLoad" Margin="24,16,0,0" Width="25" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" />
-            <usercontrols:RenderingControl x:Name="picSkin_0" Margin="88,64,0,0" Width="16" Height="16" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" MouseUp="picSkin_Click" Rendering="picSkin_Rendering" />
+            <Image x:Name="picSkin_0" Margin="88,64,0,0" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    MouseUp="picSkin_Click" Loaded="picSkin_Rendering" />
             <ScrollBar x:Name="HScroll1" Margin="88,0,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" Orientation="Horizontal" ValueChanged="HScroll1_Change" />
             <ScrollBar x:Name="HScroll2" Margin="88,32,0,0" Padding="2,2,2,2" Width="265" Height="17" VerticalAlignment="Top"

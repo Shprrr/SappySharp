@@ -6,14 +6,14 @@
     <Grid>
         <TextBox x:Name="txtLog" Margin="8,272,0,0" Padding="2,2,2,2" Width="401" Height="217" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Lucida Console" FontSize="8.25" />
-        <usercontrols:RenderingControl x:Name="Picture1" Margin="216,80,0,0" Width="193" Height="145" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Rendering="Picture1_Paint">
+        <Grid x:Name="Picture1" Margin="216,80,0,0" Width="193" Height="145" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Loaded="Picture1_Paint">
             <Label x:Name="Label9" Margin="4,2,0,0" Padding="2,2,2,2" Width="185" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[7004]" />
-            <Label x:Name="Label10" Margin="4,18,0,0" Padding="2,2,2,2" Width="185" Height="123" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10"
-                    Content="[3004]Any instance of $T is replaced by the current track" />
-        </usercontrols:RenderingControl>
+            <TextBlock x:Name="Label10" Margin="4,18,0,0" Padding="2,2,2,2" Width="185" Height="123" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" TextWrapping="Wrap"
+                    Text="[3004]Any instance of $T is replaced by the current track" />
+        </Grid>
         <Button x:Name="Command2" Margin="240,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="[4]OK" Click="Command2_Click" />
         <Button x:Name="Command1" Margin="328,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"

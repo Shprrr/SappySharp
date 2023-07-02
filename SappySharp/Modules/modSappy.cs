@@ -104,10 +104,6 @@ static partial class modSappy
 
 
 
-    [LibraryImport("gdi32.dll")]
-    public static partial int BitBlt(int hDestDC, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int dwRop);
-    [LibraryImport("gdi32.dll")]
-    public static partial int StretchBlt(int hdc, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, int dwRop);
     [DllImport("shell32.dll", EntryPoint = "ShellExecuteA")]
     public static extern int ShellExecute(int hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
     [DllImport("COMCTL32.DLL")]
@@ -396,17 +392,34 @@ static partial class modSappy
         ghData.Free();
     }
 
-    public static void DrawSkin(FrameworkElement Victim)
+    public static void DrawSkin(Control Victim)
     {
-        BitBlt((int)Victim.hWnd(), 0, 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 0, vbSrcCopy);
-        StretchBlt((int)Victim.hWnd(), 2, 0, (int)(Victim.Width - 4), 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 2, 2, 2, vbSrcCopy);
-        BitBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), 0, 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 4, vbSrcCopy);
-        StretchBlt((int)Victim.hWnd(), 0, 2, 2, (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 6, 6, 2, 2, vbSrcCopy);
-        StretchBlt((int)Victim.hWnd(), 2, 2, (int)(Victim.Width - 4), (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 0, 0, 6, 62, vbSrcCopy);
-        StretchBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), 2, 2, (int)(Victim.Height - 4), (int)frmSappy.instance.picSkin.hWnd(), 6, 8, 2, 2, vbSrcCopy);
-        BitBlt((int)Victim.hWnd(), 0, (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 10, vbSrcCopy);
-        StretchBlt((int)Victim.hWnd(), 2, (int)(Victim.Height - 2), (int)(Victim.Width - 4), 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 12, 2, 2, vbSrcCopy);
-        BitBlt((int)Victim.hWnd(), (int)(Victim.Width - 2), (int)(Victim.Height - 2), 2, 2, (int)frmSappy.instance.picSkin.hWnd(), 6, 14, vbSrcCopy);
+        WriteableBitmap bitmap = new((int)Victim.Width, (int)Victim.Height, 72, 72, PixelFormats.Bgra32, null);
+        bitmap.BitBlt(0, 0, 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 0);
+        bitmap.StretchBlt(2, 0, (int)(Victim.Width - 4), 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 2, 2, 2);
+        bitmap.BitBlt((int)(Victim.Width - 2), 0, 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 4);
+        bitmap.StretchBlt(0, 2, 2, (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 6, 6, 2, 2);
+        bitmap.StretchBlt(2, 2, (int)(Victim.Width - 4), (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 0, 0, 6, 62);
+        bitmap.StretchBlt((int)(Victim.Width - 2), 2, 2, (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 6, 8, 2, 2);
+        bitmap.BitBlt(0, (int)(Victim.Height - 2), 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 10);
+        bitmap.StretchBlt(2, (int)(Victim.Height - 2), (int)(Victim.Width - 4), 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 12, 2, 2);
+        bitmap.BitBlt((int)(Victim.Width - 2), (int)(Victim.Height - 2), 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 14);
+        Victim.Background = new ImageBrush(bitmap);
+    }
+
+    public static void DrawSkin(Panel Victim)
+    {
+        WriteableBitmap bitmap = new((int)Victim.Width, (int)Victim.Height, 72, 72, PixelFormats.Bgra32, null);
+        bitmap.BitBlt(0, 0, 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 0);
+        bitmap.StretchBlt(2, 0, (int)(Victim.Width - 4), 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 2, 2, 2);
+        bitmap.BitBlt((int)(Victim.Width - 2), 0, 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 4);
+        bitmap.StretchBlt(0, 2, 2, (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 6, 6, 2, 2);
+        bitmap.StretchBlt(2, 2, (int)(Victim.Width - 4), (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 0, 0, 6, 62);
+        bitmap.StretchBlt((int)(Victim.Width - 2), 2, 2, (int)(Victim.Height - 4), (BitmapSource)frmSappy.instance.picSkin.Source, 6, 8, 2, 2);
+        bitmap.BitBlt(0, (int)(Victim.Height - 2), 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 10);
+        bitmap.StretchBlt(2, (int)(Victim.Height - 2), (int)(Victim.Width - 4), 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 12, 2, 2);
+        bitmap.BitBlt((int)(Victim.Width - 2), (int)(Victim.Height - 2), 2, 2, (BitmapSource)frmSappy.instance.picSkin.Source, 6, 14);
+        Victim.Background = new ImageBrush(bitmap);
     }
 
     public static string InputBox(string Prompt, ref string Title, string Default)

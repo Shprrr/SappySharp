@@ -97,6 +97,7 @@ public partial class frmSappy : Window, ISubclass
     public void Unload() { Close(); _instance = null; }
     public frmSappy()
     {
+        _instance = this;
         InitializeComponent();
         timPlay.IsEnabled = false;
         timPlay.Interval = new TimeSpan(0, 0, 0, 0, 1000);
@@ -540,6 +541,38 @@ public partial class frmSappy : Window, ISubclass
         WriteSettingI("Bar " + bar.Index + " state", (int)bar.State);
     }
 
+    private class cExplorerBarItemTemp : cExplorerBarItem
+    {
+        public IFont get_Font() => throw new NotImplementedException();
+        public void let_Font(ref IFont value) => throw new NotImplementedException();
+        public void set_Font(ref IFont value) => throw new NotImplementedException();
+        public dynamic get_Control() => throw new NotImplementedException();
+        public void let_Control(ref object value) => throw new NotImplementedException();
+        public void set_Control(ref object value) => throw new NotImplementedException();
+        public void EnsureVisible() => throw new NotImplementedException();
+
+        public EExplorerBarItemTypes ItemType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int IconIndex { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Text { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string ToolTipText { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool Bold { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int SpacingAfter { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public uint TextColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public uint TextColorOver { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool CanClick { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public string Key { get; set; }
+
+        public string Tag { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int ItemData { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int Index { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    }
+    private void SubMenuTasks_Click(object sender, RoutedEventArgs e)
+    {
+        MenuItem menuItem = sender as MenuItem;
+        cExplorerBarItem item = new cExplorerBarItemTemp { Key = menuItem.Name };
+        ebr_ItemClick(ref item);
+    }
     private void ebr_ItemClick(ref cExplorerBarItem itm)
     {
         int i = 0;
@@ -901,6 +934,13 @@ public partial class frmSappy : Window, ISubclass
         //ebr.Bars["Info"].Items["Screen"].let_Control(ref newControl);
         //ebr.Bars["Info"].Items["Screen"].SpacingAfter = 6;
         //ebr.Bars["Info"].State = (EExplorerBarStates)GetSettingI("Bar " + ebr.Bars["Info"].Index + " state");
+        //TODO: Temporary because COM code is commented.
+        mnuTasks.Items.Add(new MenuItem { Name = "taketrax", Header = Properties.Resources._52 });
+        mnuTasks.Items.Add(new MenuItem { Name = "maketrax", Header = Properties.Resources._53 });
+        mnuTasks.Items.Add(new MenuItem { Name = "takesamp", Header = Properties.Resources._54 });
+        mnuTasks.Items.Add(new MenuItem { Name = "codetrax", Header = Properties.Resources._55 });
+        mnuTasks.Items.Add(new MenuItem { Name = "makemidi", Header = Properties.Resources._51 });
+        foreach (MenuItem item in mnuTasks.Items) item.Click += SubMenuTasks_Click;
 
         Trace("- Create channel views");
         cvwChannel.Add(cvwChannelTemplate);

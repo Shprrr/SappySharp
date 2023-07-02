@@ -118,26 +118,10 @@ public partial class frmAbout : Window
     private string[] lines = new string[128]; // Refactored credits.
     public int y = 0; // scroller Y position
 
-    [DllImport("user32.dll", EntryPoint = "DrawTextA")]
-    private static extern int DrawText(int hdc, string lpStr, int nCount, ref RECT lpRect, int wFormat);
-    class RECT
-    {
-        public int left;
-        public int tOp;
-        public int Right;
-        public int Bottom;
-    }
-
-    [DllImport("gdi32.dll", EntryPoint = "CreateFontA")]
-    private static extern int CreateFont(int H, int W, int E, int o, int W2, int i, int u, int S, int C, int OP, int CP, int Q, int PAF, string F);
     [LibraryImport("gdi32.dll")]
-    private static partial int SelectObject(int hdc, int hObject);
+    public static partial int BitBlt(int hDestDC, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int dwRop);
     [LibraryImport("gdi32.dll")]
-    private static partial int DeleteObject(int hObject);
-    [LibraryImport("gdi32.dll")]
-    private static partial int SetTextColor(int hdc, int crColor);
-    [LibraryImport("gdi32.dll")]
-    private static partial int SetBkColor(int hdc, int crColor);
+    public static partial int StretchBlt(int hdc, int x, int y, int nWidth, int nHeight, int hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, int dwRop);
 
     pcMemDC myDC = new();
 

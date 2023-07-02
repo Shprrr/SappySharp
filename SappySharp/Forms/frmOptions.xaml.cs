@@ -73,8 +73,6 @@ using static SappySharp.Classes.gCommonDialog;
 using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
 using static SappySharp.Classes.cRegistry;
-using stdole;
-using SappySharp.UserControls;
 
 namespace SappySharp.Forms;
 
@@ -86,9 +84,9 @@ public partial class frmOptions : Window
     public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmOptions() { InitializeComponent(); }
 
-    public List<Image> picPage { get => VBExtension.controlArray<Image>(this, "picPage"); }
+    public List<Grid> picPage { get => VBExtension.controlArray<Grid>(this, "picPage"); }
 
-    public List<RenderingControl> picSkin { get => VBExtension.controlArray<RenderingControl>(this, "picSkin"); }
+    public List<Image> picSkin { get => VBExtension.controlArray<Image>(this, "picSkin"); }
 
     // ______________
     // |  SAPPY 2006  |
@@ -180,20 +178,6 @@ public partial class frmOptions : Window
         Unload();
     }
 
-    internal class AxHostConverter : System.Windows.Forms.AxHost
-    {
-        private AxHostConverter() : base("") { }
-
-        public static IPictureDisp ImageToPictureDisp(System.Drawing.Image image)
-        {
-            return (IPictureDisp)GetIPictureDispFromPicture(image);
-        }
-
-        public static System.Drawing.Image PictureDispToImage(IPictureDisp pictureDisp)
-        {
-            return GetPictureFromIPicture(pictureDisp);
-        }
-    }
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
     private void Form_Load()
     {
@@ -220,8 +204,8 @@ public partial class frmOptions : Window
 
         SetCaptions(this);
         Title = Properties.Resources._6000;
-        Picture1.Source = ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)frmSappy.instance.imlStatusbar.ItemPicture(3)));
-        Picture2.Source = ConvertBitmap((System.Drawing.Bitmap)AxHostConverter.PictureDispToImage((IPictureDisp)frmSappy.instance.imlStatusbar.ItemPicture(4)));
+        Picture1.Source = frmSappy.instance.imlStatusbar.ItemPicture(3).ToImageSource();
+        Picture2.Source = frmSappy.instance.imlStatusbar.ItemPicture(4).ToImageSource();
 
         txtXFile.Text = GetSetting("XML File");
         if (txtXFile.Text == "") txtXFile.Text = "sappy.xml";
@@ -339,16 +323,16 @@ public partial class frmOptions : Window
         //WriteSettingI("Settings Page", MSNList1.SelectedIndex);
     }
 
-    private void picSkin_Click(object sender, MouseButtonEventArgs e) { picSkin_Click(picSkin.IndexOf((RenderingControl)sender)); }
+    private void picSkin_Click(object sender, MouseButtonEventArgs e) { picSkin_Click(picSkin.IndexOf((Image)sender)); }
     private void picSkin_Click(int Index)
     {
         shpSkinSel.Move(picSkin[Index].Margin.Left - 3);
         picSkin[0].Tag = Index;
     }
 
-    private void picSkin_Rendering(object sender, DrawingContext e)
+    private void picSkin_Rendering(object sender, RoutedEventArgs e)
     {
-        picSkin_Paint(picSkin.IndexOf((RenderingControl)sender));
+        picSkin_Paint(picSkin.IndexOf((Image)sender));
     }
     private void picSkin_Paint(int Index)
     {
@@ -360,7 +344,9 @@ public partial class frmOptions : Window
             _ => throw new NotImplementedException()
         };
         picSkinLoad.Source = ConvertBitmap(skin);
-        BitBlt((int)picSkin[Index].hWnd(), 0, 0, 16, 16, (int)picSkinLoad.hWnd(), 8, 0, vbSrcCopy);
+        WriteableBitmap bitmap = new((int)picSkin[Index].Width, (int)picSkin[Index].Height, 72, 72, PixelFormats.Bgra32, null);
+        bitmap.BitBlt(0, 0, 16, 16, (BitmapSource)picSkinLoad.Source, 8, 0);
+        picSkin[Index].Source = bitmap;
     }
 
     private void Picture5_Paint(object sender, RoutedEventArgs e)

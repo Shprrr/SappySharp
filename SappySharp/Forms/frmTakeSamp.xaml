@@ -6,20 +6,21 @@
     <Grid>
         <TextBox x:Name="txtLog" Margin="8,272,0,0" Padding="2,2,2,2" Width="329" Height="217" VerticalAlignment="Top"
                 HorizontalAlignment="Left" FontFamily="Lucida Console" FontSize="8.25" />
-        <usercontrols:RenderingControl x:Name="Picture2" Margin="8,144,0,0" Width="329" Height="81" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Rendering="Picture2_Paint">
-            <Label x:Name="Label3" Margin="4,18,0,0" Padding="2,2,2,2" Width="321" Height="59" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[7005]" />
+        <Grid x:Name="Picture2" Margin="8,144,0,0" Width="329" Height="81" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Loaded="Picture2_Paint">
+            <TextBlock x:Name="Label3" Margin="4,18,0,0" Padding="2,2,2,2" Width="321" Height="59" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" TextWrapping="Wrap" Text="[7005]" />
             <Label x:Name="Label2" Margin="4,2,0,0" Padding="2,2,2,2" Width="321" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[7004]" />
-        </usercontrols:RenderingControl>
-        <usercontrols:RenderingControl x:Name="Picture1" Margin="8,64,0,0" Width="329" Height="73" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Rendering="Picture1_Paint">
+        </Grid>
+        <Grid x:Name="Picture1" Margin="8,64,0,0" Width="329" Height="73" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Loaded="Picture1_Paint">
             <Label x:Name="Label9" Margin="4,2,0,0" Padding="2,2,2,2" Width="321" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="[7003]FileFormats" />
-            <Label x:Name="lblFileDesc" Margin="4,18,0,0" Padding="2,2,2,2" Width="321" Height="51" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="(description of file format)" />
-        </usercontrols:RenderingControl>
+            <TextBlock x:Name="lblFileDesc" Margin="4,18,0,0" Padding="2,2,2,2" Width="321" Height="51" VerticalAlignment="Top"
+                    HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" TextWrapping="Wrap"
+                    Text="(description of file format)" />
+        </Grid>
         <Button x:Name="Command2" Margin="256,240,0,0" Padding="2,2,2,2" Width="81" Height="25" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="[5]" Click="Command2_Click" />
         <ComboBox x:Name="cboSaveAs" Margin="136,8,0,0" Padding="2,2,2,2" Width="201" Height="21" VerticalAlignment="Top"

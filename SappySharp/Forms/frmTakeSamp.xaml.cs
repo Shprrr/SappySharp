@@ -404,7 +404,7 @@ public partial class frmTakeSamp : Window
         if (cboSaveAs.SelectedIndex == 1) txtNamePat.Text += ".wav";
         if (cboSaveAs.SelectedIndex == 2) txtNamePat.Text += ".its";
         if (cboSaveAs.SelectedIndex == 3) txtNamePat.Text += ".s";
-        lblFileDesc.Content = cboSaveAs.SelectedIndex switch
+        lblFileDesc.Text = cboSaveAs.SelectedIndex switch
         {
             0 => Properties.Resources._7020,
             1 => Properties.Resources._7021,
@@ -477,7 +477,7 @@ public partial class frmTakeSamp : Window
     private void Form_Load()
     {
         SetCaptions(this);
-        Content = Properties.Resources._7000;
+        Title = Properties.Resources._7000;
         cboSaveAs.AddItem(Properties.Resources._7010);
         cboSaveAs.AddItem(Properties.Resources._7011);
         cboSaveAs.AddItem(Properties.Resources._7012);
@@ -500,11 +500,11 @@ public partial class frmTakeSamp : Window
         txtLog.SelectionStart = Len(txtLog.Text);
     }
 
-    private void Picture1_Paint(object sender, DrawingContext e)
+    private void Picture1_Paint(object sender, RoutedEventArgs e)
     {
         DrawSkin(Picture1);
     }
-    private void Picture2_Paint(object sender, DrawingContext e)
+    private void Picture2_Paint(object sender, RoutedEventArgs e)
     {
         DrawSkin(Picture2);
     }

@@ -154,7 +154,7 @@ public partial class frmSelectMidiOut : Window
         List1.SelectedIndex = WantedMidiDevice;
 
         SetCaptions(this);
-        Content = Properties.Resources._9000;
+        Title = Properties.Resources._9000;
     }
 
     private void Form_Paint(object sender, EventArgs e)
