@@ -47,7 +47,6 @@ using static SappySharp.Forms.frmOptions;
 using static SappySharp.Forms.frmMidiMapper;
 using static SappySharp.Forms.frmSelectMidiOut;
 using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.cNoStatusBar;
 using static SappySharp.Classes.SChannels;
 using static SappySharp.Classes.SNotes;
 using static SappySharp.Classes.NoteInfo;
@@ -1039,9 +1038,7 @@ public partial class cVBALImageList : IDisposable
                                 for (int j = i; j <= i + iCount - iOrigCount - 1; j += 1)
                                 {
                                     ImageList_Copy(m_hIml, j + 1, m_hIml, j, (int)eilSwapTypes.eilSwap);
-                                    string sSwapKey = m_sKey[j];
-                                    m_sKey[j] = m_sKey[j + 1];
-                                    m_sKey[j + 1] = sSwapKey;
+                                    (m_sKey[j + 1], m_sKey[j]) = (m_sKey[j], m_sKey[j + 1]);
                                 }
                             }
 

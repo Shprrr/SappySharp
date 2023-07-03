@@ -47,7 +47,6 @@ using static SappySharp.Forms.frmOptions;
 using static SappySharp.Forms.frmMidiMapper;
 using static SappySharp.Forms.frmSelectMidiOut;
 using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.cNoStatusBar;
 using static SappySharp.Classes.SChannels;
 using static SappySharp.Classes.SNotes;
 using static SappySharp.Classes.NoteInfo;

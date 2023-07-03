@@ -33,7 +33,46 @@
             </MenuItem>
         </Menu>
 
-        <Grid>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition MinWidth="64" Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition MinWidth="24" Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition MinWidth="64" Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock x:Name="simple" Text="" />
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <TextBlock x:Name="frame" Text="0" />
+            </StatusBarItem>
+            <Separator Grid.Column="3" />
+            <StatusBarItem Grid.Column="4" MouseDoubleClick="picStatusbar_DblClick">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="crudIcon" Stretch="None" />
+                    <TextBlock x:Name="crud" Text="0" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator Grid.Column="5" />
+            <StatusBarItem Grid.Column="6">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="timeIcon" Stretch="None" />
+                    <TextBlock x:Name="time" Text="00:00 (0)" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid x:Name="mainGrid">
             <Grid x:Name="panelTop" Margin="170,0,0,0" Width="324" Height="88" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Image x:Name="picTop" Margin="0,0,0,0" Width="324" Height="88" VerticalAlignment="Top" HorizontalAlignment="Left"
                         Loaded="picTop_Paint" />
@@ -76,9 +115,6 @@
             </Grid>
             <Image x:Name="picSkin" Margin="280,288,0,0" Width="25" Height="25" Stretch="None" VerticalAlignment="Top"
                     HorizontalAlignment="Left" Visibility="Hidden" />
-            <usercontrols:RenderingControl x:Name="picStatusbar" Margin="0,423,0,0" Width="495" Height="17"
-                    VerticalAlignment="Top" HorizontalAlignment="Left" Rendering="picStatusBar_Paint"
-                    MouseDoubleClick="picStatusbar_DblClick" MouseMove="picStatusbar_MouseMove" />
             <Grid x:Name="picChannels" Margin="170,88,0,0" Width="324" Height="177" VerticalAlignment="Top"
                     HorizontalAlignment="Left">
                 <CheckBox x:Name="chkMute" Margin="2,18,0,0" Padding="2,2,2,2" Width="12" Height="12" VerticalAlignment="Top"

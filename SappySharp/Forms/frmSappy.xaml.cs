@@ -47,7 +47,6 @@ using static SappySharp.Forms.frmOptions;
 using static SappySharp.Forms.frmMidiMapper;
 using static SappySharp.Forms.frmSelectMidiOut;
 using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.cNoStatusBar;
 using static SappySharp.Classes.SChannels;
 using static SappySharp.Classes.SNotes;
 using static SappySharp.Classes.NoteInfo;
@@ -196,7 +195,6 @@ public partial class frmSappy : Window, ISubclass
 
     public cVBALImageList imlImages = null;
     public cVBALImageList imlStatusbar = null;
-    public static cNoStatusBar cStatusBar = null;
     public XmlDocument x = new();
     public XmlElement rootNode = null;
 
@@ -295,7 +293,7 @@ public partial class frmSappy : Window, ISubclass
 
         WantToRecord = 2;
 
-        cStatusBar.PanelText("simple", "");
+        simple.Text = "";
 
         for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
         {
@@ -485,17 +483,12 @@ public partial class frmSappy : Window, ISubclass
 
     private void cPop_ItemHighlight(ref int ItemNumber, ref bool bEnabled, ref bool bSeparator)
     {
-        cStatusBar.PanelText("simple", cPop.get_HelpText(ItemNumber));
-        // cStatusBar.SimpleMode = True
-        // cStatusBar.SimpleText = cPop.HelpText(ItemNumber)
-        picStatusbar.Refresh();
+        simple.Text = cPop.get_HelpText(ItemNumber);
     }
 
     private void cPop_MenuExit()
     {
-        cStatusBar.PanelText("simple", "");
-        // cStatusBar.SimpleMode = False
-        picStatusbar.Refresh();
+        simple.Text = "";
     }
 
     private void cvwChannel_MuteChanged(int Index)
@@ -810,15 +803,6 @@ public partial class frmSappy : Window, ISubclass
 
         stdPic = (StdPicture)AxHostConverter.ImageToPictureDisp(Properties.Resources.STATUSICONS);
         imlStatusbar.AddFromHandle(stdPic.Handle, ImageTypes.IMAGE_BITMAP, lBackColor: 0xFF00FF);
-
-        Trace("- Create status bar");
-        cStatusBar = new cNoStatusBar();
-        cStatusBar.Create(picStatusbar);
-        cStatusBar.ImageList = imlStatusbar.hIml;
-        cStatusBar.AllowXPStyles = true;
-        cStatusBar.Font = new System.Drawing.Font(lblSong.FontFamily.ToString(), (float)lblSong.FontSize,
-            (lblSong.FontWeight > FontWeights.Regular ? System.Drawing.FontStyle.Bold : System.Drawing.FontStyle.Regular)
-            | (lblSong.FontStyle == FontStyles.Italic ? System.Drawing.FontStyle.Italic : System.Drawing.FontStyle.Regular));
         FixStatusBar();
 
         Trace("- Create menu");
@@ -1016,7 +1000,7 @@ public partial class frmSappy : Window, ISubclass
     private void Form_Resize(object sender, SizeChangedEventArgs e)
     {
         if (WindowState == WindowState.Minimized) return;
-        picChannels.Height = Height - picChannels.Margin.Top - picStatusbar.Height;
+        picChannels.Height = mainGrid.ActualHeight - picChannels.Margin.Top;
     }
 
     private void Form_Unload(object sender, RoutedEventArgs e)
@@ -1241,11 +1225,9 @@ public partial class frmSappy : Window, ISubclass
                 FileClose(File99);
                 return;
             }
-            cStatusBar.PanelText("simple", Properties.Resources._105);
-            picStatusbar.Refresh();
+            simple.Text = Properties.Resources._105;
             FindMST();
-            cStatusBar.PanelText("simple", "");
-            picStatusbar.Refresh();
+            simple.Text = "";
             if (SongTbl == 0) // still?
             {
                 MsgBox(Properties.Resources._206);
@@ -1260,7 +1242,7 @@ public partial class frmSappy : Window, ISubclass
         }
 
         // TODO: (NOT SUPPORTED): On Error Resume Next // until we get the translations
-        if (axe != "") cStatusBar.PanelText("simple", Properties.Resources._111);
+        if (axe != "") simple.Text = Properties.Resources._111;
         // TODO: (NOT SUPPORTED): On Error GoTo 0
 
         //TODO: Commenting these COM instructions because it didn't work.
@@ -1659,8 +1641,7 @@ public partial class frmSappy : Window, ISubclass
         {
             if ((File99.Position + 1) % 0x10000 == 1)
             {
-                cStatusBar.PanelText("frame", "0x" + Hex(File99.Position));
-                picStatusbar.Refresh();
+                frame.Text = "0x" + Hex(File99.Position);
             }
             byte[] buffer = new byte[sizeof(int)];
             File99.Read(buffer, 0, buffer.Length);
@@ -1901,22 +1882,8 @@ public partial class frmSappy : Window, ISubclass
     private void picStatusbar_DblClick(object sender, MouseButtonEventArgs e) { picStatusbar_DblClick(); }
     private void picStatusbar_DblClick()
     {
-        if ((int)picStatusbar.Tag >= 402 && (int)picStatusbar.Tag <= 436)
-        {
-            frmOptions.instance.Tag = "repsplz";
-            frmOptions.instance.ShowDialog();
-        }
-    }
-
-    private void picStatusbar_MouseMove(object sender, MouseEventArgs e) => CallMouseMove(e, this, picStatusbar_MouseMove);
-    private void picStatusbar_MouseMove(int Button, int Shift, double x, double y)
-    {
-        picStatusbar.Tag = x + IIf(ebrContainer.Visibility == Visibility.Hidden, ebrContainer.Width, 0);
-    }
-
-    private void picStatusBar_Paint(object sender, DrawingContext e)
-    {
-        cStatusBar?.Draw();
+        frmOptions.instance.Tag = "repsplz";
+        frmOptions.instance.ShowDialog();
     }
 
     private void picTop_Paint(object sender, RoutedEventArgs e)
@@ -1943,9 +1910,8 @@ public partial class frmSappy : Window, ISubclass
             2 => Properties.Resources._8002,
             _ => throw new NotImplementedException(),
         };
-        cStatusBar.PanelText("simple", statusText);
+        simple.Text = statusText;
         // If status = 1 Then cStatusBar.PanelText("simple") = cStatusBar.PanelText("simple") & " (" & progress & "/" & total & ")"
-        picStatusbar.Refresh();
     }
 
     private void SappyDecoder_SongFinish()
@@ -2023,12 +1989,11 @@ public partial class frmSappy : Window, ISubclass
         //   Caption = tl
         // End With
 
-        cStatusBar.PanelText("crud", loopsToGo.ToString());
-        cStatusBar.PanelText("time", Right("00" + TotalMinutes, 2) + ":" + Right("00" + TotalSeconds, 2) + " (" + SappyDecoder.Beats + ")");
-        cStatusBar.PanelText("frame", SappyDecoder.TotalTicks.ToString());
+        crud.Text = loopsToGo.ToString();
+        time.Text = Right("00" + TotalMinutes, 2) + ":" + Right("00" + TotalSeconds, 2) + " (" + SappyDecoder.Beats + ")";
+        frame.Text = SappyDecoder.TotalTicks.ToString();
 
         // If SappyDecoder.TotalTicks < 96 Then Debug.Print (96 - SappyDecoder.SappyChannels(2).WaitTicks) & " vs " & SappyDecoder.TotalTicks
-        picStatusbar.Refresh();
     }
 
     private void timPlay_Timer(object sender, EventArgs e)
@@ -2103,15 +2068,12 @@ public partial class frmSappy : Window, ISubclass
 
     public void FixStatusBar()
     {
-        try { cStatusBar.RemovePanel("simple"); } catch (Exception) { }
-        try { cStatusBar.RemovePanel("frame"); } catch (Exception) { }
-        try { cStatusBar.RemovePanel("crud"); } catch (Exception) { }
-        try { cStatusBar.RemovePanel("time"); } catch (Exception) { }
-        cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrNoBorders, "", bSpring: true, sKey: "simple");
-        cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrStandard, "0", bSpring: false, sKey: "frame");
-        cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrStandard, "0", 0, 24, false, sKey: "crud");
-        cStatusBar.AddPanel(ENSBRPanelStyleConstants.estbrStandard, "00:00 (0)", 1, 64, false, sKey: "time");
-        picStatusbar.Refresh();
+        simple.Text = "";
+        frame.Text = "0";
+        crud.Text = "0";
+        crudIcon.Source = imlStatusbar.ItemPicture(1).ToImageSource();
+        time.Text = "00:00 (0)";
+        timeIcon.Source = imlStatusbar.ItemPicture(2).ToImageSource();
     }
 
     private void PrepareRecording()
