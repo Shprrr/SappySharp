@@ -1,77 +1,7 @@
-using System.Runtime.InteropServices;
-using static VBExtension;
-using static VBConstants;
-using Microsoft.VisualBasic;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using static System.DateTime;
-using static System.Math;
-using System.Linq;
-using static Microsoft.VisualBasic.Collection;
+using System.Runtime.InteropServices;
 using static Microsoft.VisualBasic.Constants;
-using static Microsoft.VisualBasic.Conversion;
-using static Microsoft.VisualBasic.DateAndTime;
-using static Microsoft.VisualBasic.ErrObject;
-using static Microsoft.VisualBasic.FileSystem;
-using static Microsoft.VisualBasic.Financial;
-using static Microsoft.VisualBasic.Information;
-using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
-using static Microsoft.VisualBasic.VBMath;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-using SappySharp.Forms;
-using static modSappy;
-using static FMod;
-using static mdlFile;
-using static SapPlayer;
-using static MidiLib;
-using static mColorUtils;
-using static mTrace;
-using static SappySharp.Forms.frmSappy;
-using static SappySharp.Forms.frmTakeTrax;
-using static SappySharp.Forms.frmMakeTrax;
-using static SappySharp.Forms.frmAbout;
-using static SappySharp.Forms.frmTakeSamp;
-using static SappySharp.Forms.frmAssembler;
-using static SappySharp.Forms.frmOptions;
-using static SappySharp.Forms.frmMidiMapper;
-using static SappySharp.Forms.frmSelectMidiOut;
-using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.SChannels;
-using static SappySharp.Classes.SNotes;
-using static SappySharp.Classes.NoteInfo;
-using static SappySharp.Classes.SChannel;
-using static SappySharp.Classes.SNote;
-using static SappySharp.Classes.SSubroutines;
-using static SappySharp.Classes.SSubroutine;
-using static SappySharp.Classes.SappyEventQueue;
-using static SappySharp.Classes.SappyEvent;
-using static SappySharp.Classes.NoteInfos;
-using static SappySharp.Classes.SSamples;
-using static SappySharp.Classes.SSample;
-using static SappySharp.Classes.SDirects;
-using static SappySharp.Classes.SDirect;
-using static SappySharp.Classes.SDrumKit;
-using static SappySharp.Classes.SDrumKits;
-using static SappySharp.Classes.SInstruments;
-using static SappySharp.Classes.SInstrument;
-using static SappySharp.Classes.SKeyMaps;
-using static SappySharp.Classes.SKeyMap;
-using static SappySharp.Classes.clsSappyDecoder;
-using static SappySharp.Classes.gCommonDialog;
-using static SappySharp.Classes.pcMemDC;
-using static SappySharp.Classes.cVBALImageList;
-using static SappySharp.Classes.cRegistry;
 
 /// <summary>
 /// FMOD VB6 Module
@@ -289,99 +219,6 @@ static partial class FMod
     }
 
 
-    // FSOUND_REVERB_PROPERTIES
-    // FSOUND_Reverb_SetProperties, FSOUND_Reverb_GetProperties, FSOUND_REVERB_PROPERTYFLAGS
-
-    public class FSOUND_REVERB_PROPERTIES
-    {
-        //                                                     MIN     MAX    DEFAULT DESCRIPTION
-        public int Environment;                             // 0       25     0       sets all listener properties
-        public decimal EnvSize;                             // 1.0     100.0  7.5     environment size in meters
-        public decimal EnvDiffusion;                        // 0.0     1.0    1.0     environment diffusion
-        public int Room;                                    // -10000  0      -1000   room effect level (at mid frequencies)
-        public int RoomHF;                                  // -10000  0      -100    relative room effect level at high frequencies
-        public int RoomLF;                                  // -10000  0      0       relative room effect level at low frequencies
-        public decimal DecayTime;                           // 0.1     20.0   1.49    reverberation decay time at mid frequencies
-        public decimal DecayHFRatio;                        // 0.1     2.0    0.83    high-frequency to mid-frequency decay time ratio
-        public decimal DecayLFRatio;                        // 0.1     2.0    1.0     low-frequency to mid-frequency decay time ratio
-        public int Reflections;                             // -10000  1000   -2602   early reflections level relative to room effect
-        public decimal ReflectionsDelay;                    // 0.0     0.3    0.007   initial reflection delay time
-        public decimal[] ReflectionsPan = new decimal[3];   //                0,0,0   early reflections panning vector
-        public int Reverb;                                  // -1000   2000   200     late reverberation level relative to room effect
-        public decimal ReverbDelay;                         // 0.0     0.1    0.011   late reverberation delay time relative to initial reflection
-        public decimal[] ReverbPan = new decimal[3];        // 0,0,0   late reverberation panning vector
-        public decimal EchoTime;                            // .075    0.25   0.25    echo time
-        public decimal EchoDepth;                           // 0.0     1.0    0.0     echo depth
-        public decimal ModulationTime;                      // 0.04    4.0    0.25    modulation time
-        public decimal ModulationDepth;                     // 0.0     1.0    0.0     modulation depth
-        public decimal AirAbsorptionHF;                     // -100    0.0    -5.0    change in level per meter at high frequencies
-        public decimal HFReference;                         // 1000.0  20000  5000.0  reference high frequency (hz)
-        public decimal LFReference;                         // 20.0    1000.0 250.0   reference low frequency (hz)
-        public decimal RoomRolloffFactor;                   // 0.0     10.0   0.0     like FSOUND_3D_SetRolloffFactor but for room effect
-        public decimal Diffusion;                           // 0.0     100.0  100.0   Value that controls the echo density in the late reverberation decay. (xbox only)
-        public decimal Density;                             // 0.0     100.0  100.0   Value that controls the modal density in the late reverberation decay (xbox only)
-        public int flags;                                   // modifies the behavior of above properties
-    }
-
-
-    // FSOUND_REVERB_FLAGS
-    // Values for the Flags member of the FSOUND_REVERB_PROPERTIES structure.
-    [Flags]
-    public enum FSOUND_REVERB_PROPERTYFLAGS
-    {
-        FSOUND_REVERBFLAGS_DECAYTIMESCALE = 0x1 // EnvironmentSize affects reverberation decay time
-    , FSOUND_REVERBFLAGS_REFLECTIONSSCALE = 0x2 // EnvironmentSize affects reflection level
-    , FSOUND_REVERBFLAGS_REFLECTIONSDELAYSCALE = 0x4 // EnvironmentSize affects initial reflection delay time
-    , FSOUND_REVERBFLAGS_REVERBSCALE = 0x8 // EnvironmentSize affects reflections level
-    , FSOUND_REVERBFLAGS_REVERBDELAYSCALE = 0x10 // EnvironmentSize affects late reverberation delay time
-    , FSOUND_REVERBFLAGS_DECAYHFLIMIT = 0x20 // AirAbsorptionHF affects DecayHFRatio
-    , FSOUND_REVERBFLAGS_ECHOTIMESCALE = 0x40 // EnvironmentSize affects echo time
-    , FSOUND_REVERBFLAGS_MODULATIONTIMESCALE = 0x80 // EnvironmentSize affects modulation time
-    , FSOUND_REVERB_FLAGS_CORE0 = 0x100 // PS2 Only - Reverb is applied to CORE0 (hw voices 0-23)
-    , FSOUND_REVERB_FLAGS_CORE1 = 0x200 // PS2 Only - Reverb is applied to CORE1 (hw voices 24-47)
-    , FSOUND_REVERBFLAGS_DEFAULT = FSOUND_REVERBFLAGS_DECAYTIMESCALE | FSOUND_REVERBFLAGS_REFLECTIONSSCALE | FSOUND_REVERBFLAGS_REFLECTIONSDELAYSCALE | FSOUND_REVERBFLAGS_REVERBSCALE | FSOUND_REVERBFLAGS_REVERBDELAYSCALE | FSOUND_REVERBFLAGS_DECAYHFLIMIT | FSOUND_REVERB_FLAGS_CORE0 | FSOUND_REVERB_FLAGS_CORE1
-    }
-
-
-    // FSOUND_REVERB_CHANNELPROPERTIES
-    // Structure defining the properties for a reverb source, related to a FSOUND channel.
-    // FSOUND_Reverb_SetEnvironment, FSOUND_Reverb_SetEnvironmentAdvanced
-
-    public class FSOUND_REVERB_CHANNELPROPERTIES
-    {
-        public int Direct; // direct path level (at low and mid frequencies)
-        public int DirectHF; // relative direct path level at high frequencies
-        public int Room; // room effect level (at low and mid frequencies)
-        public int RoomHF; // relative room effect level at high frequencies
-        public int Obstruction; // main obstruction control (attenuation at high frequencies)
-        public decimal ObstructionLFRatio; // obstruction low-frequency level re. main control
-        public int Occlusion; // main occlusion control (attenuation at high frequencies)
-        public decimal OcclustionLFRatio; // occlusion low-frequency level re. main control
-        public decimal OcclusionRoomRatio; // relative occlusion control for room effect
-        public decimal OcclusionDirectRatio; // relative occlusion control for direct path
-        public int Exclusion; // main exlusion control (attenuation at high frequencies)
-        public decimal ExclusionLFRatio; // exclusion low-frequency level re. main control
-        public int OutsideVolumeHF; // outside sound cone level at high frequencies
-        public decimal DopplerFactor; // like DS3D flDopplerFactor but per source
-        public decimal RolloffFactor; // like DS3D flRolloffFactor but per source
-        public decimal RoomRolloffFactor; // like DS3D flRolloffFactor but for room effect
-        public decimal AirAbsorptionFactor; // multiplies AirAbsorptionHF member of FSOUND_REVERB_PROPERTIES
-        public int flags; // modifies the behavior of properties
-    }
-
-
-    // FSOUND_REVERB_CHANNELFLAGS
-    // Values for the Flags member of the FSOUND_REVERB_CHANNELPROPERTIES structure.
-    [Flags]
-    public enum FSOUND_REVERB_CHANNELFLAGS
-    {
-        FSOUND_REVERB_CHANNELFLAGS_DIRECTHFAUTO = 0x1 // Automatic setting of Direct due to distance from listener
-    , FSOUND_REVERB_CHANNELFLAGS_ROOMAUTO = 0x2 // Automatic setting of Room due to distance from listener
-    , FSOUND_REVERB_CHANNELFLAGS_ROOMHFAUTO = 0x4 // Automatic setting of RoomHF due to distance from listener
-    , FSOUND_REVERB_CHANNELFLAGS_DEFAULT = FSOUND_REVERB_CHANNELFLAGS_DIRECTHFAUTO | FSOUND_REVERB_CHANNELFLAGS_ROOMAUTO | FSOUND_REVERB_CHANNELFLAGS_ROOMHFAUTO
-    }
-
-
     // FSOUND_FX_MODES
     // These values are used with FSOUND_FX_Enable to enable DirectX 8 FX for a channel.
 
@@ -440,84 +277,9 @@ static partial class FMod
     }
 
 
-    // FSOUND_STREAM_NET_STATUS
-    // Status values for internet streams. Use FSOUND_Stream_Net_GetStatus to get the current status of an internet stream.
-
-    public enum FSOUND_STREAM_NET_STATUS
-    {
-        FSOUND_STREAM_NET_NOTCONNECTED // Stream hasn't connected yet
-    , FSOUND_STREAM_NET_CONNECTING // Stream is connecting to remote host
-    , FSOUND_STREAM_NET_BUFFERING // Stream is buffering data
-    , FSOUND_STREAM_NET_READY // Stream is ready to play
-    , FSOUND_STREAM_NET_ERROR // Stream has suffered a fatal error
-    }
-
-
-    // FSOUND_TAGFIELD_TYPE
-    // Describes the type of a particular tag field.
-    // See FSOUND_Stream_GetNumTagFields, FSOUND_Stream_GetTagField, FSOUND_Stream_FindTagField
-
-    public enum FSOUND_TAGFIELD_TYPE
-    {
-        FSOUND_TAGFIELD_VORBISCOMMENT = 0 // A vorbis comment
-    , FSOUND_TAGFIELD_ID3V1 // Part of an ID3v1 tag
-    , FSOUND_TAGFIELD_ID3V2 // An ID3v2 frame
-    , FSOUND_TAGFIELD_SHOUTCAST // A SHOUTcast header line
-    , FSOUND_TAGFIELD_ICECAST // An Icecast header line
-    , FSOUND_TAGFIELD_ASF // An Advanced Streaming Format header line
-    }
-
-
-    // FSOUND_STATUS_FLAGS
-    // These values describe the protocol and format of an internet stream. Use FSOUND_Stream_Net_GetStatus to retrieve this information for an open internet stream.
-
-    public enum FSOUND_STATUS_FLAGS
-    {
-        FSOUND_PROTOCOL_SHOUTCAST = 0x1
-    , FSOUND_PROTOCOL_ICECAST = 0x2
-    , FSOUND_PROTOCOL_HTTP = 0x4
-    , FSOUND_FORMAT_MPEG = 0x10000
-    , FSOUND_FORMAT_OGGVORBIS = 0x20000
-    }
-
-    // FSOUND_TOC_TAG
-    // FSOUND_Stream_Open, FSOUND_Stream_FindTagField
-
-    public class FSOUND_TOC_TAG
-    {
-        public byte[] TagName = new byte[3]; // The string "TOC" (4th character is 0), just in case this structure is accidentally treated as a string.
-        public int NumTracks; // The number of tracks on the CD.
-        public int[] Min = new int[99]; // The start offset of each track in minutes.
-        public int[] Sec = new int[99]; // The start offset of each track in seconds.
-        public int[] Frame = new int[99]; // The start offset of each track in frames.
-    }
-
-
     // /* ================================== */
     // /* Initialization / Global functions. */
     // /* ================================== */
-
-
-    // PRE - FSOUND_Init functions. These cant be called after FSOUND_Init is
-    // called (they will fail). They set up FMOD system functionality.
-
-
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_SetOutput@4")]
-    public static extern byte FSOUND_SetOutput(FSOUND_OUTPUTTYPES outputtype);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetDriver@4")]
-    public static partial byte FSOUND_SetDriver(int driver);
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_SetMixer@4")]
-    public static extern byte FSOUND_SetMixer(FSOUND_MIXERTYPES mixer);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetBufferSize@4")]
-    public static partial byte FSOUND_SetBufferSize(int lenms);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetHWND@4")]
-    public static partial byte FSOUND_SetHWND(int hwnd);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetMinHardwareChannels@4")]
-    public static partial byte FSOUND_SetMinHardwareChannels(int min);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetMaxHardwareChannels@4")]
-    public static partial byte FSOUND_SetMaxHardwareChannels(int min);
-    [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_SetMemorySystem@20")]
-    public static partial byte FSOUND_SetMemorySystem(int pool, int poollen, int useralloc, int userrealloc, int userfree);
 
 
     // Main initialization / closedown functions.
@@ -995,23 +757,6 @@ static partial class FMod
     public static partial int FSOUND_DSP_GetBufferLengthTotal();
     [LibraryImport("fmod.dll", EntryPoint = "_FSOUND_DSP_GetSpectrum@0")]
     public static partial int FSOUND_DSP_GetSpectrum();
-
-    // /* =================================================================================== */
-    // /* Reverb functions. (eax2/eax3 reverb)  (ONLY SUPPORTED ON WIN32 W/ FSOUND_HW3D FLAG) */
-    // /* =================================================================================== */
-
-
-    // See top of file for definitions and information on the reverb parameters.
-
-    // The FSOUND_REVERB_PRESETS have not been included in VB yet so they cannot yet be used here...
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_Reverb_SetProperties@4")]
-    public static extern byte FSOUND_Reverb_SetProperties(ref FSOUND_REVERB_PROPERTIES prop);
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_Reverb_GetProperties@4")]
-    public static extern byte FSOUND_Reverb_GetProperties(ref FSOUND_REVERB_PROPERTIES prop);
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_Reverb_SetChannelProperties@8")]
-    public static extern byte FSOUND_Reverb_SetChannelProperties(int channel, ref FSOUND_REVERB_CHANNELPROPERTIES prop);
-    [DllImport("fmod.dll", EntryPoint = "_FSOUND_Reverb_GetChannelProperties@8")]
-    public static extern byte FSOUND_Reverb_GetChannelProperties(int channel, ref FSOUND_REVERB_CHANNELPROPERTIES prop);
 
     // /* ===================================================== */
     // /* Recording functions  (ONLY SUPPORTED IN WIN32, WINCE) */

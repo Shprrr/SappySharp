@@ -1,79 +1,9 @@
-using System.Runtime.InteropServices;
-using static VBExtension;
-using static VBConstants;
-using Microsoft.VisualBasic;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using static System.DateTime;
-using static System.Math;
-using System.Linq;
-using static Microsoft.VisualBasic.Collection;
-using static Microsoft.VisualBasic.Constants;
-using static Microsoft.VisualBasic.Conversion;
-using static Microsoft.VisualBasic.DateAndTime;
-using static Microsoft.VisualBasic.ErrObject;
-using static Microsoft.VisualBasic.FileSystem;
-using static Microsoft.VisualBasic.Financial;
-using static Microsoft.VisualBasic.Information;
-using static Microsoft.VisualBasic.Interaction;
-using static Microsoft.VisualBasic.Strings;
-using static Microsoft.VisualBasic.VBMath;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-using SappySharp.Forms;
-using static modSappy;
-using static FMod;
-using static mdlFile;
-using static SapPlayer;
-using static MidiLib;
-using static mColorUtils;
-using static mTrace;
-using static SappySharp.Forms.frmSappy;
-using static SappySharp.Forms.frmTakeTrax;
-using static SappySharp.Forms.frmMakeTrax;
-using static SappySharp.Forms.frmAbout;
-using static SappySharp.Forms.frmTakeSamp;
-using static SappySharp.Forms.frmAssembler;
-using static SappySharp.Forms.frmOptions;
-using static SappySharp.Forms.frmMidiMapper;
-using static SappySharp.Forms.frmSelectMidiOut;
-using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.SChannels;
-using static SappySharp.Classes.SNotes;
-using static SappySharp.Classes.NoteInfo;
-using static SappySharp.Classes.SChannel;
-using static SappySharp.Classes.SNote;
-using static SappySharp.Classes.SSubroutines;
-using static SappySharp.Classes.SSubroutine;
-using static SappySharp.Classes.SappyEventQueue;
-using static SappySharp.Classes.SappyEvent;
-using static SappySharp.Classes.NoteInfos;
-using static SappySharp.Classes.SSamples;
-using static SappySharp.Classes.SSample;
-using static SappySharp.Classes.SDirects;
-using static SappySharp.Classes.SDirect;
-using static SappySharp.Classes.SDrumKit;
-using static SappySharp.Classes.SDrumKits;
-using static SappySharp.Classes.SInstruments;
-using static SappySharp.Classes.SInstrument;
-using static SappySharp.Classes.SKeyMaps;
-using static SappySharp.Classes.SKeyMap;
-using static SappySharp.Classes.clsSappyDecoder;
-using static SappySharp.Classes.gCommonDialog;
-using static SappySharp.Classes.pcMemDC;
-using static SappySharp.Classes.cVBALImageList;
-using static SappySharp.Classes.cRegistry;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 using stdole;
+using static Microsoft.VisualBasic.Information;
+using static Microsoft.VisualBasic.Strings;
+using static VBConstants;
 
 namespace SappySharp.Classes;
 
@@ -91,11 +21,6 @@ public partial class cVBALImageList : IDisposable
     // -----------
     // API
     // -----------
-    // General:
-    [LibraryImport("user32")]
-    private static partial int GetWindowWord(int hwnd, int nIndex);
-    private const int GWW_HINSTANCE = -6;
-
     // GDI object functions:
     [LibraryImport("gdi32")]
     private static partial int SelectObject(int hdc, int hObject);
@@ -120,63 +45,16 @@ public partial class cVBALImageList : IDisposable
     private const int BITSPIXEL = 12;
     private const int LOGPIXELSX = 88; // Logical pixels/inch in X
     private const int LOGPIXELSY = 90; // Logical pixels/inch in Y
-    // System metrics:
-    [LibraryImport("user32")]
-    private static partial int GetSystemMetrics(int nIndex);
-    private const int SM_CXICON = 11;
-    private const int SM_CYICON = 12;
-    private const int SM_CXFRAME = 32;
-    private const int SM_CYCAPTION = 4;
-    private const int SM_CYFRAME = 33;
-    private const int SM_CYBORDER = 6;
-    private const int SM_CXBORDER = 5;
 
     // Region paint and fill functions:
     [LibraryImport("gdi32")]
-    private static partial int PaintRgn(int hdc, int hRgn);
-    [LibraryImport("gdi32")]
-    private static partial int ExtFloodFill(int hdc, int x, int y, int crColor, int wFillType);
-    private const int FLOODFILLBORDER = 0;
-    private const int FLOODFILLSURFACE = 1;
-    [LibraryImport("gdi32")]
     private static partial int GetPixel(int hdc, int x, int y);
-
-    // Pen functions:
-    [LibraryImport("gdi32")]
-    private static partial int CreatePen(int nPenStyle, int nWidth, int crColor);
-    private const int PS_DASH = 1;
-    private const int PS_DASHDOT = 3;
-    private const int PS_DASHDOTDOT = 4;
-    private const int PS_DOT = 2;
-    private const int PS_SOLID = 0;
-    private const int PS_NULL = 5;
 
     // Brush functions:
     [LibraryImport("gdi32")]
     private static partial int CreateSolidBrush(int crColor);
-    [LibraryImport("gdi32")]
-    private static partial int CreatePatternBrush(int hBitmap);
-
-    // Line functions:
-    [LibraryImport("gdi32")]
-    private static partial int LineTo(int hdc, int x, int y);
-    class POINTAPI
-    {
-        public int x;
-        public int y;
-    }
-    [DllImport("gdi32")]
-    private static extern int MoveToEx(int hdc, int x, int y, ref POINTAPI lpPoint);
 
     // Colour functions:
-    [LibraryImport("gdi32")]
-    private static partial int SetTextColor(int hdc, int crColor);
-    [LibraryImport("gdi32")]
-    private static partial int SetBkColor(int hdc, int crColor);
-    [LibraryImport("gdi32")]
-    private static partial int SetBkMode(int hdc, int nBkMode);
-    private const int OPAQUE = 2;
-    private const int TRANSPARENT = 1;
     [LibraryImport("user32")]
     private static partial int GetSysColor(int nIndex);
     private const int COLOR_ACTIVEBORDER = 10;
@@ -203,12 +81,6 @@ public partial class cVBALImageList : IDisposable
     private const int COLOR_WINDOWFRAME = 6;
     private const int COLOR_WINDOWTEXT = 8;
     private const int COLORONCOLOR = 3;
-
-    // Shell Extract icon functions:
-    [DllImport("shell32.dll", EntryPoint = "FindExecutableA")]
-    private static extern int FindExecutable(string lpFile, string lpDirectory, string lpResult);
-    [DllImport("shell32.dll", EntryPoint = "ExtractIconA")]
-    private static extern int ExtractIcon(int hInst, string lpszExeFileName, int nIconIndex);
 
     // Icon functions:
     [LibraryImport("user32")]
@@ -237,22 +109,6 @@ public partial class cVBALImageList : IDisposable
     private const int SRCPAINT = 0xEE0086;
     private const int BLACKNESS = 0x42;
     private const int WHITENESS = 0xFF0062;
-    [LibraryImport("gdi32")]
-    private static partial int PatBlt(int hdc, int x, int y, int nWidth, int nHeight, int dwRop);
-    [LibraryImport("user32", EntryPoint = "LoadBitmapA")]
-    private static partial int LoadBitmapBynum(int hInstance, int lpBitmapName);
-    class BITMAP // 14 bytes
-    {
-        public int bmType;
-        public int bmWidth;
-        public int bmHeight;
-        public int bmWidthBytes;
-        public int bmPlanes;
-        public int bmBitsPixel;
-        public int bmBits;
-    }
-    [DllImport("gdi32")]
-    private static extern int CreateBitmapIndirect(ref BITMAP lpBitmap);
 
     // Text functions:
     class RECT
@@ -262,131 +118,13 @@ public partial class cVBALImageList : IDisposable
         public int Right;
         public int Bottom;
     }
-    [DllImport("user32")]
-    private static extern int PtInRect(ref RECT lpRect, int ptX, int ptY);
-    [DllImport("user32", EntryPoint = "DrawTextA")]
-    private static extern int DrawText(int hdc, string lpStr, int nCount, ref RECT lpRect, int wFormat);
-    private const int DT_BOTTOM = 0x8;
-    private const int DT_CENTER = 0x1;
-    private const int DT_LEFT = 0x0;
-    private const int DT_CALCRECT = 0x400;
-    private const int DT_WORDBREAK = 0x10;
-    private const int DT_VCENTER = 0x4;
-    private const int DT_TOP = 0x0;
-    private const int DT_TABSTOP = 0x80;
-    private const int DT_SINGLELINE = 0x20;
-    private const int DT_RIGHT = 0x2;
-    private const int DT_NOCLIP = 0x100;
-    private const int DT_INTERNAL = 0x1000;
-    private const int DT_EXTERNALLEADING = 0x200;
-    private const int DT_EXPANDTABS = 0x40;
-    private const int DT_CHARSTREAM = 4;
-    private const int DT_NOPREFIX = 0x800;
-    class DRAWTEXTPARAMS
-    {
-        public int cbSize;
-        public int iTabLength;
-        public int iLeftMargin;
-        public int iRightMargin;
-        public int uiLengthDrawn;
-    }
-    [DllImport("user32", EntryPoint = "DrawTextExA")]
-    private static extern int DrawTextEx(int hdc, string lpsz, int n, ref RECT lpRect, int un, ref DRAWTEXTPARAMS lpDrawTextParams);
-    [DllImport("user32", EntryPoint = "DrawTextExA")]
-    private static extern int DrawTextExAsNull(int hdc, string lpsz, int n, ref RECT lpRect, int un, int lpDrawTextParams);
-    private const int DT_EDITCONTROL = 0x2000;
-    private const int DT_PATH_ELLIPSIS = 0x4000;
-    private const int DT_END_ELLIPSIS = 0x8000;
-    private const int DT_MODIFYSTRING = 0x10000;
-    private const int DT_RTLREADING = 0x20000;
-    private const int DT_WORD_ELLIPSIS = 0x40000;
 
-    class SIZEAPI
-    {
-        public int cX;
-        public int cY;
-    }
-    [DllImport("gdi32", EntryPoint = "GetTextExtentPoint32A")]
-    private static extern int GetTextExtentPoint32(int hdc, string lpsz, int cbString, ref SIZEAPI lpSize);
-    [LibraryImport("gdi32")]
-    private static partial int GetStockObject(int nIndex);
-    private const int ANSI_FIXED_FONT = 11;
-    private const int ANSI_VAR_FONT = 12;
-    private const int SYSTEM_FONT = 13;
-    private const int DEFAULT_GUI_FONT = 17; // win95 only
     [DllImport("user32")]
     private static extern int FillRect(int hdc, ref RECT lpRect, int hBrush);
-    [LibraryImport("gdi32")]
-    private static partial int Rectangle(int hdc, int X1, int y1, int x2, int y2);
-    [DllImport("user32")]
-    private static extern int DrawEdge(int hdc, ref RECT qrc, int edge, int grfFlags);
-    private const int BF_LEFT = 1;
-    private const int BF_TOP = 2;
-    private const int BF_RIGHT = 4;
-    private const int BF_BOTTOM = 8;
-    private const int BF_RECT = BF_LEFT | BF_TOP | BF_RIGHT | BF_BOTTOM;
-    private const int BF_MIDDLE = 2048;
-    private const int BDR_SUNKENINNER = 8;
-    private const int BDR_SUNKENOUTER = 2;
-    private const int BDR_RAISEDOUTER = 1;
-    private const int BDR_RAISEDINNER = 4;
-
-    [LibraryImport("user32")]
-    private static partial int ShowWindow(int hwnd, int nCmdShow);
-    private const int SW_SHOWNOACTIVATE = 4;
 
     // Scrolling and region functions:
-    [DllImport("user32")]
-    private static extern int ScrollDC(int hdc, int dx, int dy, ref RECT lprcScroll, ref RECT lprcClip, int hrgnUpdate, ref RECT lprcUpdate);
-    [LibraryImport("user32")]
-    private static partial int SetWindowRgn(int hwnd, int hRgn, int bRedraw);
-    [LibraryImport("gdi32")]
-    private static partial int SelectClipRgn(int hdc, int hRgn);
-    [LibraryImport("gdi32")]
-    private static partial int CreateRectRgn(int X1, int y1, int x2, int y2);
-    [DllImport("gdi32")]
-    private static extern int CreateRectRgnIndirect(ref RECT lpRect);
-    [DllImport("gdi32")]
-    private static extern int CreatePolyPolygonRgn(ref POINTAPI lpPoint, ref int lpPolyCounts, int nCount, int nPolyFillMode);
-    [DllImport("gdi32")]
-    private static extern void CreatePolygonRgn(ref POINTAPI lpPoint, int nCount, int nPolyFillMode);
-    [LibraryImport("gdi32")]
-    private static partial int SaveDC(int hdc);
-    [LibraryImport("gdi32")]
-    private static partial int RestoreDC(int hdc, int hSavedDC);
     [DllImport("gdi32", EntryPoint = "CreateDCA")]
     private static extern int CreateDCAsNull(string lpDriverName, int lpDeviceName, int lpOutput, int lpInitData);
-
-    private const int LF_FACESIZE = 32;
-    class LOGFONT
-    {
-        public int lfHeight;
-        public int lfWidth;
-        public int lfEscapement;
-        public int lfOrientation;
-        public int lfWeight;
-        public byte lfItalic;
-        public byte lfUnderline;
-        public byte lfStrikeOut;
-        public byte lfCharSet;
-        public byte lfOutPrecision;
-        public byte lfClipPrecision;
-        public byte lfQuality;
-        public byte lfPitchAndFamily;
-        public byte[] lfFaceName = new byte[LF_FACESIZE];
-    }
-    private const int FW_NORMAL = 400;
-    private const int FW_BOLD = 700;
-    private const int FF_DONTCARE = 0;
-    private const int DEFAULT_QUALITY = 0;
-    private const int DEFAULT_PITCH = 0;
-    private const int DEFAULT_CHARSET = 1;
-    [DllImport("gdi32", EntryPoint = "CreateFontIndirectA")]
-    private static extern int CreateFontIndirect(ref LOGFONT lpLogFont);
-    [LibraryImport("kernel32")]
-    private static partial int MulDiv(int nNumber, int nNumerator, int nDenominator);
-    [DllImport("user32")]
-    private static extern int DrawFocusRect(int hdc, ref RECT lpRect);
 
     [LibraryImport("user32", EntryPoint = "DrawStateA")]
     private static partial int DrawState(int hdc, int hBrush, int lpDrawStateProc, int lParam, int wParam, int x, int y, int cX, int cY, int fuFlags);
@@ -426,16 +164,6 @@ public partial class cVBALImageList : IDisposable
     private static partial int ImageList_Add(int hImageList, int hbmImage, ref int hBmMask);
     [LibraryImport("COMCTL32")]
     private static partial int ImageList_Remove(int hImageList, int ImgIndex);
-    class IMAGEINFO
-    {
-        public int hBitmapImage;
-        public int hBitmapMask;
-        public int cPlanes;
-        public int cBitsPerPixel;
-        public RECT rcImage;
-    }
-    [DllImport("COMCTL32.DLL")]
-    private static extern int ImageList_GetImageInfo(int hIml, int i, ref IMAGEINFO pImageInfo);
     [LibraryImport("COMCTL32")]
     private static partial int ImageList_AddIcon(int hIml, int hIcon);
     [LibraryImport("COMCTL32")]
@@ -464,8 +192,6 @@ public partial class cVBALImageList : IDisposable
     private const int ILD_IMAGE = 0x20;
     private const int ILD_ROP = 0x40;
     private const int ILD_OVERLAYMASK = 3840;
-    [DllImport("COMCTL32.DLL")]
-    private static extern int ImageList_GetImageRect(int hIml, int i, ref RECT prcImage);
     // Messages:
     [LibraryImport("COMCTL32")]
     private static partial int ImageList_DrawEx(int hIml, int i, int hdcDst, int x, int y, int dx, int dy, int rgbBk, int rgbFg, int fStyle);
@@ -485,14 +211,6 @@ public partial class cVBALImageList : IDisposable
     [LibraryImport("COMCTL32")]
     private static partial int ImageList_Copy(int himlDst, int iDst, int himlSrc, int iSrc, int uFlags);
 
-    [DllImport("kernel32", EntryPoint = "GetTempFileNameA")]
-    private static extern int GetTempFileName(string lpszPath, string lpPrefixString, int wUnique, string lpTempFileName);
-    [DllImport("kernel32", EntryPoint = "GetTempPathA")]
-    private static extern int GetTempPath(int nBufferLength, string lpBuffer);
-    int MAX_PATH = 260;
-    [DllImport("kernel32", EntryPoint = "lstrlenA")]
-    private static extern int lstrlen(string lpString);
-
     struct PictDesc
     {
         public int cbSizeofStruct;
@@ -507,12 +225,6 @@ public partial class cVBALImageList : IDisposable
     // -----------
     // ENUMS
     // -----------
-    public enum eilIconState
-    {
-        Normal = 0
-    , Disabled = 1
-    }
-
     public enum ImageTypes
     {
         IMAGE_BITMAP = 0
@@ -1072,95 +784,6 @@ public partial class cVBALImageList : IDisposable
         pEnsureKeys();
 
         return _AddFromHandle;
-    }
-    public int AddFromPictureBox(int hdc, ref dynamic pic, dynamic vKey, int LeftPixels = 0, int TopPixels = 0, int lBackColor = -1)
-    {
-        BITMAP tBM = null;
-        int lAColor = 0;
-        RECT tR = null;
-
-        // Adds an image or series of images from an area of a PictureBox
-        // or other Device Context:
-        int lR = -1;
-        if (hIml != 0)
-        {
-            // Create a DC to hold the bitmap to transfer into the image list:
-            int lHDC = CreateCompatibleDC(hdc);
-            if (lHDC != 0)
-            {
-                int lhBmp = CreateCompatibleBitmap(hdc, m_lIconSizeX, m_lIconSizeY);
-                if (lhBmp != 0)
-                {
-                    // Get the backcolor to use:
-                    if (lBackColor == -1)
-                    {
-                        // None specified, use the colour at 0,0:
-                        lBackColor = GetPixel(pic.hdc, 0, 0);
-                    }
-                    else
-                    {
-                        // Try to get the specified backcolor:
-                        if (OleTranslateColor(lBackColor, 0, ref lAColor) != 0)
-                        {
-                            // Failed- use default of silver
-                            lBackColor = 0xC0C0C0;
-                        }
-                        else
-                        {
-                            // Set to GDI version of OLE Color
-                            lBackColor = lAColor;
-                        }
-                    }
-                    // Select the bitmap into the DC
-                    int lhBmpOld = SelectObject(lHDC, lhBmp);
-                    // Clear the background:
-                    int hBrush = CreateSolidBrush(lBackColor);
-                    tR.Right = m_lIconSizeX; tR.Bottom = m_lIconSizeY;
-                    FillRect(lHDC, ref tR, hBrush);
-                    DeleteObject(hBrush);
-
-                    // Get the source picture's dimension:
-                    dynamic lpObject = tBM;
-                    GetObjectAPI(pic.Picture.Handle, Marshal.SizeOf(tBM), ref lpObject);
-                    tBM = lpObject;
-                    int lW = 16;
-                    int lH = 16;
-                    if (lW + LeftPixels > tBM.bmWidth)
-                    {
-                        lW = tBM.bmWidth - LeftPixels;
-                    }
-                    if (lH + TopPixels > tBM.bmHeight)
-                    {
-                        lH = tBM.bmHeight - TopPixels;
-                    }
-                    if (lW > 0 && lH > 0)
-                    {
-                        // Blt from the picture into the bitmap:
-                        lR = BitBlt(lHDC, 0, 0, lW, lH, hdc, LeftPixels, TopPixels, SRCCOPY);
-                        Debug.Assert(lR != 0);
-                    }
-
-                    // We now have the image in the bitmap, so select it out of the DC:
-                    SelectObject(lHDC, lhBmpOld);
-                    // And add it to the image list:
-                    AddFromHandle(lhBmp, ImageTypes.IMAGE_BITMAP, vKey, lBackColor);
-
-                    DeleteObject(lhBmp);
-                }
-                // Clear up the DC:
-                DeleteDC(lHDC);
-            }
-        }
-
-        if (lR != -1)
-        {
-            SetKey(lR, vKey);
-        }
-
-        int _AddFromPictureBox = lR + 1;
-        pEnsureKeys();
-
-        return _AddFromPictureBox;
     }
     private void SetKey(int lIndex, dynamic vKey)
     {

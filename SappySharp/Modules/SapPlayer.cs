@@ -1,97 +1,11 @@
-using System.Runtime.InteropServices;
-using static VBExtension;
-using static VBConstants;
-using Microsoft.VisualBasic;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using static System.DateTime;
-using static System.Math;
-using System.Linq;
-using static Microsoft.VisualBasic.Collection;
-using static Microsoft.VisualBasic.Constants;
-using static Microsoft.VisualBasic.Conversion;
-using static Microsoft.VisualBasic.DateAndTime;
-using static Microsoft.VisualBasic.ErrObject;
-using static Microsoft.VisualBasic.FileSystem;
-using static Microsoft.VisualBasic.Financial;
-using static Microsoft.VisualBasic.Information;
-using static Microsoft.VisualBasic.Interaction;
-using static Microsoft.VisualBasic.Strings;
-using static Microsoft.VisualBasic.VBMath;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-using SappySharp.Forms;
-using static modSappy;
-using static FMod;
 using static mdlFile;
-using static SapPlayer;
-using static MidiLib;
-using static mColorUtils;
-using static mTrace;
-using static SappySharp.Forms.frmSappy;
-using static SappySharp.Forms.frmTakeTrax;
-using static SappySharp.Forms.frmMakeTrax;
-using static SappySharp.Forms.frmAbout;
-using static SappySharp.Forms.frmTakeSamp;
-using static SappySharp.Forms.frmAssembler;
-using static SappySharp.Forms.frmOptions;
-using static SappySharp.Forms.frmMidiMapper;
-using static SappySharp.Forms.frmSelectMidiOut;
-using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.SChannels;
-using static SappySharp.Classes.SNotes;
-using static SappySharp.Classes.NoteInfo;
-using static SappySharp.Classes.SChannel;
-using static SappySharp.Classes.SNote;
-using static SappySharp.Classes.SSubroutines;
-using static SappySharp.Classes.SSubroutine;
-using static SappySharp.Classes.SappyEventQueue;
-using static SappySharp.Classes.SappyEvent;
-using static SappySharp.Classes.NoteInfos;
-using static SappySharp.Classes.SSamples;
-using static SappySharp.Classes.SSample;
-using static SappySharp.Classes.SDirects;
-using static SappySharp.Classes.SDirect;
-using static SappySharp.Classes.SDrumKit;
-using static SappySharp.Classes.SDrumKits;
-using static SappySharp.Classes.SInstruments;
-using static SappySharp.Classes.SInstrument;
-using static SappySharp.Classes.SKeyMaps;
-using static SappySharp.Classes.SKeyMap;
-using static SappySharp.Classes.clsSappyDecoder;
-using static SappySharp.Classes.gCommonDialog;
-using static SappySharp.Classes.pcMemDC;
-using static SappySharp.Classes.cVBALImageList;
-using static SappySharp.Classes.cRegistry;
+using static Microsoft.VisualBasic.FileSystem;
 
 static class SapPlayer
 {
     public static string[,] NoiseWaves = new string[2, 10];
     public static bool Details = false;
-    public class SappyMasterTableEntry
-    {
-        public int pSong;
-        public int wPriority1;
-        public int wPriority2;
-    }
-    public class SappySongHeader
-    {
-        public byte wTracks; // Integer
-        public byte wBlocks;
-        // w1 As Integer
-        public byte wPriority;
-        public byte wReverb;
-        public int pInstrumentBank;
-    }
     public class SappyInstrumentHeader
     {
         public byte bChannel;
@@ -107,42 +21,6 @@ static class SapPlayer
         public byte bSustain;
         public byte bRelease;
     }
-    public class SappySquare1Header
-    {
-        public byte bRaw1;
-        public byte bRaw2;
-        public byte bDutyCycle;
-        public byte b3;
-        public byte b4;
-        public byte b5;
-        public byte bAttack;
-        public byte bDecay;
-        public byte bSustain;
-        public byte bRelease;
-    }
-    public class SappySquare2Header
-    {
-        public byte b0;
-        public byte b1;
-        public byte bDutyCycle;
-        public byte b3;
-        public byte b4;
-        public byte b5;
-        public byte bAttack;
-        public byte bDecay;
-        public byte bSustain;
-        public byte bRelease;
-    }
-    public class SappyWaveHeader
-    {
-        public byte b0;
-        public byte b1;
-        public int pSample;
-        public byte bAttack;
-        public byte bDecay;
-        public byte bSustain;
-        public byte bRelease;
-    }
     public class SappyNoiseHeader
     {
         public byte b0;
@@ -155,19 +33,6 @@ static class SapPlayer
         public byte bDecay;
         public byte bSustain;
         public byte bRelease;
-    }
-    public class SappyInvalidHeader
-    {
-        public byte b0;
-        public byte b1;
-        public byte b2;
-        public byte b3;
-        public byte b4;
-        public byte b5;
-        public byte b6;
-        public byte b7;
-        public byte b8;
-        public byte b9;
     }
     public class SappyDrumKitHeader
     {
@@ -217,14 +82,6 @@ static class SapPlayer
     // 5 - ??
 
 
-    public static SappySongHeader ReadSongHead(int filenumber, int offset = -1)
-    {
-        Array _ReadSongHead = new SappySongHeader[1];
-        ReadOffset(filenumber, offset);
-        FileGet(filenumber, ref _ReadSongHead, ReadOffset(filenumber) + 1);
-        ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappySongHeader)_ReadSongHead.GetValue(0);
-    }
     public static SappyInstrumentHeader ReadInstrumentHead(int filenumber, int offset = -1)
     {
         Array _ReadInstrumentHead = new SappyInstrumentHeader[1];
@@ -257,30 +114,6 @@ static class SapPlayer
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
         return (SappyMultiHeader)_ReadMultiHead.GetValue(0);
     }
-    public static SappySquare1Header ReadSquare1Head(int filenumber, int offset = -1)
-    {
-        Array _ReadSquare1Head = new SappySquare1Header[1];
-        ReadOffset(filenumber, offset);
-        FileGet(filenumber, ref _ReadSquare1Head, ReadOffset(filenumber) + 1);
-        ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappySquare1Header)_ReadSquare1Head.GetValue(0);
-    }
-    public static SappySquare1Header ReadSquare2Head(int filenumber, int offset = -1)
-    {
-        Array _ReadSquare2Head = new SappySquare1Header[1];
-        ReadOffset(filenumber, offset);
-        FileGet(filenumber, ref _ReadSquare2Head, ReadOffset(filenumber) + 1);
-        ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappySquare1Header)_ReadSquare2Head.GetValue(0);
-    }
-    public static SappyWaveHeader ReadWaveHead(int filenumber, int offset = -1)
-    {
-        Array _ReadWaveHead = new SappyWaveHeader[1];
-        ReadOffset(filenumber, offset);
-        FileGet(filenumber, ref _ReadWaveHead, ReadOffset(filenumber) + 1);
-        ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyWaveHeader)_ReadWaveHead.GetValue(0);
-    }
     public static SappyNoiseHeader ReadNoiseHead(int filenumber, int offset = -1)
     {
         Array _ReadNoiseHead = new SappyNoiseHeader[1];
@@ -288,14 +121,6 @@ static class SapPlayer
         FileGet(filenumber, ref _ReadNoiseHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
         return (SappyNoiseHeader)_ReadNoiseHead.GetValue(0);
-    }
-    public static SappyInvalidHeader ReadInvalidHead(int filenumber, int offset = -1)
-    {
-        Array _ReadInvalidHead = new SappyInvalidHeader[1];
-        ReadOffset(filenumber, offset);
-        FileGet(filenumber, ref _ReadInvalidHead, ReadOffset(filenumber) + 1);
-        ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyInvalidHeader)_ReadInvalidHead.GetValue(0);
     }
     public static SappySampleHeader ReadSampleHead(int filenumber, int offset = -1)
     {

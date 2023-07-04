@@ -1,90 +1,39 @@
-using System.Runtime.InteropServices;
-using static VBExtension;
-using static VBConstants;
-using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using static System.DateTime;
+using System.Windows.Forms.Integration;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using System.Xml;
+using PortControlLibrary;
+using SappySharp.Classes;
+using SappySharp.UserControls;
+using SSubTimer6;
+using stdole;
+using vbalExplorerBarLib6;
 using static System.Math;
-using System.Linq;
-using static Microsoft.VisualBasic.Collection;
+using static mColorUtils;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
-using static Microsoft.VisualBasic.DateAndTime;
-using static Microsoft.VisualBasic.ErrObject;
-using static SappySharp.VBFileSystem;
-using static Microsoft.VisualBasic.Financial;
 using static Microsoft.VisualBasic.Information;
 using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
-using static Microsoft.VisualBasic.VBMath;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-using SappySharp.Forms;
-using static modSappy;
-using static FMod;
-using static mdlFile;
-using static SapPlayer;
 using static MidiLib;
-using static mColorUtils;
+using static modSappy;
 using static mTrace;
-using static SappySharp.Forms.frmSappy;
-using static SappySharp.Forms.frmTakeTrax;
-using static SappySharp.Forms.frmMakeTrax;
-using static SappySharp.Forms.frmAbout;
-using static SappySharp.Forms.frmTakeSamp;
-using static SappySharp.Forms.frmAssembler;
-using static SappySharp.Forms.frmOptions;
-using static SappySharp.Forms.frmMidiMapper;
-using static SappySharp.Forms.frmSelectMidiOut;
-using static SappySharp.Forms.frmInputBox;
-using static SappySharp.Classes.SChannels;
-using static SappySharp.Classes.SNotes;
-using static SappySharp.Classes.NoteInfo;
-using static SappySharp.Classes.SChannel;
-using static SappySharp.Classes.SNote;
-using static SappySharp.Classes.SSubroutines;
-using static SappySharp.Classes.SSubroutine;
-using static SappySharp.Classes.SappyEventQueue;
-using static SappySharp.Classes.SappyEvent;
-using static SappySharp.Classes.NoteInfos;
-using static SappySharp.Classes.SSamples;
-using static SappySharp.Classes.SSample;
-using static SappySharp.Classes.SDirects;
-using static SappySharp.Classes.SDirect;
-using static SappySharp.Classes.SDrumKit;
-using static SappySharp.Classes.SDrumKits;
-using static SappySharp.Classes.SInstruments;
-using static SappySharp.Classes.SInstrument;
-using static SappySharp.Classes.SKeyMaps;
-using static SappySharp.Classes.SKeyMap;
+using static SapPlayer;
 using static SappySharp.Classes.clsSappyDecoder;
-using static SappySharp.Classes.gCommonDialog;
-using static SappySharp.Classes.pcMemDC;
 using static SappySharp.Classes.cVBALImageList;
-using static SappySharp.Classes.cRegistry;
-using System.Windows.Threading;
-using SappySharp.Classes;
-using System.Reflection;
-using SappySharp.UserControls;
-using System.Windows.Forms.Integration;
-using vbalExplorerBarLib6;
-using PortControlLibrary;
-using cPopMenu6;
-using stdole;
-using SSubTimer6;
-using System.IO;
-using System.Xml;
-using System.Windows.Interop;
+using static SappySharp.Classes.NoteInfo;
+using static SappySharp.VBFileSystem;
+using static VBExtension;
 
 namespace SappySharp.Forms;
 
@@ -1161,14 +1110,12 @@ public partial class frmSappy : Window, ISubclass
     private void mnuFileOpen_Click(object sender, RoutedEventArgs e) { mnuFileOpen_Click(); }
     private void mnuFileOpen_Click()
     {
-        gCommonDialog cc = new();
-
         if ((string)mnuFileOpen.Tag == "BrotherMaynard") goto skipABit;
         string fileTile = null;
         bool readOnly = false;
         int filterIndex = 1;
         string filter = Properties.Resources._2 + "|*.gba";
-        if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
+        if (!gCommonDialog.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
 
         skipABit:;
         FileClose(File99);
@@ -1343,10 +1290,9 @@ public partial class frmSappy : Window, ISubclass
     ExitForGood:;
 
         // Do mIRC string...
-        gCommonDialog cc = new();
         AssemblyName assemblyName = Application.ResourceAssembly.GetName();
         songinfo = assemblyName.Version.Major + "." + assemblyName.Version.Minor +
-              "|" + cc.VBGetFileTitle(myFile) +
+              "|" + gCommonDialog.VBGetFileTitle(myFile) +
               "|" + gamecode +
               "|" + txtSong +
               "|" + /*ebr.Bars["Info"].Items["Game"].Text +*/ //TODO: Commenting these COM instructions because it didn't work.
@@ -1725,15 +1671,14 @@ public partial class frmSappy : Window, ISubclass
     private void mnuImportLST_Click(object sender, RoutedEventArgs e) { mnuImportLST_Click(); }
     private void mnuImportLST_Click()
     {
-        gCommonDialog cc = new();
         string myFile = "";
 
         string fileTile = null;
         bool readOnly = false;
         int filterIndex = 1;
         string filter = "Sappy.LST|sappy.lst";
-        if (!cc.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
-        string myDir = Left(myFile, Len(myFile) - Len(cc.VBGetFileTitle(myFile)));
+        if (!gCommonDialog.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
+        string myDir = Left(myFile, Len(myFile) - Len(gCommonDialog.VBGetFileTitle(myFile)));
 
         x.Save(Left(xfile, Len(xfile) - 3) + "bak");
 
@@ -1864,15 +1809,14 @@ public partial class frmSappy : Window, ISubclass
     private void picScreenshot_DblClick(object sender, MouseButtonEventArgs e) { if (e.ClickCount != 2) return; picScreenshot_DblClick(); }
     private void picScreenshot_DblClick()
     {
-        gCommonDialog cc = new();
         string s = (string)picScreenshot.Tag;
         string fileTile = null;
         bool readOnly = false;
         int filterIndex = 1;
         string filter = Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG";
-        if (cc.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex))
+        if (gCommonDialog.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex))
         {
-            s = cc.VBGetFileTitle(s);
+            s = gCommonDialog.VBGetFileTitle(s);
             picScreenshot.Source = new BitmapImage(new(s));
             picScreenshot.Tag = s;
             SaveNewRomHeader("screenshot", s);
@@ -2079,11 +2023,10 @@ public partial class frmSappy : Window, ISubclass
     private void PrepareRecording()
     {
         string target = "";
-        gCommonDialog cc = new();
         string fileTitle = lblSongName.Content + ".mid";
         string filter = "Type 0 MIDI (*.mid)|*.mid";
         int filterIndex = 1;
-        if (!cc.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, DefaultExt: "mid")) return;
+        if (!gCommonDialog.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, DefaultExt: "mid")) return;
         WantToRecord = 1;
         WantToRecordTo = target;
         cmdPlay.setValue(true);
