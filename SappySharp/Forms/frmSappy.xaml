@@ -6,15 +6,18 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="mnuFile" Header="[10]File">
-                <MenuItem x:Name="mnuFileOpen" Header="[11]Open" Click="mnuFileOpen_Click" />
+                <MenuItem x:Name="mnuFileOpen" Header="[11]Open" Click="mnuFileOpen_Click" GotFocus="menu_GotFocus"
+                        LostFocus="menu_LostFocus" />
                 <Separator x:Name="mnuFileSep" />
-                <MenuItem x:Name="mnuFileExit" Header="[12]Exit" Click="mnuFileExit_Click" />
+                <MenuItem x:Name="mnuFileExit" Header="[12]Exit" Click="mnuFileExit_Click" GotFocus="menu_GotFocus"
+                        LostFocus="menu_LostFocus" />
             </MenuItem>
             <MenuItem x:Name="mnuTasks" Header="[20]Tasks" />
             <MenuItem x:Name="mnuOptions" Header="[30]Options">
-                <MenuItem x:Name="mnuOutput_0" Header="[31]Output to MIDI" IsCheckable="True" Click="mnuOutput_Click" />
+                <MenuItem x:Name="mnuOutput_0" Header="[31]Output to MIDI" IsCheckable="True" Click="mnuOutput_Click"
+                        GotFocus="menu_GotFocus" LostFocus="menu_LostFocus" />
                 <MenuItem x:Name="mnuOutput_1" Header="[32]Output to Wave" IsCheckable="True" IsChecked="True"
-                        Click="mnuOutput_Click" />
+                        Click="mnuOutput_Click" GotFocus="menu_GotFocus" LostFocus="menu_LostFocus" />
                 <Separator x:Name="mnuOptionsSep" />
                 <MenuItem x:Name="mnuSeekPlaylist" Header="[36]Seek by Playlist" Click="mnuSeekPlaylist_Click" />
                 <MenuItem x:Name="mnuAutovance" Header="[37]AutoAdvance" Visibility="Collapsed" Click="mnuAutovance_Click" />
@@ -28,8 +31,10 @@
             </MenuItem>
             <MenuItem x:Name="mnuHelp" Header="[40]Help">
                 <MenuItem x:Name="mnuHelpHelp" Header="[43]Help" Click="mnuHelpHelp_Click" />
-                <MenuItem x:Name="mnuHelpAbout" Header="[41]About" Click="mnuHelpAbout_Click" />
-                <MenuItem x:Name="mnuHelpOnline" Header="[42]HR Online" Click="mnuHelpOnline_Click" />
+                <MenuItem x:Name="mnuHelpAbout" Header="[41]About" Click="mnuHelpAbout_Click" GotFocus="menu_GotFocus"
+                        LostFocus="menu_LostFocus" />
+                <MenuItem x:Name="mnuHelpOnline" Header="[42]HR Online" Click="mnuHelpOnline_Click" GotFocus="menu_GotFocus"
+                        LostFocus="menu_LostFocus" />
             </MenuItem>
         </Menu>
 
@@ -143,8 +148,6 @@
                 <Image x:Name="picScreenshot" Margin="24,304,0,0" Width="122" Height="82" VerticalAlignment="Top"
                         HorizontalAlignment="Left" MouseLeftButtonDown="picScreenshot_DblClick" />
             </DockPanel>
-            <DockPanel x:Name="cPopContainer" Margin="200,288,0,0" Width="0" Height="0" VerticalAlignment="Top"
-                    HorizontalAlignment="Left" />
             <Border x:Name="Shape1" Margin="192,280,0,0" Width="225" Height="57" BorderBrush="Navy" BorderThickness="2"
                     Visibility="Hidden">
                 <Canvas Background="Blue">

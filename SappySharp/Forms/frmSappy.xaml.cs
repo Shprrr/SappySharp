@@ -62,8 +62,6 @@ public partial class frmSappy : Window, ISubclass
 
     public ExplorerBarCtl ebr { get; private set; }
 
-    public PopMenuCtl cPop { get; private set; }
-
     // ______________
     // |  SAPPY 2006  |
     // |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
@@ -141,6 +139,7 @@ public partial class frmSappy : Window, ISubclass
 
     private static bool DontLoadDude = false;
     private static int[] TaskMenus = new int[16];
+    private Dictionary<object, string> _helpTexts = new();
 
     public cVBALImageList imlImages = null;
     public cVBALImageList imlStatusbar = null;
@@ -424,18 +423,18 @@ public partial class frmSappy : Window, ISubclass
         {
             if (ItemNumber == TaskMenus[i])
             {
-                itm = ebr.Bars["Tasks"].Items[cPop.get_MenuKey(ItemNumber)];
+                //itm = ebr.Bars["Tasks"].Items[cPop.get_MenuKey(ItemNumber)]; // See SubMenuTasks_Click
                 ebr_ItemClick(ref itm);
             }
         }
     }
 
-    private void cPop_ItemHighlight(ref int ItemNumber, ref bool bEnabled, ref bool bSeparator)
+    private void menu_GotFocus(object sender, RoutedEventArgs e)
     {
-        simple.Text = cPop.get_HelpText(ItemNumber);
+        simple.Text = _helpTexts[sender];
     }
 
-    private void cPop_MenuExit()
+    private void menu_LostFocus(object sender, RoutedEventArgs e)
     {
         simple.Text = "";
     }
@@ -609,14 +608,6 @@ public partial class frmSappy : Window, ISubclass
         ebrHost.Child = ebr;
         ebrContainer.Children.Add(ebrHost);
 
-        WindowsFormsHost cPopHost = new();
-        cPop = new PopMenuCtl();
-        cPop.PopMenuClick += cPop_Click;
-        cPop.ItemHighlight += cPop_ItemHighlight;
-        cPop.MenuExit += cPop_MenuExit;
-        cPopHost.Child = cPop;
-        cPopContainer.Children.Add(cPopHost);
-
         int i = 0;
         string regset = "";
 
@@ -754,40 +745,25 @@ public partial class frmSappy : Window, ISubclass
         imlStatusbar.AddFromHandle(stdPic.Handle, ImageTypes.IMAGE_BITMAP, lBackColor: 0xFF00FF);
         FixStatusBar();
 
-        Trace("- Create menu");
-        cPop.SubClassMenu(this);
-        if (GetSettingI("Nice Menus") == 0)
-        {
-            // cPop.HighlightStyle =
-            cPop.OfficeXpStyle = false;
-        }
-        else
-        {
-            cPop.OfficeXpStyle = true;
-        }
-
         Trace("- Set menu icons and help");
-        object hIml = imlImages.hIml;
-        cPop.set_ImageList(ref hIml);
-        //TODO: Commenting these COM instructions because it didn't work.
-        //cPop.set_ItemIcon("mnuFileOpen", 0);
-        //cPop.set_ItemIcon("mnuOutput(0)", 2);
-        //cPop.set_ItemIcon("mnuOutput(1)", 3);
-        //cPop.set_ItemIcon("mnuSeekPlaylist", 4);
-        //// cPop.get_ItemIcon("mnuAutovance", )5
-        //cPop.set_ItemIcon("mnuGBMode", 6);
-        //cPop.set_ItemIcon("mnuHelpHelp", 7);
-        //cPop.set_ItemIcon("mnuHelpOnline", 8);
-        //cPop.set_ItemIcon("mnuImportLST", 20);
-        //cPop.set_ItemIcon("mnuSelectMIDI", 22);
-        //cPop.set_ItemIcon("mnuSettings", 24);
-        //cPop.set_ItemIcon("mnuMidiMap", 23);
-        //cPop.set_HelpText("mnuFileOpen", Properties.Resources._70);
-        //cPop.set_HelpText("mnuFileExit", Properties.Resources._71);
-        //cPop.set_HelpText("mnuOutput(0)", Properties.Resources._72);
-        //cPop.set_HelpText("mnuOutput(1)", Properties.Resources._73);
-        //cPop.set_HelpText("mnuHelpAbout", Properties.Resources._75);
-        //cPop.set_HelpText("mnuHelpOnline", Properties.Resources._76);
+        mnuFileOpen.Icon = new Image { Source = imlImages.ItemPicture(1).ToImageSource() };
+        mnuOutput_0.Icon = new Image { Source = imlImages.ItemPicture(3).ToImageSource() };
+        mnuOutput_1.Icon = new Image { Source = imlImages.ItemPicture(4).ToImageSource() };
+        mnuSeekPlaylist.Icon = new Image { Source = imlImages.ItemPicture(5).ToImageSource() };
+        mnuAutovance.Icon = new Image { Source = imlImages.ItemPicture(6).ToImageSource() };
+        mnuGBMode.Icon = new Image { Source = imlImages.ItemPicture(7).ToImageSource() };
+        mnuHelpHelp.Icon = new Image { Source = imlImages.ItemPicture(8).ToImageSource() };
+        mnuHelpOnline.Icon = new Image { Source = imlImages.ItemPicture(9).ToImageSource() };
+        mnuImportLST.Icon = new Image { Source = imlImages.ItemPicture(21).ToImageSource() };
+        mnuSelectMIDI.Icon = new Image { Source = imlImages.ItemPicture(23).ToImageSource() };
+        mnuSettings.Icon = new Image { Source = imlImages.ItemPicture(25).ToImageSource() };
+        mnuMidiMap.Icon = new Image { Source = imlImages.ItemPicture(24).ToImageSource() };
+        _helpTexts.Add(mnuFileOpen, Properties.Resources._70);
+        _helpTexts.Add(mnuFileExit, Properties.Resources._71);
+        _helpTexts.Add(mnuOutput_0, Properties.Resources._72);
+        _helpTexts.Add(mnuOutput_1, Properties.Resources._73);
+        _helpTexts.Add(mnuHelpAbout, Properties.Resources._75);
+        _helpTexts.Add(mnuHelpOnline, Properties.Resources._76);
 
         // Not setting any images for Japanese systems until further notice.
         if (Properties.Resources._10000 != "<JAPPLZ>")
@@ -968,8 +944,6 @@ public partial class frmSappy : Window, ISubclass
         ShutMSN();
         Trace("- Terminating SappyDecoder");
         SappyDecoder = null;
-        Trace("- Killing menu subclass");
-        cPop.UnsubclassMenu();
         FileClose(File99);
         Trace("- Saving window height");
         WriteSettingI("Window Height", (int)Height);
