@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -58,7 +59,7 @@ public partial class frmSappy : Window, ISubclass
 
     public List<MenuItem> mnuOutput { get => VBExtension.controlArray<MenuItem>(this, "mnuOutput"); }
 
-    public List<ChannelViewer> cvwChannel { get; private set; } = new();
+    public List<ChannelViewer> cvwChannel => cvwChannels.Children.OfType<ChannelViewer>().ToList();
 
     public ExplorerBarCtl ebr { get; private set; }
 
@@ -469,14 +470,6 @@ public partial class frmSappy : Window, ISubclass
         chkMute.Tag = "-_-";
     }
 
-    private void cvwChannel_Resize(int Index)
-    {
-        for (int i = 1; i <= cvwChannel.Count - 1; i += 1)
-        {
-            cvwChannel[i].Margin = new(cvwChannel[i].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i].Margin.Right, cvwChannel[i].Margin.Bottom);
-        }
-    }
-
     private void ebr_BarClick(ref cExplorerBar bar)
     {
         WriteSettingI("Bar " + bar.Index + " state", (int)bar.State);
@@ -852,15 +845,11 @@ public partial class frmSappy : Window, ISubclass
         foreach (MenuItem item in mnuTasks.Items) item.Click += SubMenuTasks_Click;
 
         Trace("- Create channel views");
-        cvwChannel.Add(cvwChannelTemplate);
         cvwChannelTemplate.MuteChanged += (sender, e) => cvwChannel_MuteChanged(0);
-        cvwChannelTemplate.Resize += (sender, e) => cvwChannel_Resize(0);
         for (i = 1; i < 32; i += 1)
         {
-            cvwChannel.Add(new ChannelViewer());
+            cvwChannels.Children.Add(new ChannelViewer());
             cvwChannel[i].MuteChanged += (sender, e) => cvwChannel_MuteChanged(i);
-            cvwChannel[i].Resize += (sender, e) => cvwChannel_Resize(i);
-            cvwChannel[i].Margin = new Thickness(cvwChannel[i - 1].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].ActualHeight, cvwChannel[i - 1].Margin.Right, cvwChannel[i - 1].Margin.Bottom);
             cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
             cvwChannel[i].Visibility = Visibility.Hidden;
@@ -1058,13 +1047,9 @@ public partial class frmSappy : Window, ISubclass
         {
             lblExpand.Content = "6";
         }
-        for (int i = 0; i <= cvwChannel.Count - 1; i += 1)
+        for (int i = 0; i < cvwChannel.Count; i++)
         {
             cvwChannel[i].Expand((string)lblExpand.Content == "5");
-        }
-        for (int i = 1; i <= cvwChannel.Count - 1; i += 1)
-        {
-            cvwChannel[i].Margin = new(cvwChannel[i].Margin.Left, cvwChannel[i - 1].Margin.Top + cvwChannel[i - 1].Height, cvwChannel[i].Margin.Right, cvwChannel[i].Margin.Bottom);
         }
     }
 
@@ -1773,11 +1758,6 @@ public partial class frmSappy : Window, ISubclass
     private void mnuSettings_Click()
     {
         frmOptions.instance.ShowDialog();
-    }
-
-    private void picChannels_Paint()
-    {
-        // StretchBlt picChannels.hdc, 0, 0, picChannels.ScaleWidth, 17, picSkin.hdc, 6, 16, 2, 17, vbSrcCopy
     }
 
     private void picScreenshot_DblClick(object sender, MouseButtonEventArgs e) { if (e.ClickCount != 2) return; picScreenshot_DblClick(); }
