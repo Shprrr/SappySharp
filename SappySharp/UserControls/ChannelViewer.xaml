@@ -7,8 +7,12 @@
     <Grid>
         <Canvas x:Name="shpMeter" Margin="64,1,0,0" Width="256" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left"
                 Background="#004000" />
-        <CheckBox x:Name="chkMute" Margin="2,12,0,0" Padding="2,2,2,2" Width="12" Height="12" VerticalAlignment="Top"
-                HorizontalAlignment="Left" ToolTip="Mute this Track" />
+        <CheckBox x:Name="chkMute" Margin="2,3,0,0" Padding="2,2,2,2" VerticalAlignment="Top"
+                HorizontalAlignment="Left" ToolTip="Mute this Track">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="0.70" ScaleY="0.70" />
+            </CheckBox.LayoutTransform>
+        </CheckBox>
         <Label x:Name="lblType" Margin="256,16,0,0" Padding="2,2,2,2" Width="49" Height="10" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="Direct" Foreground="#FF00C000" HorizontalContentAlignment="Right" />
         <Label x:Name="lblExpand" Margin="305,0,0,0" Padding="2,2,2,2" Width="16" Height="28" VerticalAlignment="Top"

@@ -201,7 +201,7 @@ public partial class frmSappy : Window, ISubclass
         //   Next i
         // Else
         chkMute.Tag = "O.O";
-        for (int i = 0; i <= cvwChannel.Count - 1; i += 1)
+        for (int i = 0; i <= cvwChannel.Count - 1; i++)
         {
             cvwChannel[i].mute = chkMute.IsChecked.GetValueOrDefault() ? 1 : 0;
         }
@@ -216,19 +216,19 @@ public partial class frmSappy : Window, ISubclass
         MousePointer = 11;
         SappyDecoder.outputtype = mnuOutput[1].IsChecked ? SongOutputTypes.sotWave : SongOutputTypes.sotMIDI;
         SappyDecoder.ClearMidiPatchMap();
-        for (int i = 0; i <= 127; i += 1)
+        for (int i = 0; i <= 127; i++)
         {
             // SappyDecoder.MidiMap(i) = MidiMap(i)
             SappyDecoder.SetMidiPatchMap(i, MidiMap[i], MidiMapTrans[i]);
             SappyDecoder.SetMidiDrumMap(i, DrumMap[i]);
         }
-        for (int i = 0; i <= BECnt; i += 1)
+        for (int i = 0; i <= BECnt; i++)
         {
             SappyDecoder.AddEarPiercer(BleedingEars[i]);
         }
         if (mnuGBMode.IsChecked)
         {
-            for (int i = 0; i <= 126; i += 1)
+            for (int i = 0; i <= 126; i++)
             {
                 // SappyDecoder.MidiMap(i) = IIf(i Mod 2 = 1, 80, 81) '80
                 SappyDecoder.SetMidiPatchMap(i, i % 2 == 1 ? 80 : 81, 0);
@@ -244,7 +244,7 @@ public partial class frmSappy : Window, ISubclass
 
         simple.Text = "";
 
-        for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
+        for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i++)
         {
             SappyDecoder.SappyChannels[i + 1].mute = IIf(cvwChannel[i].mute == 1, false, true);
             cvwChannel[i].Note = "";
@@ -392,7 +392,7 @@ public partial class frmSappy : Window, ISubclass
         Playing = false;
         timPlay.IsEnabled = false;
         cmdPlay.setImage(imlImages.ItemPicture(19).ToImageSource());
-        for (int i = 0; i <= cvwChannel.Count - 1; i += 1)
+        for (int i = 0; i <= cvwChannel.Count - 1; i++)
         {
             cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
@@ -420,7 +420,7 @@ public partial class frmSappy : Window, ISubclass
     private void cPop_Click(ref int ItemNumber)
     {
         cExplorerBarItem itm = null;
-        for (int i = 1; i <= 16; i += 1)
+        for (int i = 1; i <= 16; i++)
         {
             if (ItemNumber == TaskMenus[i])
             {
@@ -450,7 +450,7 @@ public partial class frmSappy : Window, ISubclass
     FlickIt:;
         if ((string)chkMute.Tag == "O.O") return;
         int j = 0;
-        for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i += 1)
+        for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i++)
         {
             if (cvwChannel[i].mute == 1) j++;
         }
@@ -512,7 +512,7 @@ public partial class frmSappy : Window, ISubclass
         int i = 0;
         if (itm.Key == "taketrax")
         {
-            for (i = 0; i <= SongHead.NumTracks - 1; i += 1)
+            for (i = 0; i <= SongHead.NumTracks - 1; i++)
             {
                 frmTakeTrax.instance.lstTracks.AddItem("0x" + FixHex(SongHead.Tracks[i], 6));
             }
@@ -846,10 +846,11 @@ public partial class frmSappy : Window, ISubclass
 
         Trace("- Create channel views");
         cvwChannelTemplate.MuteChanged += (sender, e) => cvwChannel_MuteChanged(0);
-        for (i = 1; i < 32; i += 1)
+        for (i = 1; i < 32; i++)
         {
             cvwChannels.Children.Add(new ChannelViewer());
             cvwChannel[i].MuteChanged += (sender, e) => cvwChannel_MuteChanged(i);
+            cvwChannel[i].mute = 1;
             cvwChannel[i].volume = "0";
             cvwChannel[i].pan = 0;
             cvwChannel[i].Visibility = Visibility.Hidden;
@@ -1297,7 +1298,7 @@ public partial class frmSappy : Window, ISubclass
         for (int j = 0; j < 255; j += 1)
         {
             playlist[j] = new();
-            for (int i = 0; i < 1024; i += 1)
+            for (int i = 0; i < 1024; i++)
             {
                 playlist[j].SongName[i] = "";
             }
@@ -1306,7 +1307,7 @@ public partial class frmSappy : Window, ISubclass
         playlist[0].SongName[0] = Properties.Resources._109;
         playlist[0].SongNo[0] = 1;
         NumPLs = 1;
-        for (int i = 0; i < 127; i += 1)
+        for (int i = 0; i < 127; i++)
         {
             MidiMap[i] = i;
             MidiMapTrans[i] = 0;
@@ -1457,7 +1458,7 @@ public partial class frmSappy : Window, ISubclass
                                     }
                                     if (n3.Name == "from")
                                     {
-                                        for (int i = int.Parse(n3.Value); i <= int.Parse(n4.GetAttribute("to")); i += 1)
+                                        for (int i = int.Parse(n3.Value); i <= int.Parse(n4.GetAttribute("to")); i++)
                                         {
                                             BleedingEars[BECnt] = i;
                                             BECnt++;
