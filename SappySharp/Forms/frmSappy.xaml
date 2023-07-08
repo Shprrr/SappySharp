@@ -122,32 +122,32 @@
                     HorizontalAlignment="Left" Visibility="Hidden" />
             <Grid x:Name="picChannels" Margin="170,88,0,0" Width="324" Height="177" VerticalAlignment="Top"
                     HorizontalAlignment="Left" Background="Black">
-                <CheckBox x:Name="chkMute" Margin="2,18,0,0" Padding="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Left"
+                <CheckBox x:Name="chkMute" Margin="2,22,0,0" Padding="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Left"
                         IsChecked="True" Click="chkMute_Click">
                     <CheckBox.LayoutTransform>
                         <ScaleTransform ScaleX="0.70" ScaleY="0.70" />
                     </CheckBox.LayoutTransform>
                 </CheckBox>
-                <StackPanel x:Name="cvwChannels" Margin="0,31,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <StackPanel x:Name="cvwChannels" Margin="0,37,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
                     <usercontrols:ChannelViewer x:Name="cvwChannelTemplate" Width="321" Height="16" VerticalAlignment="Top"
                             HorizontalAlignment="Left" mute="1" Location="0x000000" Delay="0" patch="0" volume="0" Note=""
                             iType="Direct" Visibility="Hidden" />
                 </StackPanel>
-                <Line x:Name="linProgress" X1="-1" Y1="16" X2="136" Y2="16" StrokeThickness="2" Stroke="#FFC0C000" />
-                <Label x:Name="lblExpand" Margin="305,16,0,0" Padding="2,2,2,2" Width="16" Height="15" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Marlett" FontSize="9.75" FontWeight="Bold" Foreground="#FF00C000"
+                <Line x:Name="linProgress" X1="-1" Y1="19" X2="136" Y2="19" StrokeThickness="2" Stroke="#FFC0C000" />
+                <Label x:Name="lblExpand" Margin="305,19,0,0" Padding="2,2,2,2" Width="16" Height="15" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Marlett" FontSize="12" FontWeight="Bold" Foreground="#FF00C000"
                         Content="6" Tag="[NoLocal]" MouseUp="lblExpand_Click" />
-                <Label x:Name="lblSongName" Margin="16,2,0,0" Padding="2,2,2,2" Width="289" Height="11" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" FontWeight="Bold" Foreground="#FF00C0C0"
+                <Label x:Name="lblSongName" Margin="16,2,0,0" Padding="2,2,2,2" Width="289" Height="14" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" FontWeight="Bold" Foreground="#FF00C0C0"
                         HorizontalContentAlignment="Center" Content="[102]PleaseLoadGame" Tag="[NoLocal]" />
-                <Line x:Name="Line2" X1="0" Y1="16" X2="326" Y2="16" StrokeThickness="2" Stroke="#FF808000" />
-                <Line x:Name="Line1" X1="0" Y1="30" X2="326" Y2="30" StrokeThickness="2" Stroke="#FF808000" />
-                <Label x:Name="lblPC" Margin="18,17,0,0" Padding="2,2,2,2" Width="41" Height="12" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Foreground="#FF00C000" Content="[103]Loc" />
-                <Label x:Name="lblDel" Margin="64,17,0,0" Padding="2,2,2,2" Width="17" Height="12" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Foreground="#FFC04000" Content="Del" />
-                <Label x:Name="lblNote" Margin="88,17,0,0" Padding="2,2,2,2" Width="65" Height="12" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="6.75" Foreground="#FF00C0C0" Content="[104]Note" />
+                <Line x:Name="Line2" X1="0" Y1="19" X2="326" Y2="19" Stroke="#FF808000" />
+                <Line x:Name="Line1" X1="0" Y1="36" X2="326" Y2="36" Stroke="#FF808000" />
+                <Label x:Name="lblPC" Margin="18,20,0,0" Padding="2,2,2,2" Width="41" Height="15" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" Foreground="#FF00C000" Content="[103]Loc" />
+                <Label x:Name="lblDel" Margin="64,20,0,0" Padding="2,2,2,2" Width="17" Height="15" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" Foreground="#FFC04000" Content="Del" />
+                <Label x:Name="lblNote" Margin="88,20,0,0" Padding="2,2,2,2" Width="65" Height="15" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" Foreground="#FF00C0C0" Content="[104]Note" />
             </Grid>
             <DockPanel x:Name="ebrContainer" Margin="0,0,0,0" Width="170" Height="423" VerticalAlignment="Top"
                     HorizontalAlignment="Left">

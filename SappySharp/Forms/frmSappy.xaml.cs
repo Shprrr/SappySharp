@@ -688,9 +688,6 @@ public partial class frmSappy : Window, ISubclass
         Trace("- Localize");
         SetCaptions(this);
         Title = Properties.Resources._0;
-        lblPC.FontSize = 7;
-        lblDel.FontSize = 7;
-        lblNote.FontSize = 7;
         linProgress.X2 = -1;
 
         Trace("- Attach messages");

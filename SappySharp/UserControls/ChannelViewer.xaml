@@ -2,31 +2,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:SappySharp.UserControls"
-        mc:Ignorable="d" d:DesignHeight="53" d:DesignWidth="321" Background="Black" FontSize="6" FontFamily="Tahoma"
+        mc:Ignorable="d" d:DesignHeight="53" d:DesignWidth="321" Background="Black" FontSize="8" FontFamily="Tahoma"
         SizeChanged="UserControl_SizeChanged">
     <Grid>
         <Canvas x:Name="shpMeter" Margin="64,1,0,0" Width="256" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left"
                 Background="#004000" />
-        <CheckBox x:Name="chkMute" Margin="2,3,0,0" Padding="2,2,2,2" VerticalAlignment="Top"
-                HorizontalAlignment="Left" ToolTip="Mute this Track">
+        <CheckBox x:Name="chkMute" Margin="2,3,0,0" Padding="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Left"
+                ToolTip="Mute this Track">
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="0.70" ScaleY="0.70" />
             </CheckBox.LayoutTransform>
         </CheckBox>
-        <Label x:Name="lblType" Margin="256,16,0,0" Padding="2,2,2,2" Width="49" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblType" Margin="256,16,0,0" Padding="2,2,2,2" Width="49" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="Direct" Foreground="#FF00C000" HorizontalContentAlignment="Right" />
         <Label x:Name="lblExpand" Margin="305,0,0,0" Padding="2,2,2,2" Width="16" Height="28" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Content="6" Foreground="#FF00C000" FontSize="9" FontFamily="Marlett"
+                HorizontalAlignment="Left" Content="6" Foreground="#FF00C000" FontSize="12" FontFamily="Marlett"
                 MouseUp="lblExpand_MouseUp" />
-        <Label x:Name="lblNote" Margin="88,3,0,0" Padding="2,2,2,2" Width="201" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblNote" Margin="88,3,0,0" Padding="2,2,2,2" Width="201" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Foreground="#FF00C0C0" />
-        <Label x:Name="lblVol" Margin="40,16,0,0" Padding="2,2,2,2" Width="17" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblVol" Margin="40,16,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="0" Foreground="#FFFFC080" />
-        <Label x:Name="lblPat" Margin="16,16,0,0" Padding="2,2,2,2" Width="17" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblPat" Margin="16,16,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="0" Foreground="#FFFF8080" />
-        <Label x:Name="lblDel" Margin="64,3,0,0" Padding="2,2,2,2" Width="17" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblDel" Margin="64,3,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="0" Foreground="#FFC04000" />
-        <Label x:Name="lblPC" Margin="18,3,0,0" Padding="2,2,2,2" Width="49" Height="10" VerticalAlignment="Top"
+        <Label x:Name="lblPC" Margin="18,3,0,0" Padding="2,2,2,2" Width="49" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="0x000000" Foreground="#FF00C000" />
     </Grid>
 </UserControl>
