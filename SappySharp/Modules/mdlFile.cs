@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualBasic;
 using static Microsoft.VisualBasic.FileSystem;
 using static Microsoft.VisualBasic.Strings;
@@ -60,7 +61,7 @@ static class mdlFile
         WriteOffset(filenumber, offset);
         for (byte i = 0; i <= Width - 1; i += 1)
         {
-            WriteByte(filenumber, (byte)(Data / (16 ^ i) % 256));
+            WriteByte(filenumber, (byte)(Data / (int)Math.Pow(16, i) % 256));
         }
     }
 
@@ -69,7 +70,7 @@ static class mdlFile
         WriteOffset(filenumber, offset);
         for (int i = Width - 1; i >= 0; i--)
         {
-            WriteByte(filenumber, (byte)(Data / (16 ^ i) % 256));
+            WriteByte(filenumber, (byte)(Data / (int)Math.Pow(16, i) % 256));
         }
     }
 
@@ -108,7 +109,7 @@ static class mdlFile
         do
         {
             a = ReadByte(filenumber);
-            _ReadVLQ *= (2 ^ 7);
+            _ReadVLQ *= (int)Math.Pow(2, 7);
             _ReadVLQ += a % 0x80;
             retlen = (byte)(retlen + 1);
         } while (!(retlen == 4 || a < 0x80));
@@ -121,7 +122,7 @@ static class mdlFile
         ReadOffset(filenumber, offset);
         for (int i = Width - 1; i >= 0; i--)
         {
-            _ReadBigEndian += ReadByte(filenumber) * (256 ^ i);
+            _ReadBigEndian += ReadByte(filenumber) * (int)Math.Pow(256, i);
         }
         return _ReadBigEndian;
     }
@@ -132,7 +133,7 @@ static class mdlFile
         ReadOffset(filenumber, offset);
         for (int i = 0; i <= Width - 1; i += 1)
         {
-            _ReadLittleEndian += ReadByte(filenumber) * (256 ^ i);
+            _ReadLittleEndian += ReadByte(filenumber) * (int)Math.Pow(256, i);
         }
         return _ReadLittleEndian;
     }

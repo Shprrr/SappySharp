@@ -182,24 +182,24 @@ static class SapPlayer
     }
     public static int NoteToFreq(int MIDINote, int MidCFreq = -1)
     {
-        int magic = 2 ^ (1 / 12);
+        double magic = Math.Pow(2, 1d / 12);
         int X = MIDINote - 0x3C;
-        int c;
+        double c;
         if (MidCFreq == -1)
         {
             int a = 7040;
-            c = a * (magic ^ 3);
+            c = a * Math.Pow(magic, 3);
         }
         else if (MidCFreq == -2)
         {
             int a = 7040 / 2;
-            c = a * (magic ^ 3);
+            c = a * Math.Pow(magic, 3);
         }
         else
         {
             c = MidCFreq;
         }
-        return c * (magic ^ X);
+        return (int)(c * Math.Pow(magic, X));
     }
     public static int SLen2Ticks(byte ShortLen)
     {

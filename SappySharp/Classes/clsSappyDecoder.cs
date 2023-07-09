@@ -330,7 +330,7 @@ public partial class clsSappyDecoder
         mvarSongListPointer = SongListPointer;
         mvarSongNumber = SongNumber;
 
-        if (mvarPlaying == true) StopSong();
+        if (mvarPlaying) StopSong();
 
         SappyInstrumentHeader inshead = null;
         SappyDrumKitHeader drmhead = null;
@@ -539,7 +539,7 @@ public partial class clsSappyDecoder
 
                         // TODO: (NOT SUPPORTED): On Error Resume Next
 
-                        if (PatchExists(lp) == false)
+                        if (!PatchExists(lp))
                         {
                             inshead = ReadInstrumentHead(1, (int)(mvarInstrumentTablePointer + CLng(lp) * CLng(12)));
 
@@ -591,7 +591,7 @@ public partial class clsSappyDecoder
                                 inshead = ReadInstrumentHead(1, GBAROMPointerToOffset((int)(drmhead.pDirectTable + CLng(pn) * CLng(12))));
                                 dirhead = ReadDirectHead(1);
                                 gbhead = ReadNoiseHead(1, GBAROMPointerToOffset((int)(drmhead.pDirectTable + CLng(pn) * CLng(12))) + 2);
-                                if (DirectExists(DrumKits[Str(lp)].Directs, pn) == false)
+                                if (!DirectExists(DrumKits[Str(lp)].Directs, pn))
                                 {
                                     DrumKits[Str(lp)].Directs.Add(Str(pn));
                                     SetStuff(DrumKits[Str(lp)].Directs[Str(pn)], inshead, dirhead, gbhead);
@@ -602,12 +602,12 @@ public partial class clsSappyDecoder
                             else if ((inshead.bChannel & 0x40) == 0x40) // multi
                             {
                                 mulhead = ReadMultiHead(1);
-                                if (KeyMapExists(Instruments[Str(lp)].KeyMaps, pn) == false) Instruments[Str(lp)].KeyMaps.Add(ReadByte(1, GBAROMPointerToOffset(mulhead.pKeyMap) + pn), Str(pn));
+                                if (!KeyMapExists(Instruments[Str(lp)].KeyMaps, pn)) Instruments[Str(lp)].KeyMaps.Add(ReadByte(1, GBAROMPointerToOffset(mulhead.pKeyMap) + pn), Str(pn));
                                 cdr = Instruments[Str(lp)].KeyMaps[Str(pn)].AssignDirect;
                                 inshead = ReadInstrumentHead(1, GBAROMPointerToOffset((int)(mulhead.pDirectTable + CLng(cdr) * CLng(12))));
                                 dirhead = ReadDirectHead(1);
                                 gbhead = ReadNoiseHead(1, GBAROMPointerToOffset((int)(mulhead.pDirectTable + CLng(cdr) * CLng(12))) + 2);
-                                if (DirectExists(Instruments[Str(lp)].Directs, (byte)cdr) == false)
+                                if (!DirectExists(Instruments[Str(lp)].Directs, (byte)cdr))
                                 {
                                     Instruments[Str(lp)].Directs.Add(Str(cdr));
                                     SetStuff(Instruments[Str(lp)].Directs[Str(cdr)], inshead, dirhead, gbhead);
@@ -686,7 +686,7 @@ public partial class clsSappyDecoder
 
                             // TODO: (NOT SUPPORTED): On Error Resume Next
 
-                            if (PatchExists(lp) == false)
+                            if (!PatchExists(lp))
                             {
                                 inshead = ReadInstrumentHead(1, (int)(mvarInstrumentTablePointer + CLng(lp) * CLng(12)));
                                 if ((inshead.bChannel & 0x80) == 0x80)
@@ -734,7 +734,7 @@ public partial class clsSappyDecoder
                                     inshead = ReadInstrumentHead(1, GBAROMPointerToOffset((int)(drmhead.pDirectTable + CLng(pn) * CLng(12))));
                                     dirhead = ReadDirectHead(1);
                                     gbhead = ReadNoiseHead(1, GBAROMPointerToOffset((int)(drmhead.pDirectTable + CLng(pn) * CLng(12))) + 2);
-                                    if (DirectExists(DrumKits[Str(lp)].Directs, pn) == false)
+                                    if (!DirectExists(DrumKits[Str(lp)].Directs, pn))
                                     {
                                         DrumKits[Str(lp)].Directs.Add(Str(pn));
                                         SetStuff(DrumKits[Str(lp)].Directs[Str(pn)], inshead, dirhead, gbhead);
@@ -745,12 +745,12 @@ public partial class clsSappyDecoder
                                 else if ((inshead.bChannel & 0x40) == 0x40) // multi
                                 {
                                     mulhead = ReadMultiHead(1);
-                                    if (KeyMapExists(Instruments[Str(lp)].KeyMaps, pn) == false) Instruments[Str(lp)].KeyMaps.Add(ReadByte(1, GBAROMPointerToOffset(mulhead.pKeyMap) + pn), Str(pn));
+                                    if (!KeyMapExists(Instruments[Str(lp)].KeyMaps, pn)) Instruments[Str(lp)].KeyMaps.Add(ReadByte(1, GBAROMPointerToOffset(mulhead.pKeyMap) + pn), Str(pn));
                                     cdr = Instruments[Str(lp)].KeyMaps[Str(pn)].AssignDirect;
                                     inshead = ReadInstrumentHead(1, GBAROMPointerToOffset((int)(mulhead.pDirectTable + CLng(cdr) * CLng(12))));
                                     dirhead = ReadDirectHead(1);
                                     gbhead = ReadNoiseHead(1, GBAROMPointerToOffset((int)(mulhead.pDirectTable + CLng(cdr) * CLng(12))) + 2);
-                                    if (DirectExists(Instruments[Str(lp)].Directs, (byte)cdr) == false)
+                                    if (!DirectExists(Instruments[Str(lp)].Directs, (byte)cdr))
                                     {
                                         Instruments[Str(lp)].Directs.Add(Str(cdr));
                                         SetStuff(Instruments[Str(lp)].Directs[Str(cdr)], inshead, dirhead, gbhead);
@@ -808,7 +808,7 @@ public partial class clsSappyDecoder
             quark++;
             // On Error Resume Next
             Trace("#" + quark + " - " + Item.GBWave + " - " + Item.SampleData);
-            if (Item.GBWave == true)
+            if (Item.GBWave)
             {
                 if (Val(Item.SampleData) == 0)
                 {
@@ -836,14 +836,14 @@ public partial class clsSappyDecoder
                     // Next i
                     WriteString(2, Item.SampleData);
                     CloseFile(2);
-                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, "temp.raw", FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable == true, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, 0, 0);
+                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, "temp.raw", FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, 0, 0);
                     FSOUND_Sample_SetLoopPoints(Item.FModSample, Item.loopstart, Item.Size - 1);
                     DeleteFile("temp.raw");
                     // TODO: (NOT SUPPORTED): On Error GoTo 0
                 }
                 else
                 {
-                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, Filename, FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable == true, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, int.Parse(Item.SampleData), Item.Size);
+                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, Filename, FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, int.Parse(Item.SampleData), Item.Size);
                     FSOUND_Sample_SetLoopPoints(Item.FModSample, Item.loopstart, Item.Size - 1);
                 }
             }
@@ -1001,13 +1001,13 @@ public partial class clsSappyDecoder
         {
             for (int i = 0; i <= 31; i += 1)
             {
-                if (NoteArray[i].Enabled == true && NoteArray[i].WaitTicks > 0)
+                if (NoteArray[i].Enabled && NoteArray[i].WaitTicks > 0)
                 {
                     NoteArray[i].WaitTicks = NoteArray[i].WaitTicks - (mvarTickCounter - mvarLastTick);
                 }
-                if (NoteArray[i].WaitTicks <= 0 && NoteArray[i].Enabled == true && NoteArray[i].NoteOff == false)
+                if (NoteArray[i].WaitTicks <= 0 && NoteArray[i].Enabled && !NoteArray[i].NoteOff)
                 {
-                    if (SappyChannels[NoteArray[i].ParentChannel].Sustain == false)
+                    if (!SappyChannels[NoteArray[i].ParentChannel].Sustain)
                     {
                         NoteArray[i].NoteOff = true;
                     }
@@ -1015,7 +1015,7 @@ public partial class clsSappyDecoder
             }
             for (int i = 1; i <= SappyChannels.count; i += 1)
             {
-                while (SappyChannels[i].Enabled == false)
+                while (!SappyChannels[i].Enabled)
                 {
                     i++;
                     if (i > SappyChannels.count) break;
@@ -1089,7 +1089,7 @@ public partial class clsSappyDecoder
                             SappyChannels[i].MainVolume = SappyChannels[i].EventQueue[SappyChannels[i].ProgramCounter].Param1;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].ParentChannel == i)
+                                if (NoteArray[Item.NoteID].Enabled && NoteArray[Item.NoteID].ParentChannel == i)
                                 {
                                     int dav = CInt(CInt(NoteArray[Item.NoteID].Velocity) / CInt(0x7F) * (CInt(SappyChannels[i].MainVolume) / CInt(0x7F)) * (CInt(Int(NoteArray[Item.NoteID].EnvPosition)) / CInt(0xFF)) * 255);
                                     if (mutethis) dav = 0;
@@ -1115,7 +1115,7 @@ public partial class clsSappyDecoder
                             SappyChannels[i].Panning = SappyChannels[i].EventQueue[SappyChannels[i].ProgramCounter].Param1;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].ParentChannel == i)
+                                if (NoteArray[Item.NoteID].Enabled && NoteArray[Item.NoteID].ParentChannel == i)
                                 {
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
@@ -1140,16 +1140,16 @@ public partial class clsSappyDecoder
                             SappyChannels[i].ProgramCounter = SappyChannels[i].ProgramCounter + 1;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].ParentChannel == i)
+                                if (NoteArray[Item.NoteID].Enabled && NoteArray[Item.NoteID].ParentChannel == i)
                                 {
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
-                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (2 ^ (1 / 12)) ^ (CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                     else
                                     {
                                         // MIDIPITCHBEND
-                                        // PitchWheel(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (2 ^ (1 / 12)) ^ ((CInt(SappyChannels[i].PitchBend - &H40)) / CInt(&H40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        // PitchWheel(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                 }
                             }
@@ -1161,16 +1161,16 @@ public partial class clsSappyDecoder
                             SappyChannels[i].ProgramCounter = SappyChannels[i].ProgramCounter + 1;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].ParentChannel == i)
+                                if (NoteArray[Item.NoteID].Enabled && NoteArray[Item.NoteID].ParentChannel == i)
                                 {
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
-                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (2 ^ (1 / 12)) ^ (CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                     else
                                     {
                                         // MIDIPITCHBENDRANGE
-                                        // PitchWheel(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (2 ^ (1 / 12)) ^ ((CInt(SappyChannels[i].PitchBend - &H40)) / CInt(&H40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        // PitchWheel(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                 }
                             }
@@ -1193,7 +1193,7 @@ public partial class clsSappyDecoder
                             SappyChannels[i].Sustain = false;
                             foreach (var Item in SappyChannels[i].Notes)
                             {
-                                if (NoteArray[Item.NoteID].Enabled == true && NoteArray[Item.NoteID].NoteOff == false) // And NoteArray[Item.NoteID].WaitTicks < 1 Then
+                                if (NoteArray[Item.NoteID].Enabled && !NoteArray[Item.NoteID].NoteOff) // And NoteArray[Item.NoteID].WaitTicks < 1 Then
                                 {
                                     NoteArray[Item.NoteID].NoteOff = true;
                                 }
@@ -1209,7 +1209,7 @@ public partial class clsSappyDecoder
                             break;
 
                         case 0xB4:
-                            if (SappyChannels[i].InSubroutine == true)
+                            if (SappyChannels[i].InSubroutine)
                             {
                                 SappyChannels[i].ProgramCounter = SappyChannels[i].ReturnPointer;
                                 SappyChannels[i].InSubroutine = false;
@@ -1281,12 +1281,12 @@ public partial class clsSappyDecoder
                     if (x < 32)
                     {
                         NoteArray[x] = Item;
-                        if (clearedchannel[Item.ParentChannel] == false)
+                        if (!clearedchannel[Item.ParentChannel])
                         {
                             clearedchannel[Item.ParentChannel] = true;
                             foreach (var item2 in SappyChannels[Item.ParentChannel].Notes)
                             {
-                                if (NoteArray[item2.NoteID].Enabled == true && NoteArray[item2.NoteID].NoteOff == false)
+                                if (NoteArray[item2.NoteID].Enabled && !NoteArray[item2.NoteID].NoteOff)
                                 {
                                     NoteArray[item2.NoteID].NoteOff = true;
                                 }
@@ -1309,7 +1309,7 @@ public partial class clsSappyDecoder
                             {
                                 das = Str(Directs[Str(pat)].SampleID);
                                 daf = NoteToFreq(nn + (60 - Directs[Str(pat)].DrumTuneKey), IIf(SamplePool[das].GBWave, -1, SamplePool[das].Frequency));
-                                if (SamplePool[das].GBWave == true) daf /= 2;
+                                if (SamplePool[das].GBWave) daf /= 2;
                             }
                             else if (Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare1 || Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare2)
                             {
@@ -1336,7 +1336,7 @@ public partial class clsSappyDecoder
                             if (Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotWave)
                             {
                                 das = Str(Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].SampleID);
-                                if (Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].FixedPitch == true)
+                                if (Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].FixedPitch)
                                 {
                                     daf = SamplePool[das].Frequency;
                                 }
@@ -1365,7 +1365,7 @@ public partial class clsSappyDecoder
                             if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotDirect || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotWave)
                             {
                                 das = Str(DrumKits[Str(pat)].Directs[Str(nn)].SampleID);
-                                if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch == true && SamplePool[das].GBWave == false)
+                                if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch && !SamplePool[das].GBWave)
                                 {
                                     daf = SamplePool[das].Frequency;
                                 }
@@ -1396,7 +1396,7 @@ public partial class clsSappyDecoder
 
                         if (das != "")
                         {
-                            daf *= 2 ^ (1 / 12) ^ Transpose;
+                            daf *= (int)Math.Pow(Math.Pow(2, 1d / 12), Transpose);
                             int dav = CInt(CInt(Item.Velocity) / CInt(0x7F) * (CInt(SappyChannels[Item.ParentChannel].MainVolume) / CInt(0x7F)) * 255);
                             if (mutethis) dav = 0;
 
@@ -1494,7 +1494,7 @@ public partial class clsSappyDecoder
 
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
-                                if (mutethis == false)
+                                if (!mutethis)
                                 {
                                     NoteArray[x].FModChannel = FSOUND_PlaySound(x + 1, SamplePool[das].FModSample);
                                 }
@@ -1507,14 +1507,14 @@ public partial class clsSappyDecoder
                             NoteArray[x].Notephase = NotePhases.npInitial;
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
-                                FSOUND_SetFrequency(NoteArray[x].FModChannel, CInt(daf) * (2 ^ (1 / 12)) ^ (CInt(SappyChannels[Item.ParentChannel].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[Item.ParentChannel].PitchBendRange)));
+                                FSOUND_SetFrequency(NoteArray[x].FModChannel, CInt(daf) * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[Item.ParentChannel].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[Item.ParentChannel].PitchBendRange)));
                                 FSOUND_SetVolume(NoteArray[x].FModChannel, dav * IIf(SappyChannels[Item.ParentChannel].mute, 0, 1));
                                 FSOUND_SetPan(NoteArray[x].FModChannel, SappyChannels[Item.ParentChannel].Panning * 2);
                             }
                             else
                             {
                                 // MIDIPLAYSOUND
-                                if (SappyChannels[Item.ParentChannel].mute == false)
+                                if (!SappyChannels[Item.ParentChannel].mute)
                                 {
                                     // If Item.PatchNumber = 127 Then 'easy way
                                     if (DrumKitExists(Item.PatchNumber)) // better way
@@ -1549,11 +1549,11 @@ public partial class clsSappyDecoder
             {
                 for (int i = 0; i <= 31; i += 1)
                 {
-                    if (NoteArray[i].Enabled == true)
+                    if (NoteArray[i].Enabled)
                     {
                         if (NoteArray[i].outputtype == NoteOutputTypes.notDirect)
                         {
-                            if (NoteArray[i].NoteOff == true && NoteArray[i].Notephase < NotePhases.npRelease)
+                            if (NoteArray[i].NoteOff && NoteArray[i].Notephase < NotePhases.npRelease)
                             {
                                 NoteArray[i].EnvStep = 0;
                                 NoteArray[i].Notephase = NotePhases.npRelease;
@@ -1631,7 +1631,7 @@ public partial class clsSappyDecoder
                         else
                         {
                             // GB Envelope
-                            if (NoteArray[i].NoteOff == true && NoteArray[i].Notephase < NotePhases.npRelease)
+                            if (NoteArray[i].NoteOff && NoteArray[i].Notephase < NotePhases.npRelease)
                             {
                                 NoteArray[i].EnvStep = 0;
                                 NoteArray[i].Notephase = NotePhases.npRelease;
@@ -1866,7 +1866,7 @@ public partial class clsSappyDecoder
     {
         for (byte i = 0; i <= 31; i += 1)
         {
-            if (NoteArray[i].Enabled == false)
+            if (!NoteArray[i].Enabled)
             {
                 return i;
             }
@@ -1956,7 +1956,7 @@ public partial class clsSappyDecoder
         Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + IIf(UseReadString, "readstring", "seek") + ")");
         D.SampleID = dirhead.pSampleHeader.ToString();
         int sid = int.Parse(D.SampleID);
-        if (SampleExists(sid) == false)
+        if (!SampleExists(sid))
         {
             SamplePool.Add(Str(sid));
             if (D.outputtype == DirectOutputTypes.dotDirect)
@@ -1988,7 +1988,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }
@@ -1999,7 +1999,7 @@ public partial class clsSappyDecoder
         Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + IIf(UseReadString, "readstring", "seek") + ", multi)");
         D.SampleID = dirhead.pSampleHeader.ToString();
         int sid = int.Parse(D.SampleID);
-        if (SampleExists(sid) == false)
+        if (!SampleExists(sid))
         {
             SamplePool.Add(Str(sid));
             if (D.outputtype == DirectOutputTypes.dotDirect)
@@ -2031,7 +2031,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (16 ^ bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }
