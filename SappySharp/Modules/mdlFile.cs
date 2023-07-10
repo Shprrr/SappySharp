@@ -18,7 +18,9 @@ static class mdlFile
 
     public static void OpenFile(int filenumber, string Filename)
     {
-        if (filenumber < VF) FileOpen(filenumber, Filename, OpenMode.Binary);
+        if (filenumber < VF)
+            if (filenumber == 1) FileOpen(filenumber, Filename, OpenMode.Binary, OpenAccess.Read, OpenShare.LockWrite);
+            else FileOpen(filenumber, Filename, OpenMode.Binary);
         WriteOffset(filenumber, 0);
         ReadOffset(filenumber, 0);
     }
@@ -81,7 +83,7 @@ static class mdlFile
         // For i = 1 To Len(Data)
         // WriteByte FileNumber, IIf(Mid(Data, i, 1) = Chr(0), 0, Asc(Mid(Data, i, 1)))
         // Next i
-        FilePutObject(filenumber, Data, WriteOffset(filenumber) + 1);
+        FilePut(filenumber, Data, WriteOffset(filenumber) + 1);
         WriteOffset(filenumber, WriteOffset(filenumber) + Len(Data));
     }
 

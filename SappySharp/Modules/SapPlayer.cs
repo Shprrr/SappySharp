@@ -6,12 +6,12 @@ static class SapPlayer
 {
     public static string[,] NoiseWaves = new string[2, 10];
     public static bool Details = false;
-    public class SappyInstrumentHeader
+    public struct SappyInstrumentHeader
     {
         public byte bChannel;
         public byte bDrumPitch;
     }
-    public class SappyDirectHeader
+    public struct SappyDirectHeader
     {
         public byte b0;
         public byte b1;
@@ -21,7 +21,7 @@ static class SapPlayer
         public byte bSustain;
         public byte bRelease;
     }
-    public class SappyNoiseHeader
+    public struct SappyNoiseHeader
     {
         public byte b0;
         public byte b1;
@@ -34,7 +34,7 @@ static class SapPlayer
         public byte bSustain;
         public byte bRelease;
     }
-    public class SappyDrumKitHeader
+    public struct SappyDrumKitHeader
     {
         public byte b0;
         public byte b1;
@@ -44,14 +44,14 @@ static class SapPlayer
         public byte b8;
         public byte b9;
     }
-    public class SappyMultiHeader
+    public struct SappyMultiHeader
     {
         public byte b0;
         public byte b1;
         public int pDirectTable;
         public int pKeyMap;
     }
-    public class SappySampleHeader
+    public struct SappySampleHeader
     {
         public int flags;
         public byte b4;
@@ -84,51 +84,51 @@ static class SapPlayer
 
     public static SappyInstrumentHeader ReadInstrumentHead(int filenumber, int offset = -1)
     {
-        Array _ReadInstrumentHead = new SappyInstrumentHeader[1];
+        ValueType _ReadInstrumentHead = new SappyInstrumentHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadInstrumentHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyInstrumentHeader)_ReadInstrumentHead.GetValue(0);
+        return (SappyInstrumentHeader)_ReadInstrumentHead;
     }
     public static SappyDirectHeader ReadDirectHead(int filenumber, int offset = -1)
     {
-        Array _ReadDirectHead = new SappyDirectHeader[1];
+        ValueType _ReadDirectHead = new SappyDirectHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadDirectHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyDirectHeader)_ReadDirectHead.GetValue(0);
+        return (SappyDirectHeader)_ReadDirectHead;
     }
     public static SappyDrumKitHeader ReadDrumKitHead(int filenumber, int offset = -1)
     {
-        Array _ReadDrumKitHead = new SappyDrumKitHeader[1];
+        ValueType _ReadDrumKitHead = new SappyDrumKitHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadDrumKitHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyDrumKitHeader)_ReadDrumKitHead.GetValue(0);
+        return (SappyDrumKitHeader)_ReadDrumKitHead;
     }
     public static SappyMultiHeader ReadMultiHead(int filenumber, int offset = -1)
     {
-        Array _ReadMultiHead = new SappyMultiHeader[1];
+        ValueType _ReadMultiHead = new SappyMultiHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadMultiHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyMultiHeader)_ReadMultiHead.GetValue(0);
+        return (SappyMultiHeader)_ReadMultiHead;
     }
     public static SappyNoiseHeader ReadNoiseHead(int filenumber, int offset = -1)
     {
-        Array _ReadNoiseHead = new SappyNoiseHeader[1];
+        ValueType _ReadNoiseHead = new SappyNoiseHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadNoiseHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappyNoiseHeader)_ReadNoiseHead.GetValue(0);
+        return (SappyNoiseHeader)_ReadNoiseHead;
     }
     public static SappySampleHeader ReadSampleHead(int filenumber, int offset = -1)
     {
-        Array _ReadSampleHead = new SappySampleHeader[1];
+        ValueType _ReadSampleHead = new SappySampleHeader();
         ReadOffset(filenumber, offset);
         FileGet(filenumber, ref _ReadSampleHead, ReadOffset(filenumber) + 1);
         ReadOffset(filenumber, (int)(Seek(filenumber) - 1));
-        return (SappySampleHeader)_ReadSampleHead.GetValue(0);
+        return (SappySampleHeader)_ReadSampleHead;
     }
 
     public static int SignedByteToInteger(byte SignedByte) => SignedByte > 0x7F ? SignedByte - 0x100 : SignedByte;

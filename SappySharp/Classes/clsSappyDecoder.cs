@@ -113,10 +113,10 @@ public partial class clsSappyDecoder
     private const int GBWaveBaseFreq = 880;
     private const int SappyPPQN = 24;
 
-    private int[] MidiPatchMap = new int[127]; // by Kawa
-    private int[] MidiPatchTrans = new int[127];
-    private int[] MidiDrumMap = new int[127];
-    private int[] EarPiercers = new int[127];
+    private int[] MidiPatchMap = new int[128]; // by Kawa
+    private int[] MidiPatchTrans = new int[128];
+    private int[] MidiDrumMap = new int[128];
+    private int[] EarPiercers = new int[128];
     private int EarPiercerCnt = 0;
 
     private class tBufferRawMidiEvent
@@ -187,7 +187,7 @@ public partial class clsSappyDecoder
     }
     public void ClearMidiPatchMap() // by Kawa
     {
-        for (int i = 0; i <= 127; i += 1)
+        for (int i = 0; i < 128; i++)
         {
             MidiPatchMap[i] = i;
             MidiDrumMap[i] = i;
@@ -332,12 +332,12 @@ public partial class clsSappyDecoder
 
         if (mvarPlaying) StopSong();
 
-        SappyInstrumentHeader inshead = null;
-        SappyDrumKitHeader drmhead = null;
-        SappyDirectHeader dirhead = null;
-        SappySampleHeader smphead = null;
-        SappyMultiHeader mulhead = null;
-        SappyNoiseHeader gbhead = null;
+        SappyInstrumentHeader inshead = new();
+        SappyDrumKitHeader drmhead = new();
+        SappyDirectHeader dirhead = new();
+        SappySampleHeader smphead = new();
+        SappyMultiHeader mulhead = new();
+        SappyNoiseHeader gbhead = new();
 
         SappyChannels.Clear();
         DrumKits.Clear();
@@ -345,7 +345,7 @@ public partial class clsSappyDecoder
         Instruments.Clear();
         Directs.Clear();
         NoteQueue.Clear();
-        for (int i = 0; i <= 31; i += 1)
+        for (int i = 0; i < 32; i++)
         {
             NoteArray[i].Enabled = false;
         }
@@ -359,7 +359,7 @@ public partial class clsSappyDecoder
 
         Loading.Invoke(0);
         SSubroutines xta = new();
-        for (int i = 1; i <= b; i += 1)
+        for (int i = 1; i <= b; i++)
         {
             int loopoffset = -1;
             SappyChannels.Add();
@@ -552,8 +552,7 @@ public partial class clsSappyDecoder
                                 DrumKits.Add(Str(lp));
                                 DrumKits[Str(lp)].Directs.Add(Str(pn));
                                 SetStuff(DrumKits[Str(lp)].Directs[Str(pn)], inshead, dirhead, gbhead);
-                                if (Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotWave) GetSample(DrumKits[Str(lp)].Directs[Str(pn)], dirhead, ref smphead, false);
-
+                                    if (Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotWave) GetSample(DrumKits[Str(lp)].Directs[Str(pn)], dirhead, ref smphead, false);
                             }
                             else if ((inshead.bChannel & 0x40) == 0x40) // multi
                             {
@@ -850,7 +849,7 @@ public partial class clsSappyDecoder
             // TODO: (NOT SUPPORTED): On Error GoTo 0
         }
 
-        for (int i = 0; i <= 9; i += 1)
+        for (int i = 0; i <= 9; i++)
         {
             SamplePool.Add("noise0" + i);
             Randomize(DateAndTime.Timer);
@@ -965,12 +964,17 @@ public partial class clsSappyDecoder
     // Added by Kawa in DLL conversion
     public clsSappyDecoder()
     {
+        for (int i = 0; i < NoteArray.Length; i++)
+        {
+            NoteArray[i] = new();
+        }
+
         Trace(DateTime.Now + vbTab + "- Yo, this be clsSappyDecoder, Class_Initialize()");
         Randomize(DateAndTime.Timer);
         int sz = GetSettingI("Noise Length");
         if (sz == 0) sz = 2047;
         int ts = GetTickCount();
-        for (int i = 0; i <= 9; i += 1)
+        for (int i = 0; i <= 9; i++)
         {
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(0," + i + ")");
             for (int j = 0; j <= sz; j += 1) // 2047 // 16383
@@ -999,7 +1003,7 @@ public partial class clsSappyDecoder
         TotalMSecs += lMilliseconds;
         if (mvarTickCounter > 0)
         {
-            for (int i = 0; i <= 31; i += 1)
+            for (int i = 0; i <= 31; i++)
             {
                 if (NoteArray[i].Enabled && NoteArray[i].WaitTicks > 0)
                 {
@@ -1013,7 +1017,7 @@ public partial class clsSappyDecoder
                     }
                 }
             }
-            for (int i = 1; i <= SappyChannels.count; i += 1)
+            for (int i = 1; i <= SappyChannels.count; i++)
             {
                 while (!SappyChannels[i].Enabled)
                 {
@@ -1272,7 +1276,7 @@ public partial class clsSappyDecoder
 
             if (SappyChannels.count > 0)
             {
-                bool[] clearedchannel = new bool[SappyChannels.count]; // TODO: (NOT SUPPORTED): ReDim clearedchannel(1 To SappyChannels.count)
+                bool[] clearedchannel = new bool[SappyChannels.count];
 
                 UpdateDisplay.Invoke();
                 foreach (var Item in NoteQueue)
@@ -1281,9 +1285,9 @@ public partial class clsSappyDecoder
                     if (x < 32)
                     {
                         NoteArray[x] = Item;
-                        if (!clearedchannel[Item.ParentChannel])
+                        if (!clearedchannel[Item.ParentChannel - 1])
                         {
-                            clearedchannel[Item.ParentChannel] = true;
+                            clearedchannel[Item.ParentChannel - 1] = true;
                             foreach (var item2 in SappyChannels[Item.ParentChannel].Notes)
                             {
                                 if (NoteArray[item2.NoteID].Enabled && !NoteArray[item2.NoteID].NoteOff)
@@ -1538,7 +1542,7 @@ public partial class clsSappyDecoder
                                     BufferEvent($"{Chr(0x90 + Item.ParentChannel)}{Chr(Item.NoteNumber + MidiPatchTrans[Item.PatchNumber])}{Chr(Item.Velocity)}", TotalTicks);
                                 }
                             }
-                            PlayedANote.Invoke((byte)Item.ParentChannel, Item.NoteNumber, Item.Velocity);
+                            PlayedANote?.Invoke((byte)Item.ParentChannel, Item.NoteNumber, Item.Velocity);
                         }
                     }
                 }
@@ -1547,7 +1551,7 @@ public partial class clsSappyDecoder
 
             if (mvarNoteFrameCounter > 0)
             {
-                for (int i = 0; i <= 31; i += 1)
+                for (int i = 0; i <= 31; i++)
                 {
                     if (NoteArray[i].Enabled)
                     {
@@ -1725,7 +1729,7 @@ public partial class clsSappyDecoder
             }
 
             bool xmmm = false;
-            for (int i = 1; i <= SappyChannels.count; i += 1)
+            for (int i = 1; i <= SappyChannels.count; i++)
             {
                 if (SappyChannels[i].Enabled) xmmm = true;
             }
@@ -1864,7 +1868,7 @@ public partial class clsSappyDecoder
 
     public byte FreeNote()
     {
-        for (byte i = 0; i <= 31; i += 1)
+        for (byte i = 0; i <= 31; i++)
         {
             if (!NoteArray[i].Enabled)
             {

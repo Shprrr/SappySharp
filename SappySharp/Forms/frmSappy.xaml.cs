@@ -120,12 +120,12 @@ public partial class frmSappy : Window, ISubclass
         public int[] SongNo = new int[1024];
     }
 
-    private static tPlaylist[] playlist = new tPlaylist[255];
+    private static tPlaylist[] playlist = new tPlaylist[256];
     private static int NumPLs = 0;
-    private static int[] MidiMap = new int[127];
-    private static int[] MidiMapTrans = new int[127];
-    private static int[] DrumMap = new int[127];
-    private static int[] BleedingEars = new int[127];
+    private static int[] MidiMap = new int[128];
+    private static int[] MidiMapTrans = new int[128];
+    private static int[] DrumMap = new int[128];
+    private static int[] BleedingEars = new int[128];
     private static int BECnt = 0;
     public XmlElement MidiMapNode = null;
     public XmlElement MidiMapsDaddy = null;
@@ -216,7 +216,7 @@ public partial class frmSappy : Window, ISubclass
         MousePointer = 11;
         SappyDecoder.outputtype = mnuOutput[1].IsChecked ? SongOutputTypes.sotWave : SongOutputTypes.sotMIDI;
         SappyDecoder.ClearMidiPatchMap();
-        for (int i = 0; i <= 127; i++)
+        for (int i = 0; i < 128; i++)
         {
             // SappyDecoder.MidiMap(i) = MidiMap(i)
             SappyDecoder.SetMidiPatchMap(i, MidiMap[i], MidiMapTrans[i]);
@@ -1096,7 +1096,7 @@ public partial class frmSappy : Window, ISubclass
         //    cPop.set_Enabled(TaskMenus[i], false);
         //}
 
-        File99 = File.Open(myFile, FileMode.Open);
+        File99 = File.Open(myFile, FileMode.Open, FileAccess.Read , FileShare.Read);
         File99.Seek(0xAC, SeekOrigin.Begin);
         File99.Read(out string code, 4);
         if (Asc(Mid(code, 1, 1)) == 0)

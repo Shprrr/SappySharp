@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic;
 using static Microsoft.VisualBasic.FileSystem;
@@ -33,7 +34,7 @@ static partial class MidiLib
         {
             //Trace("Opened MIDI port");
             // TODO: (NOT SUPPORTED): On Error Resume Next
-            FileOpen(4, System.Reflection.Assembly.GetExecutingAssembly().Location + "\\pmidi.tmp", OpenMode.Input);
+            FileOpen(4, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\pmidi.tmp", OpenMode.Input);
             if (Err().Number == 0)
             {
                 int i = 0;
@@ -44,9 +45,9 @@ static partial class MidiLib
             }
         }
         // allows for closing midi after a crash
-        FileOpen(4, System.Reflection.Assembly.GetExecutingAssembly().Location + "\\pmidi.tmp", OpenMode.Output);
-        Print(4, "Previous midi handle: (used in case it crashed last time)");
-        Print(4, mdh);
+        FileOpen(4, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\pmidi.tmp", OpenMode.Output);
+        PrintLine(4, "Previous midi handle: (used in case it crashed last time)");
+        PrintLine(4, mdh);
         FileClose(4);
         midiOpened = true;
     }
