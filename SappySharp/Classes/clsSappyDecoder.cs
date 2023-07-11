@@ -410,7 +410,7 @@ public partial class clsSappyDecoder
             if (i == 7)
             {
                 i = 7;
-                VBOpenFile(7, "trackseven.txt", "Output");
+                FileOpen(7, "trackseven.txt", OpenMode.Output);
             }
 
             int cticks = 0;
@@ -432,10 +432,10 @@ public partial class clsSappyDecoder
                 }
                 c = ReadByte(1);
 
-                if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + Hex(c));
+                if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + Hex(c));
                 if (pc == 0x11BE31)
                 {
-                    VBWriteFile(7, "Warning!");
+                    PrintLine(7, "Warning!");
                 }
 
                 if (c != 0xB9 && c >= 0xB5 && c < 0xC5 || c == 0xCD)
@@ -490,7 +490,7 @@ public partial class clsSappyDecoder
                         byte D = ReadByte(1);
                         byte pn = 0;
 
-                        if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "  " + Hex(D));
+                        if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "  " + Hex(D));
 
                         if (D >= 0x80)
                         {
@@ -507,14 +507,14 @@ public partial class clsSappyDecoder
                             lln[nc] = D;
                             pc++;
                             byte e = ReadByte(1);
-                            if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "    " + Hex(e));
+                            if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "    " + Hex(e));
                             byte F;
                             if (e < 0x80)
                             {
                                 llv[nc] = e;
                                 pc++;
                                 F = ReadByte(1);
-                                if (i == 7) VBWriteFile(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "      " + Hex(F));
+                                if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "      " + Hex(F));
                                 if (F >= 0x80)
                                 {
                                     F = lla[nc];

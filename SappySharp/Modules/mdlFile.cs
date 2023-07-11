@@ -30,7 +30,7 @@ static class mdlFile
         if (filenumber < VF)
         {
             FileOpen(filenumber, Filename, OpenMode.Output);
-            Print(filenumber, "x");
+            PrintLine(filenumber, "x");
             FileClose(filenumber);
         }
         else

@@ -265,7 +265,7 @@ public partial class frmSappy : Window, ISubclass
 
         if (GetSettingI("mIRC Now Playing") != 0)
         {
-            File43 = File.OpenWrite(Assembly.GetExecutingAssembly().Location + "\\sappy.stt");
+            File43 = File.OpenWrite(AppContext.BaseDirectory + "\\sappy.stt");
             File43.Write(songinfo);
             FileClose(File43);
         }
@@ -401,7 +401,7 @@ public partial class frmSappy : Window, ISubclass
         // TODO: (NOT SUPPORTED): On Error Resume Next
         if (GetSetting("mIRC Now Playing") != null)
         {
-            File44 = File.OpenWrite(Assembly.GetExecutingAssembly().Location + "\\sappy.stt");
+            File44 = File.OpenWrite(AppContext.BaseDirectory + "\\sappy.stt");
             AssemblyName assemblyName = Application.ResourceAssembly.GetName();
             File44.Write(assemblyName.Version.Major + "." + assemblyName.Version.Minor + " | | | | Not running | ");
             FileClose(File44);

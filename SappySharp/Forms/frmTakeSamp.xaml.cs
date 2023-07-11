@@ -212,13 +212,13 @@ public partial class frmTakeSamp : Window
         string aByteStr;
         FileGet(99, ref theStuff);
         FileOpen(98, Filename, OpenMode.Output);
-        Print(98, Properties.Resources._7030);
-        Print(98, "#TONE NAME     : ", Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
-        Print(98, "#FREQUENCY     :", freq);
-        Print(98, "#BASE NOTE#    : 60");
-        Print(98, "#START ADRESS  : 000000");
-        Print(98, "#LOOP ADDRESS  : " + Right("000000" + loopstart, 6));
-        Print(98, "#END ADDRESS   : " + Right("000000" + Length, 6));
+        PrintLine(98, Properties.Resources._7030);
+        PrintLine(98, "#TONE NAME     : ", Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
+        PrintLine(98, "#FREQUENCY     :", freq);
+        PrintLine(98, "#BASE NOTE#    : 60");
+        PrintLine(98, "#START ADRESS  : 000000");
+        PrintLine(98, "#LOOP ADDRESS  : " + Right("000000" + loopstart, 6));
+        PrintLine(98, "#END ADDRESS   : " + Right("000000" + Length, 6));
         if (hdr2 == 0x0)
         {
             aByteStr = "1Shot";
@@ -231,22 +231,22 @@ public partial class frmTakeSamp : Window
         {
             aByteStr = "Maple chokes on 0x" + Right("0000" + Hex(hdr2), 4);
         }
-        Print(98, "#LOOP MODE     : " + aByteStr);
-        Print(98, "#FINE TUNE     : 0");
-        Print(98, "#WAVE EXP/COMP : 1");
-        Print(98, "#VOL EXP/COMP  : 1");
-        Print(98, "");
-        Print(98, vbTab + ".section.rodata");
-        Print(98, vbTab + ".Global" + vbTab + Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
-        Print(98, vbTab + ".Align" + vbTab + "2");
-        Print(98, "");
-        Print(98, Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2) + ":");
-        Print(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr1), 4));
-        Print(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr2), 4));
-        Print(98, vbTab + ".Int" + vbTab + freq);
-        Print(98, vbTab + ".Int" + vbTab + loopstart);
-        Print(98, vbTab + ".Int" + vbTab + Length);
-        Print(98, "");
+        PrintLine(98, "#LOOP MODE     : " + aByteStr);
+        PrintLine(98, "#FINE TUNE     : 0");
+        PrintLine(98, "#WAVE EXP/COMP : 1");
+        PrintLine(98, "#VOL EXP/COMP  : 1");
+        PrintLine(98, "");
+        PrintLine(98, vbTab + ".section.rodata");
+        PrintLine(98, vbTab + ".Global" + vbTab + Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
+        PrintLine(98, vbTab + ".Align" + vbTab + "2");
+        PrintLine(98, "");
+        PrintLine(98, Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2) + ":");
+        PrintLine(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr1), 4));
+        PrintLine(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr2), 4));
+        PrintLine(98, vbTab + ".Int" + vbTab + freq);
+        PrintLine(98, vbTab + ".Int" + vbTab + loopstart);
+        PrintLine(98, vbTab + ".Int" + vbTab + Length);
+        PrintLine(98, "");
         for (int j = 0; j <= 8; j += Length)
         {
             aByteStr = vbTab + ".byte ";
@@ -257,10 +257,10 @@ public partial class frmTakeSamp : Window
             }
             // TODO: (NOT SUPPORTED): On Error GoTo 0
             aByteStr = Left(aByteStr, Len(aByteStr) - 1); // chop off trailing ,
-            Print(98, aByteStr);
+            PrintLine(98, aByteStr);
         }
-        Print(98, "");
-        Print(98, vbTab + ".end");
+        PrintLine(98, "");
+        PrintLine(98, vbTab + ".end");
         FileClose(98);
         return;
     Fucksocks:;

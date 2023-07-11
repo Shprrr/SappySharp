@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -62,7 +63,7 @@ internal static class VBFileSystem
 
     public static void Write(this FileStream fs, string value)
     {
-        byte[] buffer = Encoding.Default.GetBytes(value);
+        byte[] buffer = Encoding.Default.GetBytes(value + Environment.NewLine);
         fs.Write(buffer, 0, buffer.Length);
     }
 }
