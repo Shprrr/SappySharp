@@ -1218,7 +1218,7 @@ public partial class frmSappy : Window, ISubclass
         lblInst.Content = "0x" + FixHex(SongHead.VoiceGroup - 0x8000000, 6);
 
         string n = "?";
-        lblSongName.Content = Replace(Properties.Resources._106, "$INDEX", i.ToString());
+        lblSongName.Text = Replace(Properties.Resources._106, "$INDEX", i.ToString());
         justthesongname = "Track " + i;
         for (int k = 0; k <= NumPLs; k += 1)
         {
@@ -1229,7 +1229,7 @@ public partial class frmSappy : Window, ISubclass
                     DontLoadDude = true;
                     n = playlist[k].SongName[l];
                     justthesongname = n;
-                    lblSongName.Content = Replace(Replace(Properties.Resources._107, "$NAME", n), "$INDEX", i.ToString());
+                    lblSongName.Text = Replace(Replace(Properties.Resources._107, "$NAME", n), "$INDEX", i.ToString());
                     for (int m = 0; m <= cbxSongs.Items.Count - 1; m += 1)
                     {
                         // If cbxSongs.List[m] = playlist[k].SongName[l] Then
@@ -1975,7 +1975,7 @@ public partial class frmSappy : Window, ISubclass
     private void PrepareRecording()
     {
         string target = "";
-        string fileTitle = lblSongName.Content + ".mid";
+        string fileTitle = lblSongName.Text + ".mid";
         string filter = "Type 0 MIDI (*.mid)|*.mid";
         int filterIndex = 1;
         if (!gCommonDialog.VBGetSaveFileName(ref target, ref fileTitle, ref filter, ref filterIndex, DefaultExt: "mid")) return;

@@ -137,9 +137,9 @@
                 <Label x:Name="lblExpand" Margin="305,19,0,0" Padding="2,2,2,2" Width="16" Height="15" VerticalAlignment="Top"
                         HorizontalAlignment="Left" FontFamily="Marlett" FontSize="12" FontWeight="Bold" Foreground="#FF00C000"
                         Content="6" Tag="[NoLocal]" MouseUp="lblExpand_Click" />
-                <Label x:Name="lblSongName" Margin="16,2,0,0" Padding="2,2,2,2" Width="289" Height="14" VerticalAlignment="Top"
-                        HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" FontWeight="Bold" Foreground="#FF00C0C0"
-                        HorizontalContentAlignment="Center" Content="[102]PleaseLoadGame" Tag="[NoLocal]" />
+                <TextBlock x:Name="lblSongName" Margin="16,2,0,0" Padding="2,2,2,2" Width="289" Height="14"
+                        VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8" FontWeight="Bold"
+                        Foreground="#FF00C0C0" TextAlignment="Center" Text="[102]PleaseLoadGame" Tag="[NoLocal]" />
                 <Line x:Name="Line2" X1="0" Y1="19" X2="326" Y2="19" Stroke="#FF808000" />
                 <Line x:Name="Line1" X1="0" Y1="36" X2="326" Y2="36" Stroke="#FF808000" />
                 <Label x:Name="lblPC" Margin="18,20,0,0" Padding="2,2,2,2" Width="41" Height="15" VerticalAlignment="Top"

@@ -941,7 +941,7 @@ public partial class clsSappyDecoder
             H = "MTrk";
             FilePutObject(midifile, H);
             FilePutObject(midifile, CLng(0));
-            string msg = (string)frmSappy.instance.lblSongName.Content;
+            string msg = frmSappy.instance.lblSongName.Text;
             System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
             msg = msg + " --- dumped by " + assemblyName.Name + " version " + assemblyName.Version.Major + "." + assemblyName.Version.Minor;
 
