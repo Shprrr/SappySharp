@@ -379,7 +379,7 @@ public partial class frmSappy : Window, ISubclass
     private void cmdStop_Click(object sender, RoutedEventArgs e) { cmdStop_Click(); }
     private void cmdStop_Click()
     {
-        if (Playing == true)
+        if (Playing)
         {
             Playing = false;
             SappyDecoder.StopSong();
@@ -1096,7 +1096,7 @@ public partial class frmSappy : Window, ISubclass
         //    cPop.set_Enabled(TaskMenus[i], false);
         //}
 
-        File99 = File.Open(myFile, FileMode.Open, FileAccess.Read , FileShare.Read);
+        File99 = File.Open(myFile, FileMode.Open, FileAccess.Read, FileShare.Read);
         File99.Seek(0xAC, SeekOrigin.Begin);
         File99.Read(out string code, 4);
         if (Asc(Mid(code, 1, 1)) == 0)
@@ -1255,7 +1255,7 @@ public partial class frmSappy : Window, ISubclass
               "|" + /*ebr.Bars["Info"].Items["Game"].Text +*/ //TODO: Commenting these COM instructions because it didn't work.
               "|" + n + IIf(SappyDecoder.outputtype == SongOutputTypes.sotMIDI, " (midi)", "");
 
-        if (Playing == true)
+        if (Playing)
         {
             cmdPlay_Click();
         }
@@ -1834,7 +1834,7 @@ public partial class frmSappy : Window, ISubclass
         // Some of this from Drew's Sappy 2 interface.
         string it = "";
 
-        for (int c = 1; c <= SappyDecoder.SappyChannels.count; c += 1)
+        for (int c = 1; c <= SappyDecoder.SappyChannels.count; c++)
         {
             int ct = 0;
             string ns = "";
@@ -1842,9 +1842,9 @@ public partial class frmSappy : Window, ISubclass
             {
                 foreach (SNote n in SappyDecoder.SappyChannels[c].Notes)
                 {
-                    if (SappyDecoder.NoteInfo[n.NoteID].Enabled == true && SappyDecoder.NoteInfo[n.NoteID].NoteOff == false)
+                    if (SappyDecoder.NoteInfo[n.NoteID].Enabled && !SappyDecoder.NoteInfo[n.NoteID].NoteOff)
                     {
-                        ct += (int)(SappyDecoder.NoteInfo[n.NoteID].Velocity / 0x7F * (SappyDecoder.NoteInfo[n.NoteID].EnvPosition / 0xFF) * 0x7F);
+                        ct += (int)((decimal)SappyDecoder.NoteInfo[n.NoteID].Velocity / 0x7F * (SappyDecoder.NoteInfo[n.NoteID].EnvPosition / 0xFF) * 0x7F);
                         ns = ns + NoteToName(SappyDecoder.NoteInfo[n.NoteID].NoteNumber) + " ";
                     }
                     it = SappyDecoder.NoteInfo[n.NoteID].outputtype switch
@@ -1859,7 +1859,7 @@ public partial class frmSappy : Window, ISubclass
                 }
                 ct /= SappyDecoder.SappyChannels[c].Notes.count;
             }
-            ct = ct / 127 * (SappyDecoder.SappyChannels[c].MainVolume / 127) * 255;
+            ct = (int)(ct / 127m * (SappyDecoder.SappyChannels[c].MainVolume / 127m) * 255);
             cvwChannel[c - 1].Delay = SappyDecoder.SappyChannels[c].WaitTicks.ToString();
             cvwChannel[c - 1].volume = ct.ToString();
             cvwChannel[c - 1].pan = SappyDecoder.SappyChannels[c].Panning - 64;

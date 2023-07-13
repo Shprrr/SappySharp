@@ -70,7 +70,7 @@ public partial class ChannelViewer : UserControl
 
     public string patch { get => (string)lblPat.Content; set => lblPat.Content = value; }
 
-    public string volume { get => (string)lblVol.Content; set => lblVol.Content = value; }
+    public string volume { get => lblVol.Text; set => lblVol.Text = value; }
 
     public string Note { get => (string)lblNote.Content; set => lblNote.Content = value; }
 
@@ -127,20 +127,20 @@ public partial class ChannelViewer : UserControl
         int left = 0;
         if (m_Pan == 0)
         {
-            left = (int)(64 + 128 - Conversion.Val((string)lblVol.Content) / 2);
-            shpMeter.Width = Conversion.Val((string)lblVol.Content);
+            left = (int)(64 + 128 - Conversion.Val(lblVol.Text) / 2);
+            shpMeter.Width = Conversion.Val(lblVol.Text);
         }
         else if (m_Pan < 0)
         {
-            left = (int)(64 + 128 - Conversion.Val((string)lblVol.Content) / 2);
-            shpMeter.Width = Conversion.Val((string)lblVol.Content) / 2 + 1;
+            left = (int)(64 + 128 - Conversion.Val(lblVol.Text) / 2);
+            shpMeter.Width = Conversion.Val(lblVol.Text) / 2 + 1;
         }
         else if (m_Pan > 0)
         {
             left = 64 + 128;
-            shpMeter.Width = Conversion.Val((string)lblVol.Content) / 2;
+            shpMeter.Width = Conversion.Val(lblVol.Text) / 2;
         }
         shpMeter.Margin = new(left, shpMeter.Margin.Top, shpMeter.Margin.Right, shpMeter.Margin.Bottom);
-        shpMeter.Background = new SolidColorBrush(Color.FromRgb(0, (byte)(32 + Conversion.Val((string)lblVol.Content) / 3), 0));
+        shpMeter.Background = new SolidColorBrush(Color.FromRgb(0, (byte)(32 + Conversion.Val(lblVol.Text) / 3), 0));
     }
 }

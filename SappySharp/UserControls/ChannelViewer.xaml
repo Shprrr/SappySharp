@@ -20,8 +20,8 @@
                 MouseUp="lblExpand_MouseUp" />
         <Label x:Name="lblNote" Margin="88,3,0,0" Padding="2,2,2,2" Width="201" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Foreground="#FF00C0C0" />
-        <Label x:Name="lblVol" Margin="40,16,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
-                HorizontalAlignment="Left" Content="0" Foreground="#FFFFC080" />
+        <TextBlock x:Name="lblVol" Margin="40,16,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
+                HorizontalAlignment="Left" Text="0" Foreground="#FFFFC080" />
         <Label x:Name="lblPat" Margin="16,16,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="0" Foreground="#FFFF8080" />
         <Label x:Name="lblDel" Margin="64,3,0,0" Padding="2,2,2,2" Width="17" Height="13" VerticalAlignment="Top"
