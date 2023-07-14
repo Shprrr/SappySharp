@@ -1876,7 +1876,7 @@ public partial class frmSappy : Window, ISubclass
             totallen += SappyDecoder.SappyChannels[c].TrackLengthInBytes;
             totalplayed += SappyDecoder.SappyChannels[c].ProgramCounter;
         }
-        int totalpercent = 326 / totallen * totalplayed;
+        int totalpercent = (int)(326d / totallen * totalplayed);
         linProgress.X2 = totalpercent;
         // Caption = totalplayed & " / " & totallen & " -> " & totalpercent & "%"
         // Dim totalplayed As Long

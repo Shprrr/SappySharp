@@ -9,7 +9,7 @@ namespace SappySharp.Classes;
 public class SKeyMaps : IEnumerable<SKeyMap>
 {
     // local variable to hold collection
-    private readonly Collection mCol = null;
+    private readonly Collection mCol = new();
     public void Clear()
     {
         while (mCol.Count > 0)

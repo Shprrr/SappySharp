@@ -56,7 +56,7 @@ static class SapPlayer
         public int flags;
         public byte b4;
         public byte FineTune;
-        public int wFreq;
+        public short wFreq;
         public int wLoop;
         public int wSize;
     }

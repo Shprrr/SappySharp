@@ -410,6 +410,7 @@ public partial class clsSappyDecoder
             if (i == 7)
             {
                 i = 7;
+                FileClose(7);
                 FileOpen(7, "trackseven.txt", OpenMode.Output);
             }
 
@@ -552,7 +553,11 @@ public partial class clsSappyDecoder
                                 DrumKits.Add(Str(lp));
                                 DrumKits[Str(lp)].Directs.Add(Str(pn));
                                 SetStuff(DrumKits[Str(lp)].Directs[Str(pn)], inshead, dirhead, gbhead);
+                                try
+                                {
                                     if (Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotWave) GetSample(DrumKits[Str(lp)].Directs[Str(pn)], dirhead, ref smphead, false);
+                                }
+                                catch (Exception) { }
                             }
                             else if ((inshead.bChannel & 0x40) == 0x40) // multi
                             {
@@ -1368,15 +1373,19 @@ public partial class clsSappyDecoder
                             NoteArray[x].EnvRelease = DrumKits[Str(pat)].Directs[Str(nn)].EnvRelease;
                             if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotDirect || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotWave)
                             {
-                                das = Str(DrumKits[Str(pat)].Directs[Str(nn)].SampleID);
-                                if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch && !SamplePool[das].GBWave)
+                                try
                                 {
-                                    daf = SamplePool[das].Frequency;
+                                    das = Str(DrumKits[Str(pat)].Directs[Str(nn)].SampleID);
+                                    if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch && !SamplePool[das].GBWave)
+                                    {
+                                        daf = SamplePool[das].Frequency;
+                                    }
+                                    else
+                                    {
+                                        daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, IIf(SamplePool[das].GBWave, -2, SamplePool[das].Frequency));
+                                    }
                                 }
-                                else
-                                {
-                                    daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, IIf(SamplePool[das].GBWave, -2, SamplePool[das].Frequency));
-                                }
+                                catch (Exception) { das = ""; }
                             }
                             else if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare1 || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare2)
                             {
@@ -1992,7 +2001,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }
