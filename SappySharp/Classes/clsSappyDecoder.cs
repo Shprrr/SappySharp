@@ -48,7 +48,6 @@ public partial class clsSappyDecoder
     private NoteInfo[] NoteArray = new NoteInfo[32];
 
     public CTimerMM EventProcessor = null;
-    public CTimerMM NoteProcessor = null;
 
     public int TotalTicks = 0; // by Kawa
     public int TotalMSecs = 0; // by Kawa
@@ -1430,9 +1429,7 @@ public partial class clsSappyDecoder
                                         }
                                         if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB1Chan].ParentChannel)}{Chr(NoteArray[mvarGB1Chan].NoteNumber)}{Chr(0)}", TotalTicks);
                                         NoteArray[mvarGB1Chan].FModChannel = 0;
-                                        // TODO: (NOT SUPPORTED): On Error Resume Next
-                                        SappyChannels[NoteArray[mvarGB1Chan].ParentChannel].Notes.Remove(Str(mvarGB1Chan));
-                                        // TODO: (NOT SUPPORTED): On Error GoTo 0
+                                        try { SappyChannels[NoteArray[mvarGB1Chan].ParentChannel].Notes.Remove(Str(mvarGB1Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB1Chan].Enabled = false;
                                     }
                                     mvarGB1Chan = x;
@@ -1452,9 +1449,7 @@ public partial class clsSappyDecoder
                                         }
                                         if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB2Chan].ParentChannel)}{Chr(NoteArray[mvarGB2Chan].NoteNumber)}{Chr(0)}", TotalTicks);
                                         NoteArray[mvarGB2Chan].FModChannel = 0;
-                                        // TODO: (NOT SUPPORTED): On Error Resume Next
-                                        SappyChannels[NoteArray[mvarGB2Chan].ParentChannel].Notes.Remove(Str(mvarGB2Chan));
-                                        // TODO: (NOT SUPPORTED): On Error GoTo 0
+                                        try { SappyChannels[NoteArray[mvarGB2Chan].ParentChannel].Notes.Remove(Str(mvarGB2Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB2Chan].Enabled = false;
                                     }
                                     mvarGB2Chan = x;
@@ -1474,9 +1469,7 @@ public partial class clsSappyDecoder
                                         }
                                         if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB3Chan].ParentChannel)}{Chr(NoteArray[mvarGB3Chan].NoteNumber)}{Chr(0)}", TotalTicks); // ...and here (Drag)
                                         NoteArray[mvarGB3Chan].FModChannel = 0;
-                                        // TODO: (NOT SUPPORTED): On Error Resume Next
-                                        SappyChannels[NoteArray[mvarGB3Chan].ParentChannel].Notes.Remove(Str(mvarGB3Chan));
-                                        // TODO: (NOT SUPPORTED): On Error GoTo 0
+                                        try { SappyChannels[NoteArray[mvarGB3Chan].ParentChannel].Notes.Remove(Str(mvarGB3Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB3Chan].Enabled = false;
                                     }
                                     mvarGB3Chan = x;
@@ -1496,9 +1489,7 @@ public partial class clsSappyDecoder
                                         }
                                         if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB4Chan].ParentChannel)}{Chr(NoteArray[mvarGB4Chan].NoteNumber)}{Chr(0)}", TotalTicks);
                                         NoteArray[mvarGB4Chan].FModChannel = 0;
-                                        // TODO: (NOT SUPPORTED): On Error Resume Next
-                                        SappyChannels[NoteArray[mvarGB4Chan].ParentChannel].Notes.Remove(Str(mvarGB4Chan));
-                                        // TODO: (NOT SUPPORTED): On Error GoTo 0
+                                        try { SappyChannels[NoteArray[mvarGB4Chan].ParentChannel].Notes.Remove(Str(mvarGB4Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB4Chan].Enabled = false;
                                     }
                                     mvarGB4Chan = x;
@@ -1781,20 +1772,7 @@ public partial class clsSappyDecoder
         StopSong();
     }
 
-    private void NoteProcessor_Timer(int lMilliseconds)
-    {
-        EventProcessor.Enabled = false;
-        EventProcessor.EventType = EEventTypes.etPeriodic;
-        EventProcessor.Interval = 60000 / (mvarTempo * SappyPPQN); // * dticks
-        EventProcessor.Resolution = 1;
-        EventProcessor.Enabled = true;
-        return;
-    hell:;
-        MsgBox("runtime error: " + Err().Number + " / " + Err().Description, vbCritical);
-        StopSong();
-    }
-
-    public bool DirectExists(SDirects DirectsCollection, byte DirectID)
+    public static bool DirectExists(SDirects DirectsCollection, byte DirectID)
     {
         foreach (var Item in DirectsCollection)
         {
@@ -1805,7 +1783,7 @@ public partial class clsSappyDecoder
         }
         return false;
     }
-    public bool KeyMapExists(SKeyMaps KeyMapCollection, byte KeyMapID)
+    public static bool KeyMapExists(SKeyMaps KeyMapCollection, byte KeyMapID)
     {
         foreach (var Item in KeyMapCollection)
         {
@@ -1920,7 +1898,7 @@ public partial class clsSappyDecoder
         }
     }
 
-    public int FlipLong(int Value)
+    public static int FlipLong(int Value)
     {
         string[] b = new string[4];
         string s1 = Strings.Right("00000000" + Hex(Value), 8);
@@ -1951,7 +1929,7 @@ public partial class clsSappyDecoder
         // FlipLong = value
     }
 
-    public int FlipInt(int Value)
+    public static int FlipInt(int Value)
     {
         byte b1 = (byte)(Value % 0x100);
         Value /= 0x100;
