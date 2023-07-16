@@ -85,12 +85,6 @@ public static class VBExtension
     //public static void Unload(this Window Ob) { Ob.Close(); }
     public static void Stop(int code = 1) { Environment.Exit(code); }
 
-    public static bool IIf(bool A, bool B, bool C) { return !!A ? B : C; }
-    public static string IIf(bool A, string B, string C) { return !!A ? B : C; }
-    public static double IIf(bool A, double B, double C) { return !!A ? B : C; }
-    public static decimal IIf(bool A, decimal B, decimal C) { return !!A ? B : C; }
-    public static int IIf(bool A, int B, int C) { return !!A ? B : C; }
-
     public static double ValDouble(string s)
     {
         string f = "";

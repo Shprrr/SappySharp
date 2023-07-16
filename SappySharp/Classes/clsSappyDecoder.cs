@@ -839,14 +839,14 @@ public partial class clsSappyDecoder
                     // Next i
                     WriteString(2, Item.SampleData);
                     CloseFile(2);
-                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, "temp.raw", FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, 0, 0);
+                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, "temp.raw", FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (Item.LoopEnable ? FSOUND_MODES.FSOUND_LOOP_NORMAL : 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, 0, 0);
                     FSOUND_Sample_SetLoopPoints(Item.FModSample, Item.loopstart, Item.Size - 1);
                     DeleteFile("temp.raw");
                     // TODO: (NOT SUPPORTED): On Error GoTo 0
                 }
                 else
                 {
-                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, Filename, FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (FSOUND_MODES)IIf(Item.LoopEnable, FSOUND_MODES.FSOUND_LOOP_NORMAL, 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, int.Parse(Item.SampleData), Item.Size);
+                    Item.FModSample = FSOUND_Sample_Load((int)FSOUND_CHANNELSAMPLEMODE.FSOUND_FREE, Filename, FSOUND_MODES.FSOUND_8BITS | FSOUND_MODES.FSOUND_LOADRAW | (Item.LoopEnable ? FSOUND_MODES.FSOUND_LOOP_NORMAL : 0) | FSOUND_MODES.FSOUND_MONO | FSOUND_MODES.FSOUND_SIGNED, int.Parse(Item.SampleData), Item.Size);
                     FSOUND_Sample_SetLoopPoints(Item.FModSample, Item.loopstart, Item.Size - 1);
                 }
             }
@@ -1103,12 +1103,12 @@ public partial class clsSappyDecoder
                                     if (mutethis) dav = 0;
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
-                                        FSOUND_SetVolume(NoteArray[Item.NoteID].FModChannel, dav * IIf(SappyChannels[i].mute, 0, 1));
+                                        FSOUND_SetVolume(NoteArray[Item.NoteID].FModChannel, dav * (SappyChannels[i].mute ? 0 : 1));
                                     }
                                     else
                                     {
                                         // MIDISETVOL
-                                        SetChnVolume(NoteArray[Item.NoteID].FModChannel, dav * IIf(SappyChannels[i].mute, 0, 2));
+                                        SetChnVolume(NoteArray[Item.NoteID].FModChannel, dav * (SappyChannels[i].mute ? 0 : 2));
                                     }
                                     // TODO: (NOT SUPPORTED): On Error Resume Next
                                     if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[Item.NoteID].FModChannel)}{Chr(dav)}", TotalTicks);
@@ -1316,7 +1316,7 @@ public partial class clsSappyDecoder
                             if (Directs[Str(pat)].outputtype == DirectOutputTypes.dotDirect || Directs[Str(pat)].outputtype == DirectOutputTypes.dotWave)
                             {
                                 das = Str(Directs[Str(pat)].SampleID);
-                                daf = NoteToFreq(nn + (60 - Directs[Str(pat)].DrumTuneKey), IIf(SamplePool[das].GBWave, -1, SamplePool[das].Frequency));
+                                daf = NoteToFreq(nn + (60 - Directs[Str(pat)].DrumTuneKey), SamplePool[das].GBWave ? -1 : SamplePool[das].Frequency);
                                 if (SamplePool[das].GBWave) daf /= 2;
                             }
                             else if (Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare1 || Directs[Str(pat)].outputtype == DirectOutputTypes.dotSquare2)
@@ -1350,7 +1350,7 @@ public partial class clsSappyDecoder
                                 }
                                 else
                                 {
-                                    daf = NoteToFreq(nn, IIf(SamplePool[das].GBWave, -2, SamplePool[das].Frequency));
+                                    daf = NoteToFreq(nn, SamplePool[das].GBWave ? -2 : SamplePool[das].Frequency);
                                 }
                             }
                             else if (Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotSquare1 || Instruments[Str(pat)].Directs[Str(Instruments[Str(pat)].KeyMaps[Str(nn)].AssignDirect)].outputtype == DirectOutputTypes.dotSquare2)
@@ -1381,7 +1381,7 @@ public partial class clsSappyDecoder
                                     }
                                     else
                                     {
-                                        daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, IIf(SamplePool[das].GBWave, -2, SamplePool[das].Frequency));
+                                        daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, SamplePool[das].GBWave ? -2 : SamplePool[das].Frequency);
                                     }
                                 }
                                 catch (Exception) { das = ""; }
@@ -1512,7 +1512,7 @@ public partial class clsSappyDecoder
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
                                 FSOUND_SetFrequency(NoteArray[x].FModChannel, CInt(daf) * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[Item.ParentChannel].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[Item.ParentChannel].PitchBendRange)));
-                                FSOUND_SetVolume(NoteArray[x].FModChannel, dav * IIf(SappyChannels[Item.ParentChannel].mute, 0, 1));
+                                FSOUND_SetVolume(NoteArray[x].FModChannel, dav * (SappyChannels[Item.ParentChannel].mute ? 0 : 1));
                                 FSOUND_SetPan(NoteArray[x].FModChannel, SappyChannels[Item.ParentChannel].Panning * 2);
                             }
                             else
@@ -1621,12 +1621,12 @@ public partial class clsSappyDecoder
 
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
-                                FSOUND_SetVolume(NoteArray[i].FModChannel, dav * IIf(SappyChannels[NoteArray[i].ParentChannel].mute, 0, 1));
+                                FSOUND_SetVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
                             else
                             {
                                 // MIDISETVOL
-                                SetChnVolume(NoteArray[i].FModChannel, dav * IIf(SappyChannels[NoteArray[i].ParentChannel].mute, 0, 1));
+                                SetChnVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
                             // TODO: (NOT SUPPORTED): On Error Resume Next
                             if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[i].FModChannel)}{Chr(dav)}", TotalTicks);
@@ -1713,12 +1713,12 @@ public partial class clsSappyDecoder
                             if (mutethis) dav = 0;
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
-                                FSOUND_SetVolume(NoteArray[i].FModChannel, dav * IIf(SappyChannels[NoteArray[i].ParentChannel].mute, 0, 1));
+                                FSOUND_SetVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
                             else
                             {
                                 // MIDISETVOL
-                                SetChnVolume(NoteArray[i].FModChannel, dav * IIf(SappyChannels[NoteArray[i].ParentChannel].mute, 0, 1));
+                                SetChnVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
                             // TODO: (NOT SUPPORTED): On Error Resume Next
                             if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[i].FModChannel)}{Chr(dav)}", TotalTicks);
@@ -1944,7 +1944,7 @@ public partial class clsSappyDecoder
 
     private void GetSample(SDirect D, SappyDirectHeader dirhead, ref SappySampleHeader smphead, bool UseReadString)
     {
-        Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + IIf(UseReadString, "readstring", "seek") + ")");
+        Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + (UseReadString ? "readstring" : "seek") + ")");
         D.SampleID = dirhead.pSampleHeader.ToString();
         int sid = int.Parse(D.SampleID);
         if (!SampleExists(sid))
@@ -1979,7 +1979,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }
@@ -1987,7 +1987,7 @@ public partial class clsSappyDecoder
 
     private void GetSampleWithMulti(SDirect D, SappyDirectHeader dirhead, ref SappySampleHeader smphead, bool UseReadString)
     {
-        Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + IIf(UseReadString, "readstring", "seek") + ", multi)");
+        Console.WriteLine("GetSample -> 0x" + Hex(dirhead.pSampleHeader) + " (" + (UseReadString ? "readstring" : "seek") + ", multi)");
         D.SampleID = dirhead.pSampleHeader.ToString();
         int sid = int.Parse(D.SampleID);
         if (!SampleExists(sid))
@@ -2022,7 +2022,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int(IIf(Strings.Mid(tsi, ai / 2 + 1, 1) == "", 0, Strings.Asc(Strings.Mid(tsi, ai / 2 + 1, 1))) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
                 }
             }
         }

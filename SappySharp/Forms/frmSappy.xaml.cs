@@ -246,7 +246,7 @@ public partial class frmSappy : Window, ISubclass
 
         for (int i = 0; i <= SappyDecoder.SappyChannels.count - 1; i++)
         {
-            SappyDecoder.SappyChannels[i + 1].mute = IIf(cvwChannel[i].mute == 1, false, true);
+            SappyDecoder.SappyChannels[i + 1].mute = cvwChannel[i].mute != 1;
             cvwChannel[i].Note = "";
             cvwChannel[i].pan = 0;
             cvwChannel[i].volume = "0";
@@ -273,7 +273,7 @@ public partial class frmSappy : Window, ISubclass
         if (GetSettingI("MSN Now Playing") != 0)
         {
             AssemblyName assemblyName = Application.ResourceAssembly.GetName();
-            TellMSN(justthesongname + IIf(SappyDecoder.outputtype == SongOutputTypes.sotMIDI, " (midi)", ""), "Sappy " + assemblyName.Version.Major + "." + assemblyName.Version.Minor, ebr.Bars["Info"].Items["Game"].Text + " (" + gamecode + ")"); // ebr.Bars["Info"].Items["Creator"].Text
+            TellMSN(justthesongname + (SappyDecoder.outputtype == SongOutputTypes.sotMIDI ? " (midi)" : ""), "Sappy " + assemblyName.Version.Major + "." + assemblyName.Version.Minor, ebr.Bars["Info"].Items["Game"].Text + " (" + gamecode + ")"); // ebr.Bars["Info"].Items["Creator"].Text
         }
 
         mnuOutput[0].IsEnabled = false;
@@ -445,7 +445,7 @@ public partial class frmSappy : Window, ISubclass
         // If Playing = False Then Exit Sub
         // TODO: (NOT SUPPORTED): On Error Resume Next
         if (SappyDecoder.SappyChannels.count < 1) goto FlickIt; // Exit Sub
-        SappyDecoder.SappyChannels[Index + 1].mute = IIf(cvwChannel[Index].mute == 1, false, true);
+        SappyDecoder.SappyChannels[Index + 1].mute = cvwChannel[Index].mute != 1;
 
     FlickIt:;
         if ((string)chkMute.Tag == "O.O") return;
@@ -1253,7 +1253,7 @@ public partial class frmSappy : Window, ISubclass
               "|" + gamecode +
               "|" + txtSong +
               "|" + /*ebr.Bars["Info"].Items["Game"].Text +*/ //TODO: Commenting these COM instructions because it didn't work.
-              "|" + n + IIf(SappyDecoder.outputtype == SongOutputTypes.sotMIDI, " (midi)", "");
+              "|" + n + (SappyDecoder.outputtype == SongOutputTypes.sotMIDI ? " (midi)" : "");
 
         if (Playing)
         {
