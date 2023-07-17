@@ -552,11 +552,9 @@ public partial class clsSappyDecoder
                                 DrumKits.Add(Str(lp));
                                 DrumKits[Str(lp)].Directs.Add(Str(pn));
                                 SetStuff(DrumKits[Str(lp)].Directs[Str(pn)], inshead, dirhead, gbhead);
-                                try
-                                {
-                                    if (Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotWave) GetSample(DrumKits[Str(lp)].Directs[Str(pn)], dirhead, ref smphead, false);
-                                }
-                                catch (Exception) { }
+                                bool isDirectOrWave = true;
+                                try { isDirectOrWave = Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotDirect || Instruments[Str(lp)].Directs[Str(cdr)].outputtype == DirectOutputTypes.dotWave; } catch (Exception) { }
+                                if (isDirectOrWave) GetSample(DrumKits[Str(lp)].Directs[Str(pn)], dirhead, ref smphead, false);
                             }
                             else if ((inshead.bChannel & 0x40) == 0x40) // multi
                             {
@@ -1372,19 +1370,15 @@ public partial class clsSappyDecoder
                             NoteArray[x].EnvRelease = DrumKits[Str(pat)].Directs[Str(nn)].EnvRelease;
                             if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotDirect || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotWave)
                             {
-                                try
+                                das = Str(DrumKits[Str(pat)].Directs[Str(nn)].SampleID);
+                                if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch && !SamplePool[das].GBWave)
                                 {
-                                    das = Str(DrumKits[Str(pat)].Directs[Str(nn)].SampleID);
-                                    if (DrumKits[Str(pat)].Directs[Str(nn)].FixedPitch && !SamplePool[das].GBWave)
-                                    {
-                                        daf = SamplePool[das].Frequency;
-                                    }
-                                    else
-                                    {
-                                        daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, SamplePool[das].GBWave ? -2 : SamplePool[das].Frequency);
-                                    }
+                                    daf = SamplePool[das].Frequency;
                                 }
-                                catch (Exception) { das = ""; }
+                                else
+                                {
+                                    daf = NoteToFreq(DrumKits[Str(pat)].Directs[Str(nn)].DrumTuneKey, SamplePool[das].GBWave ? -2 : SamplePool[das].Frequency);
+                                }
                             }
                             else if (DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare1 || DrumKits[Str(pat)].Directs[Str(nn)].outputtype == DirectOutputTypes.dotSquare2)
                             {
