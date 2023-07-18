@@ -999,7 +999,6 @@ public partial class clsSappyDecoder
     {
         // TODO: (NOT SUPPORTED): if (ErrorChecking == true) On Error GoTo hell
 
-        int ep = 0;
         bool mutethis = false;
 
         TotalMSecs += lMilliseconds;
@@ -1028,7 +1027,7 @@ public partial class clsSappyDecoder
                 }
 
                 // mutethis = False
-                for (ep = 0; ep <= EarPiercerCnt; ep += 1)
+                for (int ep = 0; ep <= EarPiercerCnt; ep += 1)
                 {
                     if (EarPiercers[ep] == SappyChannels[i].PatchNumber)
                     {
@@ -1403,7 +1402,7 @@ public partial class clsSappyDecoder
                         if (das != "")
                         {
                             daf *= (int)Math.Pow(Math.Pow(2, 1d / 12), Transpose);
-                            int dav = CInt(CInt(Item.Velocity) / CInt(0x7F) * (CInt(SappyChannels[Item.ParentChannel].MainVolume) / CInt(0x7F)) * 255);
+                            int dav = CInt((double)Item.Velocity / 0x7F * ((double)SappyChannels[Item.ParentChannel].MainVolume / 0x7F) * 255);
                             if (mutethis) dav = 0;
 
                             switch (NoteArray[x].outputtype)
@@ -1610,7 +1609,7 @@ public partial class clsSappyDecoder
                             if (nex > NoteArray[i].EnvDestination && NoteArray[i].EnvStep > 0) nex = NoteArray[i].EnvDestination;
                             if (nex < NoteArray[i].EnvDestination && NoteArray[i].EnvStep < 0) nex = NoteArray[i].EnvDestination;
                             NoteArray[i].EnvPosition = nex;
-                            int dav = CInt(CInt(NoteArray[i].Velocity) / CInt(0x7F) * (CInt(SappyChannels[NoteArray[i].ParentChannel].MainVolume) / CInt(0x7F)) * (CInt(Int(NoteArray[i].EnvPosition)) / CInt(0xFF)) * 255);
+                            int dav = CInt((double)NoteArray[i].Velocity / 0x7F * ((double)SappyChannels[NoteArray[i].ParentChannel].MainVolume / 0x7F) * ((double)Int(NoteArray[i].EnvPosition) / 0xFF) * 255);
                             if (mutethis) dav = 0;
 
                             if (mvarOutputType == SongOutputTypes.sotWave)
@@ -1703,7 +1702,7 @@ public partial class clsSappyDecoder
                             if (nex < NoteArray[i].EnvDestination && NoteArray[i].EnvStep < 0) nex = NoteArray[i].EnvDestination;
                             NoteArray[i].EnvPosition = nex;
 
-                            int dav = CInt(CInt(NoteArray[i].Velocity) / CInt(0x7F) * (CInt(SappyChannels[NoteArray[i].ParentChannel].MainVolume) / CInt(0x7F)) * (CInt(Int(NoteArray[i].EnvPosition)) / CInt(0xFF)) * 255);
+                            int dav = CInt((double)NoteArray[i].Velocity / 0x7F * ((double)SappyChannels[NoteArray[i].ParentChannel].MainVolume / 0x7F) * ((double)Int(NoteArray[i].EnvPosition) / 0xFF) * 255);
                             if (mutethis) dav = 0;
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
