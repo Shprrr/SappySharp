@@ -122,24 +122,18 @@ public partial class frmOptions : Window
     {
         for (int i = 0; i < picPage.Count; i += 1)
         {
-            //picPage[i].BorderStyle = 0;
             picPage[i].Visibility = Visibility.Hidden;
             picPage[i].Move(136, 32);
         }
-        //TODO: Support MSN ?
-        //MSNList1.AddItem(Properties.Resources._6011); // Playback
-        //MSNList1.AddItem(Properties.Resources._6005); // Now Playing
-        //MSNList1.AddItem(Properties.Resources._6008); // Interface
-        //MSNList1.AddItem(Properties.Resources._6012); // Skin
-        //// MSNList1.ListIndex = 0
-        //// TODO: (NOT SUPPORTED): On Error Resume Next
-        //i = GetSettingI("Settings Page");
-        //if (i > MSNList1.ListCount - 1) i = 0;
-        //MSNList1.SelectedIndex = i;
-
-        //AttachMessage(this, hwnd, WM_MOUSEWHEEL);
-
-        //picPage[3].ScaleMode = 3;
+        MSNList1.AddItem(Properties.Resources._6011); // Playback
+        MSNList1.AddItem(Properties.Resources._6005); // Now Playing
+        MSNList1.AddItem(Properties.Resources._6008); // Interface
+        MSNList1.AddItem(Properties.Resources._6012); // Skin
+        // MSNList1.ListIndex = 0
+        // TODO: (NOT SUPPORTED): On Error Resume Next
+        int page = GetSettingI("Settings Page");
+        if (page > MSNList1.Items.Count - 1) page = 0;
+        MSNList1.SelectedIndex = page;
 
         SetCaptions(this);
         Title = Properties.Resources._6000;
@@ -197,15 +191,10 @@ public partial class frmOptions : Window
     {
         if ((string)Tag == "repsplz")
         {
-            //MSNList1.SelectedIndex = 0;
+            MSNList1.SelectedIndex = 0;
             txtReps.SetFocus();
             Tag = "";
         }
-    }
-
-    private void Form_Unload(object sender, RoutedEventArgs e)
-    {
-        //DetachMessage(this, hwnd, WM_MOUSEWHEEL);
     }
 
     private void HScroll1_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -230,36 +219,15 @@ public partial class frmOptions : Window
         DrawColorBar();
     }
 
-    //TODO: Support MSN ?
-    //private int ISubclass_WindowProc(int hwnd, int iMsg, int wParam, int lParam)
-    //{
-    //    int _ISubclass_WindowProc = 0;
-    //    if (iMsg == WM_MOUSEWHEEL)
-    //    {
-    //        if (wParam > 0)
-    //        {
-    //            MSNList1.SelectedIndex = MSNList1.SelectedIndex > 0 ? MSNList1.SelectedIndex - 1 : 0;
-    //            MSNList1.Redraw();
-    //        }
-    //        else if (wParam < 0)
-    //        {
-    //            MSNList1.SelectedIndex = MSNList1.SelectedIndex < MSNList1.ListCount - 1 ? MSNList1.SelectedIndex + 1 : MSNList1.ListCount - 1;
-    //            MSNList1.Redraw();
-    //        }
-    //    }
-    //    return _ISubclass_WindowProc;
-    //}
-
-    private void MSNList1_Click(object sender, RoutedEventArgs e) { MSNList1_Click(); }
-    private void MSNList1_Click()
+    private void MSNList1_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         for (int i = 0; i < picPage.Count; i += 1)
         {
             picPage[i].Visibility = Visibility.Hidden;
         }
-        //picPage[MSNList1.ListIndex].Source = true;
-        //lblHeader.Content = MSNList1.List[MSNList1.ListIndex].DefaultProperty;
-        //WriteSettingI("Settings Page", MSNList1.SelectedIndex);
+        picPage[MSNList1.SelectedIndex].Visibility = Visibility.Visible;
+        lblHeader.Content = MSNList1.SelectedItem;
+        WriteSettingI("Settings Page", MSNList1.SelectedIndex);
     }
 
     private void picSkin_Click(object sender, MouseButtonEventArgs e) { picSkin_Click(picSkin.IndexOf((Image)sender)); }

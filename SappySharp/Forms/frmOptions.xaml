@@ -1,8 +1,8 @@
 <Window x:Class="SappySharp.Forms.frmOptions" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:SappySharp.Forms"
-        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Settings" Height="265" Width="537"
-        Loaded="Form_Load" Unloaded="Form_Unload" SizeChanged="Form_Resize">
+        xmlns:usercontrols="clr-namespace:SappySharp.UserControls" mc:Ignorable="d" Title="Settings" Height="305" Width="557"
+        Loaded="Form_Load" SizeChanged="Form_Resize">
     <Grid>
         <Grid x:Name="picPage_3" Margin="128,96,0,0" Width="393" Height="89" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ComboBox x:Name="cbxPresets" Margin="240,56,0,0" Padding="2,2,2,2" Width="145" Height="22" VerticalAlignment="Top"
@@ -69,7 +69,8 @@
             <Label x:Name="Label3" Margin="264,24,0,0" Padding="2,2,2,2" Width="129" Height="17" VerticalAlignment="Top"
                     HorizontalAlignment="Left" FontFamily="Calibri" FontSize="10" Content="[6003]infinite" />
         </Grid>
-        <Canvas x:Name="MSNList1" Margin="8,8,0,0" Width="121" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <ListBox x:Name="MSNList1" Margin="8,8,0,0" Width="121" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left"
+                SelectionChanged="MSNList1_SelectionChanged" />
         <Button x:Name="Command1" Margin="456,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top"
                 HorizontalAlignment="Left" Content="[5]" Click="Command1_Click" />
         <Button x:Name="cmdOK" Margin="376,232,0,0" Padding="2,2,2,2" Width="73" Height="25" VerticalAlignment="Top"
@@ -78,11 +79,12 @@
                 Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
         <Line x:Name="Line9" X1="136" Y1="224" X2="529" Y2="224"
                 Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
-        <Label x:Name="lblHeader" Margin="144,9,0,0" Padding="2,2,2,2" Width="18" Height="13" VerticalAlignment="Top"
-                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold" Content="foo" />
         <Line x:Name="Line6" X1="136" Y1="16" X2="529" Y2="16"
                 Stroke="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
         <Line x:Name="Line5" X1="136" Y1="17" X2="529" Y2="17"
                 Stroke="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
+        <Label x:Name="lblHeader" Margin="144,9,0,0" Padding="2,2,2,2" MinWidth="18" Height="13" VerticalAlignment="Top"
+                HorizontalAlignment="Left" FontFamily="Tahoma" FontSize="8.25" FontWeight="Bold"
+                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Content="foo" />
     </Grid>
 </Window>
