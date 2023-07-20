@@ -40,13 +40,11 @@ namespace SappySharp.Forms;
 
 public partial class frmSappy : Window, ISubclass
 {
-    private static frmSappy _instance;
-    public static frmSappy instance { set { _instance = null; } get { return _instance ??= new frmSappy(); } }
-    public static void Load() { if (_instance == null) { dynamic A = instance; } }
-    public void Unload() { Close(); _instance = null; }
+    public static frmSappy instance { get; set; }
+    public void Unload() { Close(); instance = null; }
     public frmSappy()
     {
-        _instance = this;
+        instance = this;
         InitializeComponent();
         timPlay.IsEnabled = false;
         timPlay.Interval = new TimeSpan(0, 0, 0, 0, 1000);
@@ -512,33 +510,41 @@ public partial class frmSappy : Window, ISubclass
         int i = 0;
         if (itm.Key == "taketrax")
         {
+            frmTakeTrax instance = new();
             for (i = 0; i <= SongHead.NumTracks - 1; i++)
             {
-                frmTakeTrax.instance.lstTracks.AddItem("0x" + FixHex(SongHead.Tracks[i], 6));
+                instance.lstTracks.AddItem("0x" + FixHex(SongHead.Tracks[i], 6));
             }
-            frmTakeTrax.instance.ShowDialog();
+            instance.ShowDialog();
         }
         if (itm.Key == "maketrax")
         {
-            frmMakeTrax.instance.txtHeaderOffset.Text = "0x" + FixHex(SongHeadOrg, 6);
-            frmMakeTrax.instance.txtTrack.Text = "0x" + FixHex(SongHead.Tracks[i], 6);
-            frmMakeTrax.instance.MyNumblocks = SongHead.NumBlocks;
-            frmMakeTrax.instance.MyPriority = SongHead.Priority;
-            frmMakeTrax.instance.MyReverb = SongHead.Reverb;
-            frmMakeTrax.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
-            frmMakeTrax.instance.SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8;
-            frmMakeTrax.instance.ShowDialog();
+            frmMakeTrax instance = new();
+            instance.txtHeaderOffset.Text = "0x" + FixHex(SongHeadOrg, 6);
+            instance.txtTrack.Text = "0x" + FixHex(SongHead.Tracks[i], 6);
+            instance.MyNumblocks = SongHead.NumBlocks;
+            instance.MyPriority = SongHead.Priority;
+            instance.MyReverb = SongHead.Reverb;
+            instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
+            instance.SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8;
+            instance.ShowDialog();
         }
         if (itm.Key == "takesamp")
         {
-            frmTakeSamp.instance.SingleSong = SongHeadOrg;
-            frmTakeSamp.instance.ShowDialog();
+            frmTakeSamp instance = new()
+            {
+                SingleSong = SongHeadOrg
+            };
+            instance.ShowDialog();
         }
         if (itm.Key == "codetrax")
         {
-            frmAssembler.instance.SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8;
-            frmAssembler.instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
-            frmAssembler.instance.ShowDialog();
+            frmAssembler instance = new()
+            {
+                SongTableEntry = SongTbl + int.Parse(txtSong.Text) * 8
+            };
+            instance.txtVoicegroup.Text = "0x" + FixHex(SongHead.VoiceGroup, 6);
+            instance.ShowDialog();
         }
         if (itm.Key == "makemidi") PrepareRecording();
 
@@ -1610,7 +1616,7 @@ public partial class frmSappy : Window, ISubclass
     private void mnuHelpAbout_Click(object sender, RoutedEventArgs e) { mnuHelpAbout_Click(); }
     private void mnuHelpAbout_Click()
     {
-        frmAbout.instance.ShowDialog();
+        new frmAbout().ShowDialog();
     }
 
     private void mnuHelpHelp_Click(object sender, RoutedEventArgs e) { mnuHelpHelp_Click(); }
@@ -1718,7 +1724,7 @@ public partial class frmSappy : Window, ISubclass
     private void mnuMidiMap_Click(object sender, RoutedEventArgs e) { mnuMidiMap_Click(); }
     private void mnuMidiMap_Click()
     {
-        frmMidiMapper.instance.ShowDialog();
+        new frmMidiMapper().ShowDialog();
     }
 
     private void mnuOutput_Click(object sender, RoutedEventArgs e) { mnuOutput_Click(mnuOutput.IndexOf((MenuItem)sender)); }
@@ -1749,13 +1755,13 @@ public partial class frmSappy : Window, ISubclass
     private void mnuSelectMIDI_Click(object sender, RoutedEventArgs e) { mnuSelectMIDI_Click(); }
     private void mnuSelectMIDI_Click()
     {
-        frmSelectMidiOut.instance.ShowDialog();
+        new frmSelectMidiOut().ShowDialog();
     }
 
     private void mnuSettings_Click(object sender, RoutedEventArgs e) { mnuSettings_Click(); }
     private void mnuSettings_Click()
     {
-        frmOptions.instance.ShowDialog();
+        new frmOptions().ShowDialog();
     }
 
     private void picScreenshot_DblClick(object sender, MouseButtonEventArgs e) { if (e.ClickCount != 2) return; picScreenshot_DblClick(); }
@@ -1778,8 +1784,11 @@ public partial class frmSappy : Window, ISubclass
     private void picStatusbar_DblClick(object sender, MouseButtonEventArgs e) { picStatusbar_DblClick(); }
     private void picStatusbar_DblClick()
     {
-        frmOptions.instance.Tag = "repsplz";
-        frmOptions.instance.ShowDialog();
+        frmOptions instance = new()
+        {
+            Tag = "repsplz"
+        };
+        instance.ShowDialog();
     }
 
     private void picTop_Paint(object sender, RoutedEventArgs e)

@@ -15,10 +15,6 @@ namespace SappySharp.Forms;
 
 public partial class frmTakeSamp : Window
 {
-    private static frmTakeSamp _instance;
-    public static frmTakeSamp instance { set { _instance = null; } get { return _instance ??= new frmTakeSamp(); } }
-    public static void Load() { if (_instance == null) { dynamic A = instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmTakeSamp() { InitializeComponent(); }
 
     // ______________
@@ -404,7 +400,7 @@ public partial class frmTakeSamp : Window
     private void Command2_Click()
     {
         ClickSound();
-        Unload();
+        Close();
     }
 
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }

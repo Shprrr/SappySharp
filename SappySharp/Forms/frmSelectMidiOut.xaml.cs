@@ -9,10 +9,6 @@ namespace SappySharp.Forms;
 
 public partial class frmSelectMidiOut : Window
 {
-    private static frmSelectMidiOut _instance;
-    public static frmSelectMidiOut instance { set { _instance = null; } get { return _instance ??= new frmSelectMidiOut(); } }
-    public static void Load() { if (_instance == null) { dynamic A = instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmSelectMidiOut() { InitializeComponent(); }
 
     // ______________
@@ -63,7 +59,7 @@ public partial class frmSelectMidiOut : Window
         ClickSound();
         WantedMidiDevice = List1.SelectedIndex;
         WriteSettingI("MIDI Device", WantedMidiDevice);
-        Unload();
+        Close();
     }
 
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }

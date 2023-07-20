@@ -13,10 +13,6 @@ namespace SappySharp.Forms;
 
 public partial class frmMakeTrax : Window
 {
-    private static frmMakeTrax _instance;
-    public static frmMakeTrax instance { set { _instance = null; } get { return _instance ??= new frmMakeTrax(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmMakeTrax.instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmMakeTrax() { InitializeComponent(); }
 
     // ______________
@@ -53,7 +49,7 @@ public partial class frmMakeTrax : Window
     private void Command1_Click()
     {
         ClickSound();
-        Unload();
+        Close();
     }
 
     private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }

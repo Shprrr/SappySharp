@@ -37,10 +37,6 @@ namespace SappySharp.Forms;
 // ###########################################################################################
 public partial class frmAbout : Window
 {
-    private static frmAbout _instance;
-    public static frmAbout instance { set { _instance = null; } get { return _instance ??= new frmAbout(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmAbout.instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmAbout()
     {
         InitializeComponent();
@@ -65,7 +61,7 @@ public partial class frmAbout : Window
     {
         ClickSound();
         myDC = null;
-        Unload();
+        Close();
     }
 
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }

@@ -16,10 +16,6 @@ namespace SappySharp.Forms;
 
 public partial class frmMidiMapper : Window
 {
-    private static frmMidiMapper _instance;
-    public static frmMidiMapper instance { set { _instance = null; } get { return _instance ??= new frmMidiMapper(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmMidiMapper.instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmMidiMapper()
     {
         InitializeComponent();
@@ -141,14 +137,14 @@ public partial class frmMidiMapper : Window
 
         frmSappy.instance.x.Save(frmSappy.instance.xfile);
         frmSappy.instance.LoadGameFromXML(ref frmSappy.instance.gamecode);
-        Unload();
+        Close();
     }
 
     private void Command3_Click(object sender, RoutedEventArgs e) { Command3_Click(); }
     private void Command3_Click()
     {
         MidiClose();
-        Unload();
+        Close();
     }
 
     private void Command4_Click(object sender, RoutedEventArgs e) { Command4_Click(); }

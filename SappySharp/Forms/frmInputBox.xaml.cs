@@ -10,16 +10,10 @@ namespace SappySharp.Forms;
 
 public partial class frmInputBox : Window
 {
-    private static frmInputBox _instance;
-    public static frmInputBox instance { set { _instance = null; } get { return _instance ??= new frmInputBox(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmInputBox.instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmInputBox() { InitializeComponent(); }
 
     [LibraryImport("user32.dll")]
     private static partial int ReleaseCapture();
-    [DllImport("user32.dll", EntryPoint = "SendMessageA")]
-    private static extern int SendMessage(int hwnd, int wMsg, int wParam, ref dynamic lParam);
     private const int WM_NCLBUTTONDOWN = 0xA1;
     private const int HTCAPTION = 2;
 

@@ -16,10 +16,6 @@ namespace SappySharp.Forms;
 
 public partial class frmAssembler : Window
 {
-    private static frmAssembler _instance;
-    public static frmAssembler instance { set { _instance = null; } get { return _instance ??= new frmAssembler(); } }
-    public static void Load() { if (_instance == null) { dynamic A = frmAssembler.instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmAssembler() { InitializeComponent(); }
 
     private ScriptControl MyScripter = null; // to do Eval with
@@ -231,7 +227,7 @@ public partial class frmAssembler : Window
     private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
     private void Command2_Click()
     {
-        Unload();
+        Close();
     }
 
     private void Command3_Click(object sender, RoutedEventArgs e) { Command3_Click(); }

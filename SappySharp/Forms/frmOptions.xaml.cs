@@ -17,10 +17,6 @@ namespace SappySharp.Forms;
 
 public partial class frmOptions : Window
 {
-    private static frmOptions _instance;
-    public static frmOptions instance { set { _instance = null; } get { return _instance ??= new frmOptions(); } }
-    public static void Load() { if (_instance == null) { dynamic A = instance; } }
-    public static void Unload() { if (_instance != null) instance.Close(); _instance = null; }
     public frmOptions() { InitializeComponent(); }
 
     public List<Grid> picPage { get => VBExtension.controlArray<Grid>(this, "picPage"); }
@@ -107,14 +103,14 @@ public partial class frmOptions : Window
         frmSappy.instance.ebr.Redraw = true;
 
         ClickSound();
-        Unload();
+        Close();
     }
 
     private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
     private void Command1_Click()
     {
         ClickSound();
-        Unload();
+        Close();
     }
 
     private void Form_Load(object sender, RoutedEventArgs e) { Form_Load(); }
