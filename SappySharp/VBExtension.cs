@@ -401,7 +401,6 @@ public static class VBExtension
     public static bool Locked(this ListBox t, bool value = true) { return false; }
     public static bool setToolTipText(this FrameworkElement c, string Id) { return true; }
     public static string getToolTipText(this FrameworkElement c) { return ""; }
-    public static void ZOrder(this FrameworkElement c, int v) { }
     public static void SelectContents(this TextBox c) { c.SelectionStart = 0; c.SelectionLength = c.Text.Length; }
     public static void FocusSelect(this TextBox c) { c.SelectionStart = 0; c.SelectionLength = c.Text.Length; c.Focus(); }
     public static void SelectContents(this ComboBox c) { }
@@ -561,6 +560,7 @@ public static class VBExtension
     public static int AddItem(this ListBox c, string C, int D) { return c.Items.Add(new ComboboxItem(C, D)); }
     public static int AddItem(this ListBox c, string C, bool Selected) { int x = c.Items.Add(new ComboboxItem(C)); return SelectItem(c, x, Selected); }
     public static int AddItem(this ListBox c, string C, int D, bool Selected) { int x = c.Items.Add(new ComboboxItem(C, D)); return SelectItem(c, x, Selected); }
+    public static string SetItemText(this ListBox c, int Index, string Text) { return ((ComboboxItem)c.Items[Index]).Text = Text; }
     public static void RemoveItem(this ListBox c, int Index) { c.Items.RemoveAt(Index); }
     //public static string List(this ListBox c, int Index) { return modNumbers.InRange(0, Index, c.Items.Count) ? c.Items[Index].ToString() : ""; }
 

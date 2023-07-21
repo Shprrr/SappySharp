@@ -2,7 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic;
 using static Microsoft.VisualBasic.FileSystem;
-using static Microsoft.VisualBasic.Information;
 
 static partial class MidiLib
 {
@@ -35,14 +34,12 @@ static partial class MidiLib
             //Trace("Opened MIDI port");
             // TODO: (NOT SUPPORTED): On Error Resume Next
             FileOpen(4, AppContext.BaseDirectory + "\\pmidi.tmp", OpenMode.Input);
-            if (Err().Number == 0)
-            {
-                int i = 0;
-                LineInput(4);
-                Input(4, ref i);
-                midiOutClose(i);
-                FileClose(4);
-            }
+            int i = 0;
+            LineInput(4);
+            Input(4, ref i);
+            midiOutClose(i);
+            FileClose(4);
+            midiOutOpen(ref mdh, WantedMidiDevice, 0, 0, 0);
         }
         // allows for closing midi after a crash
         FileOpen(4, AppContext.BaseDirectory + "\\pmidi.tmp", OpenMode.Output);

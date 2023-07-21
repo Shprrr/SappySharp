@@ -54,9 +54,9 @@ public partial class frmMidiMapper : Window
     // ###########################################################################################
 
 
-    int[] MidiMap = new int[127];
-    int[] MidiTrans = new int[127];
-    int[] DrumMap = new int[127];
+    int[] MidiMap = new int[128];
+    int[] MidiTrans = new int[128];
+    int[] DrumMap = new int[128];
 
     string[] InstNames = new string[128];
     string[] Drums = new string[128];
@@ -409,7 +409,7 @@ public partial class frmMidiMapper : Window
     private void lstDrumR_Click()
     {
         DrumMap[lstDrums.SelectedIndex + 35] = lstDrumR.SelectedIndex + 35;
-        lstDrums.Items[lstDrums.SelectedIndex] = NoteToName((byte)(lstDrums.SelectedIndex + 35)) + " - " + Drums[lstDrumR.SelectedIndex + 35];
+        lstDrums.SetItemText(lstDrums.SelectedIndex, NoteToName((byte)(lstDrums.SelectedIndex + 35)) + " - " + Drums[lstDrumR.SelectedIndex + 35]);
     }
 
     private void lstDrumR_DblClick(object sender, MouseButtonEventArgs e) { lstDrumR_DblClick(); }
@@ -423,6 +423,7 @@ public partial class frmMidiMapper : Window
     private void lstDrums_Click()
     {
         lstDrumR.SelectedIndex = DrumMap[lstDrums.SelectedIndex + 35] - 35;
+        lstDrumR.ScrollIntoView(lstDrumR.SelectedItem);
     }
 
     private void lstDrums_DblClick(object sender, MouseButtonEventArgs e) { lstDrums_DblClick(); }
@@ -436,6 +437,7 @@ public partial class frmMidiMapper : Window
     private void lstInsts_Click()
     {
         lstRemapTo.SelectedIndex = MidiMap[lstInsts.SelectedIndex];
+        lstRemapTo.ScrollIntoView(lstRemapTo.SelectedItem);
         txtTranspose.Text = MidiTrans[lstInsts.SelectedIndex].ToString();
     }
 
@@ -450,7 +452,7 @@ public partial class frmMidiMapper : Window
     private void lstRemapTo_Click()
     {
         MidiMap[lstInsts.SelectedIndex] = lstRemapTo.SelectedIndex;
-        lstInsts.Items[lstInsts.SelectedIndex] = lstInsts.SelectedIndex + " - " + InstNames[lstRemapTo.SelectedIndex];
+        lstInsts.SetItemText(lstInsts.SelectedIndex, lstInsts.SelectedIndex + " - " + InstNames[lstRemapTo.SelectedIndex]);
     }
 
     private void lstRemapTo_DblClick(object sender, MouseButtonEventArgs e) { lstRemapTo_DblClick(); }
@@ -463,7 +465,11 @@ public partial class frmMidiMapper : Window
     private void Option1_Click(object sender, RoutedEventArgs e) { Option1_Click(Option1.IndexOf((RadioButton)sender)); }
     private void Option1_Click(int Index)
     {
-        Picture1[Index].ZOrder(0);
+        foreach (Grid picture in Picture1)
+        {
+            picture.Visibility = Visibility.Hidden;
+        }
+        Picture1[Index].Visibility = Visibility.Visible;
     }
 
     private void Timer1_Timer(object sender, EventArgs e)
