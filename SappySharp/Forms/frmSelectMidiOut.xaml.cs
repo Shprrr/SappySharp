@@ -40,17 +40,18 @@ public partial class frmSelectMidiOut : Window
     [DllImport("winmm.dll", EntryPoint = "midiOutGetDevCapsA")]
     private static extern int midiOutGetDevCaps(int uDeviceID, ref MIDIOUTCAPS lpCaps, int uSize);
 
-    class MIDIOUTCAPS
+    [StructLayout(LayoutKind.Sequential)]
+    struct MIDIOUTCAPS
     {
-        public int wMid;
-        public int wPid;
-        public int vDriverVersion;
-        public string szPname; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (32)
-        public int wTechnology;
-        public int wVoices;
-        public int wNotes;
-        public int wChannelMask;
-        public int dwSupport;
+        public ushort wMid;
+        public ushort wPid;
+        public uint vDriverVersion;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string szPname;
+        public ushort wTechnology;
+        public ushort wVoices;
+        public ushort wNotes;
+        public ushort wChannelMask;
+        public uint dwSupport;
     }
 
     private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
@@ -71,10 +72,10 @@ public partial class frmSelectMidiOut : Window
             return;
         }
 
-        MIDIOUTCAPS myCaps = null;
-        for (int i = 1; i <= midiOutGetNumDevs(); i += 1)
+        MIDIOUTCAPS myCaps = new();
+        for (int i = 0; i < midiOutGetNumDevs(); i++)
         {
-            midiOutGetDevCaps(i - 1, ref myCaps, 52); // LenB(myCaps)
+            Marshal.ThrowExceptionForHR(midiOutGetDevCaps(i, ref myCaps, 52)); // LenB(myCaps)
             List1.AddItem(myCaps.szPname); // Trim(myCaps.szPname)
         }
 
@@ -94,8 +95,8 @@ public partial class frmSelectMidiOut : Window
     {
         if (midiOutGetNumDevs() == 0) Label1.Content = "";
 
-        MIDIOUTCAPS myCaps = null;
-        midiOutGetDevCaps(List1.SelectedIndex, ref myCaps, 52);
+        MIDIOUTCAPS myCaps = new();
+        Marshal.ThrowExceptionForHR(midiOutGetDevCaps(List1.SelectedIndex, ref myCaps, 52));
         Label1.Content = myCaps.wTechnology switch
         {
             0 => Properties.Resources._9000,
