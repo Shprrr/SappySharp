@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using Microsoft.VisualBasic;
 using static Microsoft.VisualBasic.Constants;
@@ -6,6 +7,7 @@ using static Microsoft.VisualBasic.FileSystem;
 using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static modSappy;
+using static SappySharp.VBFileSystem;
 using static VBExtension;
 
 namespace SappySharp.Forms;
@@ -48,7 +50,7 @@ public partial class frmTakeTrax : Window
     private void Command2_Click(object sender, RoutedEventArgs e) { Command2_Click(); }
     private void Command2_Click()
     {
-        if (lstTracks.SelectedItems.Count == 0)
+        if (lstTracks.Items.Cast<ComboboxItem>().All(i => i.Value == 0))
         {
             MsgBox(Properties.Resources._3005);
             IncessantNoises("TaskFail"); // Bee-owee-owee-oweeeeeohh....
@@ -79,16 +81,16 @@ public partial class frmTakeTrax : Window
         txtLog.Visibility = Visibility.Visible;
         Scribe(Properties.Resources._3007);
         Scribe(new string('¯', Len(Properties.Resources._3007)));
-        for (i = 0; i <= lstTracks.Items.Count - 1; i += 1)
+        for (i = 0; i < lstTracks.Items.Count; i++)
         {
-            if (lstTracks.Selected(i))
+            if (lstTracks.itemData(i) == 1)
             {
                 Scribe(Replace(Properties.Resources._3008, "$TRACK", i.ToString()));
                 string t = txtFilename.Text;
                 t = Replace(t, "$T", i.ToString());
-                t = Replace(t, "$P", (string)lstTracks.Items[i]);
+                t = Replace(t, "$P", lstTracks.itemText(i));
                 Scribe(Replace(Properties.Resources._3009, "$FILE", t));
-                DumpTrack((int)Val("&H" + FixHex((string)lstTracks.Items[i], 6)), t);
+                DumpTrack((int)Val("&H" + FixHex(lstTracks.itemText(i), 6)), t);
             }
             else
             {
@@ -111,15 +113,13 @@ public partial class frmTakeTrax : Window
         txtLog.SelectionStart = Len(txtLog.Text);
     }
 
-    private void DumpTrack(int o, string t)
+    private static void DumpTrack(int o, string t)
     {
-        byte b = 0;
-        int p = 0;
         FileOpen(98, t, OpenMode.Binary);
-        Seek(99, o + 1);
+        File99.Seek(o, System.IO.SeekOrigin.Begin);
         do
         {
-            FileGet(99, ref b);
+            File99.Read(out byte b);
             FilePut(98, b);
             if (b == 0xB1) // fine
             {
@@ -130,15 +130,16 @@ public partial class frmTakeTrax : Window
             {
                 if (b == 0xB5)
                 {
-                    FileGet(99, ref b); // num reps
+                    File99.Read(out b); // num reps
                     FilePut(98, b);
                 }
-                FileGet(99, ref p);
+
+                File99.Read(out int p);
                 p = p - 0x8000000 - o;
                 FilePut(98, p);
             }
             DoEvents();
-        } while (!EOF(98));
+        } while (EOF(98));
         FileClose(98);
     }
 

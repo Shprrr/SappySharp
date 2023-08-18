@@ -523,6 +523,7 @@ public static class VBExtension
     public static void RemoveItem(this ComboBox c, int Index) { c.Items.RemoveAt(Index); }
     public static void Clear(this ComboBox c) { c.Items.Clear(); }
 
+    public static string itemText(this ListBox c, int I) { try { return ((ComboboxItem)c.Items[I]).Text; } catch (Exception e) { return null; } }
     public static int itemData(this ListBox c, int I) { try { return ((ComboboxItem)c.Items[I]).Value; } catch (Exception e) { return 0; } }
     public static bool SelectText(this ListBox c, string S) { for (int i = 0; i < c.Items.Count; i++) if (i.ToString() == S) { c.SelectedIndex = i; return true; } return false; }
     public static int SelectItem(this ListBox c, int I, bool isSelected)

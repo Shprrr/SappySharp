@@ -511,7 +511,7 @@ public partial class frmSappy : Window, ISubclass
         if (itm.Key == "taketrax")
         {
             frmTakeTrax instance = new();
-            for (i = 0; i <= SongHead.NumTracks - 1; i++)
+            for (i = 0; i < SongHead.NumTracks; i++)
             {
                 instance.lstTracks.AddItem("0x" + FixHex(SongHead.Tracks[i], 6));
             }
