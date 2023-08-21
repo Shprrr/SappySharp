@@ -19,7 +19,7 @@ static class mdlFile
     public static void OpenFile(int filenumber, string Filename)
     {
         if (filenumber < VF)
-            if (filenumber == 1) FileOpen(filenumber, Filename, OpenMode.Binary, OpenAccess.Read, OpenShare.LockWrite);
+            if (filenumber == 1) FileOpen(filenumber, Filename, OpenMode.Binary, OpenAccess.Read, OpenShare.Shared);
             else FileOpen(filenumber, Filename, OpenMode.Binary);
         WriteOffset(filenumber, 0);
         ReadOffset(filenumber, 0);

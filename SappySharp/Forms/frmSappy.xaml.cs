@@ -1102,7 +1102,7 @@ public partial class frmSappy : Window, ISubclass
         //    cPop.set_Enabled(TaskMenus[i], false);
         //}
 
-        File99 = File.Open(myFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+        File99 = File.Open(myFile, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
         File99.Seek(0xAC, SeekOrigin.Begin);
         File99.Read(out string code, 4);
         if (Asc(Mid(code, 1, 1)) == 0)

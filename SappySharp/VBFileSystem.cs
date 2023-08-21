@@ -12,6 +12,7 @@ internal static class VBFileSystem
     public static FileStream File43;
     public static FileStream File44;
     public static FileStream File96;
+    public static FileStream File98;
     public static FileStream File99;
 
     public static void FileClose(FileStream fs) => fs?.Close();
@@ -64,6 +65,18 @@ internal static class VBFileSystem
     public static void Write(this FileStream fs, string value)
     {
         byte[] buffer = Encoding.Default.GetBytes(value + Environment.NewLine);
+        fs.Write(buffer, 0, buffer.Length);
+    }
+
+    public static void Write(this FileStream fs, int value)
+    {
+        byte[] buffer = BitConverter.GetBytes(value);
+        fs.Write(buffer, 0, buffer.Length);
+    }
+
+    public static void Write(this FileStream fs, long value)
+    {
+        byte[] buffer = BitConverter.GetBytes(value);
         fs.Write(buffer, 0, buffer.Length);
     }
 }
