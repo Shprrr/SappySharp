@@ -1,7 +1,7 @@
 using System;
+using System.IO;
 using System.Windows;
 using Microsoft.VisualBasic;
-using SappySharp.Classes;
 using static Microsoft.VisualBasic.Constants;
 using static Microsoft.VisualBasic.Conversion;
 using static Microsoft.VisualBasic.FileSystem;
@@ -9,6 +9,7 @@ using static Microsoft.VisualBasic.Information;
 using static Microsoft.VisualBasic.Interaction;
 using static Microsoft.VisualBasic.Strings;
 using static modSappy;
+using static SappySharp.VBFileSystem;
 using static VBExtension;
 
 namespace SappySharp.Forms;
@@ -52,23 +53,23 @@ public partial class frmTakeSamp : Window
         public int MoreShit;
     }
 
-    bool[] DidWeAlreadyDumpThisOne = new bool[0xFFFFFF];
+    readonly bool[] DidWeAlreadyDumpThisOne = new bool[0xFFFFFF];
 
-    private int ConFreq(int freq)
+    private static int ConFreq(int freq)
     {
-        for (int k = 1; k <= 10; k += 1)
+        for (int k = 1; k <= 10; k++)
         {
             freq /= 2;
         }
         return freq;
     }
 
-    private void SaveSampleRAW(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
+    private static void SaveSampleRAW(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
     {
         // TODO: (NOT SUPPORTED): On Error GoTo Fucksocks
-        Array theStuff = new byte[Length];
+        byte[] theStuff = new byte[Length];
         FileOpen(98, Filename, OpenMode.Binary);
-        FileGet(99, ref theStuff);
+        File99.Read(theStuff, 0, Length);
         FilePut(98, theStuff);
         FileClose(98);
         return;
@@ -83,10 +84,10 @@ public partial class frmTakeSamp : Window
         // TODO: (NOT SUPPORTED): Resume Next
     }
 
-    private void SaveSampleWAV(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
+    private static void SaveSampleWAV(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
     {
         // TODO: (NOT SUPPORTED): On Error GoTo Fucksocks
-        Array theStuff = new byte[Length];
+        byte[] theStuff = new byte[Length];
         FileOpen(98, Filename, OpenMode.Binary);
         FilePut(98, (byte)0x52);
         FilePut(98, (byte)0x49);
@@ -112,8 +113,8 @@ public partial class frmTakeSamp : Window
         FilePut(98, (byte)0x0);
         FilePut(98, (byte)0x1);
         FilePut(98, (byte)0x0);
-        FilePut(98, CLng(ConFreq(freq)));
-        FilePut(98, CLng(ConFreq(freq)));
+        FilePut(98, ConFreq(freq));
+        FilePut(98, ConFreq(freq));
         FilePut(98, (byte)0x1);
         FilePut(98, (byte)0x0);
         FilePut(98, (byte)0x8);
@@ -123,13 +124,11 @@ public partial class frmTakeSamp : Window
         FilePut(98, (byte)0x74);
         FilePut(98, (byte)0x61);
         FilePut(98, Length + 1);
-        FileGet(99, ref theStuff);
-        byte[] byteStuff = (byte[])theStuff;
-        for (int k = 0; k <= Length; k += 1)
+        File99.Read(theStuff, 0, Length);
+        for (int k = 0; k < Length; k++)
         {
-            byteStuff[k] = (byte)(byteStuff[k] ^ 128);
+            theStuff[k] = (byte)(theStuff[k] ^ 128);
         }
-        theStuff = byteStuff;
         FilePut(98, theStuff);
         FileClose(98);
         return;
@@ -144,19 +143,19 @@ public partial class frmTakeSamp : Window
         // TODO: (NOT SUPPORTED): Resume Next
     }
 
-    private void SaveSampleITS(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
+    private static void SaveSampleITS(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
     {
         // TODO: (NOT SUPPORTED): On Error GoTo Fucksocks
-        Array theStuff = new byte[Length];
+        byte[] theStuff = new byte[Length];
         string IMPS = "IMPS"; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (4)
-        string DOSName = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (12)
-        string SampName = ""; // TODO: (NOT SUPPORTED) Fixed Length String not supported: (26)
+        string DOSName = new('\0', 12); // TODO: (NOT SUPPORTED) Fixed Length String not supported: (12)
+        string SampName = new('\0', 26); // TODO: (NOT SUPPORTED) Fixed Length String not supported: (26)
 
         FileOpen(98, Filename, OpenMode.Binary);
-        FileGet(99, ref theStuff);
+        File99.Read(theStuff, 0, Length);
 
-        FilePut(98, IMPS);
-        FilePut(98, DOSName);
+        FilePut(98, IMPS, StringIsFixedLength: true);
+        FilePut(98, DOSName, StringIsFixedLength: true);
         FilePut(98, (byte)0);
         FilePut(98, (byte)64); // GvL
         if (loopstart != 0)
@@ -168,24 +167,24 @@ public partial class frmTakeSamp : Window
             FilePut(98, (byte)0);
         }
         FilePut(98, (byte)64); // Vol
-        FilePut(98, SampName);
+        FilePut(98, SampName, StringIsFixedLength: true);
         FilePut(98, (byte)1); // Cvt
         FilePut(98, (byte)0); // DfP
-        FilePut(98, CLng(Length)); // CHECK!
-        FilePut(98, CLng(loopstart)); // CHECK!
+        FilePut(98, Length); // CHECK!
+        FilePut(98, loopstart); // CHECK!
         if (loopstart != 0)
         {
-            FilePut(98, CLng(Length)); // CHECK!
+            FilePut(98, Length); // CHECK!
         }
         else
         {
-            FilePut(98, CLng(0)); // CHECK!
+            FilePut(98, 0); // CHECK!
         }
-        FilePut(98, CLng(ConFreq(freq))); // C5Speed
-        FilePut(98, CLng(0)); // Sustain start
-        FilePut(98, CLng(0)); // Sustain end
-        FilePut(98, CLng(0x50));
-        FilePut(98, CLng(0)); // Vibe settings
+        FilePut(98, ConFreq(freq)); // C5Speed
+        FilePut(98, 0); // Sustain start
+        FilePut(98, 0); // Sustain end
+        FilePut(98, 0x50);
+        FilePut(98, 0); // Vibe settings
 
         FilePut(98, theStuff);
         FileClose(98);
@@ -201,16 +200,16 @@ public partial class frmTakeSamp : Window
         // TODO: (NOT SUPPORTED): Resume Next
     }
 
-    private void SaveSampleASM(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
+    private static void SaveSampleASM(string Filename, int hdr1, int hdr2, int freq, int loopstart, int Length)
     {
         // TODO: (NOT SUPPORTED): On Error GoTo Fucksocks
-        Array theStuff = new byte[Length];
+        byte[] theStuff = new byte[Length];
         string aByteStr;
-        FileGet(99, ref theStuff);
+        File99.Read(theStuff, 0, Length);
         FileOpen(98, Filename, OpenMode.Output);
         PrintLine(98, Properties.Resources._7030);
-        PrintLine(98, "#TONE NAME     : ", Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
-        PrintLine(98, "#FREQUENCY     :", freq);
+        PrintLine(98, "#TONE NAME     : " + Path.GetFileNameWithoutExtension(Filename));
+        PrintLine(98, "#FREQUENCY     : " + freq);
         PrintLine(98, "#BASE NOTE#    : 60");
         PrintLine(98, "#START ADRESS  : 000000");
         PrintLine(98, "#LOOP ADDRESS  : " + Right("000000" + loopstart, 6));
@@ -232,22 +231,22 @@ public partial class frmTakeSamp : Window
         PrintLine(98, "#WAVE EXP/COMP : 1");
         PrintLine(98, "#VOL EXP/COMP  : 1");
         PrintLine(98, "");
-        PrintLine(98, vbTab + ".section.rodata");
-        PrintLine(98, vbTab + ".Global" + vbTab + Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2));
+        PrintLine(98, vbTab + ".section .rodata");
+        PrintLine(98, vbTab + ".Global" + vbTab + Path.GetFileNameWithoutExtension(Filename));
         PrintLine(98, vbTab + ".Align" + vbTab + "2");
         PrintLine(98, "");
-        PrintLine(98, Left(gCommonDialog.VBGetFileTitle(Filename), Len(gCommonDialog.VBGetFileTitle(Filename)) - 2) + ":");
+        PrintLine(98, Path.GetFileNameWithoutExtension(Filename) + ":");
         PrintLine(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr1), 4));
         PrintLine(98, vbTab + ".short" + vbTab + "0x" + Right("0000" + Hex(hdr2), 4));
         PrintLine(98, vbTab + ".Int" + vbTab + freq);
         PrintLine(98, vbTab + ".Int" + vbTab + loopstart);
         PrintLine(98, vbTab + ".Int" + vbTab + Length);
         PrintLine(98, "");
-        for (int j = 0; j <= 8; j += Length)
+        for (int j = 0; j < Length; j += 8)
         {
             aByteStr = vbTab + ".byte ";
             // TODO: (NOT SUPPORTED): On Error Resume Next
-            for (int k = 0; k <= 7; k += 1)
+            for (int k = 0; k <= 7 && j + k < Length; k++)
             {
                 aByteStr = aByteStr + "0x" + Right("00" + Hex(theStuff.GetValue(j + k)), 2) + ",";
             }
@@ -272,32 +271,24 @@ public partial class frmTakeSamp : Window
 
     private void DumpVoiceGroup(int anInstrumentLong, int numsamples = 256)
     {
-        tInst anInstrument = default;
-        int hdr1 = 0;
-        int hdr2 = 0;
-        int hdr3 = 0;
-        int hdr4 = 0;
-        int hdr5 = 0;
-
         for (int j = 0; j <= numsamples; j += 1)
         {
-            ValueType get = anInstrument;
-            FileGet(99, ref get, anInstrumentLong + 1 + 12 * j);
-            anInstrument = (tInst)get;
+            File99.Seek(anInstrumentLong + 12 * j, SeekOrigin.Begin);
+            File99.Read(out tInst anInstrument);
             if (anInstrument.SndType == 0)
             {
                 if (anInstrument.WavePtr > 0x8000000)
                 {
-                    if (DidWeAlreadyDumpThisOne[j] == false)
+                    if (!DidWeAlreadyDumpThisOne[j])
                     {
                         DidWeAlreadyDumpThisOne[j] = true;
                         Transcribe("Wave instrument found! #" + j);
-                        Seek(99, anInstrument.WavePtr - 0x8000000 + 1);
-                        FileGet(99, ref hdr1);
-                        FileGet(99, ref hdr2);
-                        FileGet(99, ref hdr3);
-                        FileGet(99, ref hdr4); // loop
-                        FileGet(99, ref hdr5); // length
+                        File99.Seek(anInstrument.WavePtr - 0x8000000, SeekOrigin.Begin);
+                        File99.Read(out short hdr1);
+                        File99.Read(out short hdr2);
+                        File99.Read(out int hdr3);
+                        File99.Read(out int hdr4); // loop
+                        File99.Read(out int hdr5); // length
                         if (hdr5 > 0x10000)
                         {
                             hdr5 = 0x10000;
@@ -347,9 +338,6 @@ public partial class frmTakeSamp : Window
     private void Command1_Click(object sender, RoutedEventArgs e) { Command1_Click(); }
     private void Command1_Click()
     {
-        int anInstrumentLong = 0;
-        int aFillerLong = 0;
-
         txtNamePat.Text = Replace(txtNamePat.Text, "$p", "$P");
         txtNamePat.Text = Replace(txtNamePat.Text, "$i", "$I");
         int i = 2;
@@ -368,13 +356,13 @@ public partial class frmTakeSamp : Window
         txtLog.Visibility = Visibility.Visible;
         MousePointer = 11;
 
-        for (int k = 0; k <= 0xFFFFFF; k += 1)
+        for (int k = 0; k < 0xFFFFFF; k++)
         {
             DidWeAlreadyDumpThisOne[k] = false;
         }
-        Seek(99, SingleSong + 1);
-        FileGet(99, ref aFillerLong);
-        FileGet(99, ref anInstrumentLong);
+        File99.Seek(SingleSong, SeekOrigin.Begin);
+        File99.Read(out int aFillerLong);
+        File99.Read(out int anInstrumentLong);
         // TODO: (NOT SUPPORTED): On Error GoTo SillyPointers
         anInstrumentLong -= 0x8000000;
         // TODO: (NOT SUPPORTED): On Error GoTo 0

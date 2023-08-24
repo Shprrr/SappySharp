@@ -1255,7 +1255,7 @@ public partial class frmSappy : Window, ISubclass
         // Do mIRC string...
         AssemblyName assemblyName = Application.ResourceAssembly.GetName();
         songinfo = assemblyName.Version.Major + "." + assemblyName.Version.Minor +
-              "|" + gCommonDialog.VBGetFileTitle(myFile) +
+              "|" + Path.GetFileNameWithoutExtension(myFile) +
               "|" + gamecode +
               "|" + txtSong +
               "|" + /*ebr.Bars["Info"].Items["Game"].Text +*/ //TODO: Commenting these COM instructions because it didn't work.
@@ -1641,7 +1641,7 @@ public partial class frmSappy : Window, ISubclass
         int filterIndex = 1;
         string filter = "Sappy.LST|sappy.lst";
         if (!gCommonDialog.VBGetOpenFileName(ref myFile, ref fileTile, ref readOnly, ref filter, ref filterIndex)) return;
-        string myDir = Left(myFile, Len(myFile) - Len(gCommonDialog.VBGetFileTitle(myFile)));
+        string myDir = Left(myFile, Len(myFile) - Len(Path.GetFileNameWithoutExtension(myFile)));
 
         x.Save(Left(xfile, Len(xfile) - 3) + "bak");
 
@@ -1774,7 +1774,6 @@ public partial class frmSappy : Window, ISubclass
         string filter = Properties.Resources._1 + "|*.BMP;*.GIF;*.JPG";
         if (gCommonDialog.VBGetOpenFileName(ref s, ref fileTile, ref readOnly, ref filter, ref filterIndex))
         {
-            s = gCommonDialog.VBGetFileTitle(s);
             picScreenshot.Source = new BitmapImage(new(s));
             picScreenshot.Tag = s;
             SaveNewRomHeader("screenshot", s);
