@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.VisualBasic;
 using SappySharp.Forms;
 using TimerMM;
@@ -118,7 +119,7 @@ public partial class clsSappyDecoder
     private int[] EarPiercers = new int[128];
     private int EarPiercerCnt = 0;
 
-    private class tBufferRawMidiEvent
+    private struct tBufferRawMidiEvent
     {
         public int RawDelta;
         public int Ticks;
@@ -129,7 +130,7 @@ public partial class clsSappyDecoder
     //   Events(-1 To 5000) As tBufferRawMidiEvent
     // End Type
     // Private BufferTrack(32) As tBufferTrack
-    private tBufferRawMidiEvent PreviousEvent = null;
+    private tBufferRawMidiEvent PreviousEvent;
     private bool Recording = false;
     private int midifile = 0;
 
@@ -146,7 +147,7 @@ public partial class clsSappyDecoder
             EventCode = EventCode
         };
         WriteVarLen(midifile, newevent.RawDelta);
-        FilePutObject(midifile, newevent.EventCode);
+        FilePut(midifile, Encoding.Latin1.GetBytes(newevent.EventCode));
         PreviousEvent = newevent;
         return;
     hell:;
@@ -295,10 +296,10 @@ public partial class clsSappyDecoder
             // tlen = LOF(midifile) - 12
             // Debug.Print "StopSong(): Track length is " & tlen & ", total ticks " & Me.TotalTicks
             // //BufferEvent Chr$(&HFF) & Chr$(&H2F) & Chr(0), Me.TotalTicks
-            FilePutObject(midifile, (byte)10);
-            FilePutObject(midifile, (byte)0xFF);
-            FilePutObject(midifile, (byte)0x2F);
-            FilePutObject(midifile, (byte)0);
+            FilePut(midifile, (byte)10);
+            FilePut(midifile, (byte)0xFF);
+            FilePut(midifile, (byte)0x2F);
+            FilePut(midifile, (byte)0);
 
             // ...to here. (Drag)
             int tlen = (int)(LOF(midifile) - 22); // This line should now give a more accurate track length. (Drag)
@@ -306,7 +307,7 @@ public partial class clsSappyDecoder
 
             // Put #midifile, , CLng(0) // Why are these here? (Drag)
             // Put #midifile, , CLng(0)
-            FilePutObject(midifile, FlipLong(tlen), 0x13); // FlipLong(&H12345678)
+            FilePut(midifile, FlipLong(tlen), 0x13); // FlipLong(&H12345678)
             FileClose(midifile);
         }
 
@@ -405,14 +406,6 @@ public partial class clsSappyDecoder
             SappyChannels[i].TrackLengthInBytes = pc - SappyChannels[i].TrackPointer;
             pc = ReadGBAROMPointer(1, a + 4 + i * 4);
 
-
-            if (i == 7)
-            {
-                i = 7;
-                FileClose(7);
-                FileOpen(7, "trackseven.txt", OpenMode.Output);
-            }
-
             int cticks = 0;
             byte lc = 0xBE;
             byte[] lln = new byte[65];
@@ -431,13 +424,6 @@ public partial class clsSappyDecoder
                     SappyChannels[i].LoopPointer = SappyChannels[i].EventQueue.count + 1;
                 }
                 c = ReadByte(1);
-
-                if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + Hex(c));
-                if (pc == 0x11BE31)
-                {
-                    PrintLine(7, "Warning!");
-                }
-
                 if (c != 0xB9 && c >= 0xB5 && c < 0xC5 || c == 0xCD)
                 {
                     byte D = ReadByte(1);
@@ -485,13 +471,10 @@ public partial class clsSappyDecoder
                     bool g = false;
                     int nc = 0;
                     int cdr = 0;
-                    while (g == false)
+                    while (!g)
                     {
                         byte D = ReadByte(1);
                         byte pn = 0;
-
-                        if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "  " + Hex(D));
-
                         if (D >= 0x80)
                         {
                             if (nc == 0)
@@ -503,18 +486,15 @@ public partial class clsSappyDecoder
                         }
                         else
                         {
-                            // TODO: (NOT SUPPORTED): On Error GoTo hell
                             lln[nc] = D;
                             pc++;
                             byte e = ReadByte(1);
-                            if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "    " + Hex(e));
                             byte F;
                             if (e < 0x80)
                             {
                                 llv[nc] = e;
                                 pc++;
                                 F = ReadByte(1);
-                                if (i == 7) PrintLine(7, Strings.Right("000000" + Hex(pc), 6) + vbTab + "      " + Hex(F));
                                 if (F >= 0x80)
                                 {
                                     F = lla[nc];
@@ -886,16 +866,16 @@ public partial class clsSappyDecoder
             switch (mx2)
             {
                 case 0:
-                    SamplePool["square" + mx2].SampleData = new string(Chr((int)Int(0x80 + 0x7F * GBSquareMulti)), 4) + new string(Chr((int)Int(0x80 - 0x7F * GBSquareMulti)), 28);
+                    SamplePool["square" + mx2].SampleData = new string((char)Int(0x80 + 0x7F * GBSquareMulti), 4) + new string((char)Int(0x80 - 0x7F * GBSquareMulti), 28);
                     break;
                 case 1:
-                    SamplePool["square" + mx2].SampleData = new string(Chr((int)Int(0x80 + 0x7F * GBSquareMulti)), 8) + new string(Chr((int)Int(0x80 - 0x7F * GBSquareMulti)), 24);
+                    SamplePool["square" + mx2].SampleData = new string((char)Int(0x80 + 0x7F * GBSquareMulti), 8) + new string((char)Int(0x80 - 0x7F * GBSquareMulti), 24);
                     break;
                 case 2:
-                    SamplePool["square" + mx2].SampleData = new string(Chr((int)Int(0x80 + 0x7F * GBSquareMulti)), 16) + new string(Chr((int)Int(0x80 - 0x7F * GBSquareMulti)), 16);
+                    SamplePool["square" + mx2].SampleData = new string((char)Int(0x80 + 0x7F * GBSquareMulti), 16) + new string((char)Int(0x80 - 0x7F * GBSquareMulti), 16);
                     break;
                 case 3:
-                    SamplePool["square" + mx2].SampleData = new string(Chr((int)Int(0x80 + 0x7F * GBSquareMulti)), 24) + new string(Chr((int)Int(0x80 - 0x7F * GBSquareMulti)), 8);
+                    SamplePool["square" + mx2].SampleData = new string((char)Int(0x80 + 0x7F * GBSquareMulti), 24) + new string((char)Int(0x80 - 0x7F * GBSquareMulti), 8);
                     break;
             }
             SamplePool["square" + mx2].Frequency = 7040;
@@ -935,20 +915,20 @@ public partial class clsSappyDecoder
             if (Dir(RecordTo) != "") Kill(RecordTo);
             FileOpen(midifile, RecordTo, OpenMode.Binary);
             string H = "MThd";
-            FilePutObject(midifile, H);
-            FilePutObject(midifile, FlipLong(6));
-            FilePutObject(midifile, FlipInt(0));
-            FilePutObject(midifile, FlipInt(1)); // FlipInt(SappyChannels.count)
-            FilePutObject(midifile, FlipInt(24)); // 48
+            FilePut(midifile, H, StringIsFixedLength: true);
+            FilePut(midifile, FlipLong(6));
+            FilePut(midifile, FlipInt(0));
+            FilePut(midifile, FlipInt(1)); // FlipInt(SappyChannels.count)
+            FilePut(midifile, FlipInt(24)); // 48
             H = "MTrk";
-            FilePutObject(midifile, H);
-            FilePutObject(midifile, CLng(0));
+            FilePut(midifile, H, StringIsFixedLength: true);
+            FilePut(midifile, 0);
             string msg = frmSappy.instance.lblSongName.Text;
             System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
             msg = msg + " --- dumped by " + assemblyName.Name + " version " + assemblyName.Version.Major + "." + assemblyName.Version.Minor;
 
             if (Strings.Len(msg) > 120) msg = Strings.Left(msg, 120);
-            BufferEvent(Chr(0xFF) + Chr(2) + Chr(Strings.Len(msg)) + msg, 0);
+            BufferEvent($"{(char)0xFF}{(char)2}{(char)Strings.Len(msg)}{msg}", 0);
         }
 
         return;
@@ -981,12 +961,12 @@ public partial class clsSappyDecoder
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(0," + i + ")");
             for (int j = 0; j <= sz; j += 1) // 2047 // 16383
             {
-                NoiseWaves[0, i] = NoiseWaves[0, i] + Chr((int)Int(Rnd() * 153)); // (255 * 0.6)))
+                NoiseWaves[0, i] = NoiseWaves[0, i] + (char)Int(Rnd() * 153); // (255 * 0.6)))
             }
             Trace(DateTime.Now + vbTab + "- Creating NoiseWaves(1," + i + ")");
             for (int j = 0; j <= 255; j += 1)
             {
-                NoiseWaves[1, i] = NoiseWaves[1, i] + Chr((int)Int(Rnd() * 153)); // (255 * 0.6)))
+                NoiseWaves[1, i] = NoiseWaves[1, i] + (char)Int(Rnd() * 153); // (255 * 0.6)))
             }
         }
         int te = GetTickCount();
@@ -1027,7 +1007,7 @@ public partial class clsSappyDecoder
                 }
 
                 // mutethis = False
-                for (int ep = 0; ep <= EarPiercerCnt; ep += 1)
+                for (int ep = 0; ep <= EarPiercerCnt; ep++)
                 {
                     if (EarPiercers[ep] == SappyChannels[i].PatchNumber)
                     {
@@ -1056,8 +1036,8 @@ public partial class clsSappyDecoder
                         case 0xBB:
                             mvarTempo = SappyChannels[i].EventQueue[SappyChannels[i].ProgramCounter].Param1 * 2;
                             ChangedTempo.Invoke(mvarTempo);
-                            if (Recording) BufferEvent($"{Chr(0xFF)}{Chr(0x51)}", TotalTicks);
-                            if (Recording) FilePutObject(midifile, FlipLong(((60000000 / mvarTempo) & 0xFFFFFF) | 0x3000000));
+                            if (Recording) BufferEvent($"{(char)0xFF}{(char)0x51}", TotalTicks);
+                            if (Recording) FilePut(midifile, FlipLong(((60000000 / mvarTempo) & 0xFFFFFF) | 0x3000000));
                             SappyChannels[i].ProgramCounter = SappyChannels[i].ProgramCounter + 1;
                             break;
 
@@ -1086,7 +1066,7 @@ public partial class clsSappyDecoder
                             }
                             SappyChannels[i].ProgramCounter = SappyChannels[i].ProgramCounter + 1;
                             SelectInstrument(i, MidiPatchMap[SappyChannels[i].PatchNumber]);
-                            BufferEvent($"{Chr(0xC0 + i)}{Chr(MidiPatchMap[SappyChannels[i].PatchNumber])}", TotalTicks);
+                            BufferEvent($"{(char)(0xC0 + i)}{(char)MidiPatchMap[SappyChannels[i].PatchNumber]}", TotalTicks);
                             break;
 
                         case 0xBE:
@@ -1108,7 +1088,7 @@ public partial class clsSappyDecoder
                                         SetChnVolume(NoteArray[Item.NoteID].FModChannel, dav * (SappyChannels[i].mute ? 0 : 2));
                                     }
                                     // TODO: (NOT SUPPORTED): On Error Resume Next
-                                    if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[Item.NoteID].FModChannel)}{Chr(dav)}", TotalTicks);
+                                    if (Recording) BufferEvent($"{(char)(0xD0 + NoteArray[Item.NoteID].FModChannel)}{(char)dav}", TotalTicks);
                                     // TODO: (NOT SUPPORTED): On Error GoTo 0
                                 }
                             }
@@ -1131,9 +1111,6 @@ public partial class clsSappyDecoder
                                         // MIDISETPAN
                                         SetChnPan(NoteArray[Item.NoteID].FModChannel, SappyChannels[i].Panning * 2);
                                     }
-                                    // TODO: (NOT SUPPORTED): On Error Resume Next
-                                    if (Recording) BufferEvent($"{Chr(0xB0 + NoteArray[Item.NoteID].FModChannel)}{Chr(0xA)}{Chr(SappyChannels[i].Panning * 2)}", TotalTicks);
-                                    // TODO: (NOT SUPPORTED): On Error GoTo 0
                                 }
                             }
                             SappyChannels[i].ProgramCounter = SappyChannels[i].ProgramCounter + 1;
@@ -1149,7 +1126,7 @@ public partial class clsSappyDecoder
                                 {
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
-                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), (double)(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                     else
                                     {
@@ -1170,7 +1147,7 @@ public partial class clsSappyDecoder
                                 {
                                     if (mvarOutputType == SongOutputTypes.sotWave)
                                     {
-                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
+                                        FSOUND_SetFrequency(NoteArray[Item.NoteID].FModChannel, NoteArray[Item.NoteID].Frequency * (int)Math.Pow(Math.Pow(2, 1d / 12), (double)(SappyChannels[i].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[i].PitchBendRange)));
                                     }
                                     else
                                     {
@@ -1420,7 +1397,7 @@ public partial class clsSappyDecoder
                                             ToneOff(NoteArray[mvarGB1Chan].ParentChannel, NoteArray[mvarGB1Chan].NoteNumber + MidiPatchTrans[NoteArray[mvarGB1Chan].PatchNumber]);
                                             // PitchWheel(NoteArray[Item.NoteID].FModChannel, 0);
                                         }
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB1Chan].ParentChannel)}{Chr(NoteArray[mvarGB1Chan].NoteNumber)}{Chr(0)}", TotalTicks);
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[mvarGB1Chan].ParentChannel)}{(char)NoteArray[mvarGB1Chan].NoteNumber}{(char)0}", TotalTicks);
                                         NoteArray[mvarGB1Chan].FModChannel = 0;
                                         try { SappyChannels[NoteArray[mvarGB1Chan].ParentChannel].Notes.Remove(Str(mvarGB1Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB1Chan].Enabled = false;
@@ -1440,7 +1417,7 @@ public partial class clsSappyDecoder
                                             // MIDISTOPSOUND
                                             ToneOff(NoteArray[mvarGB2Chan].ParentChannel, NoteArray[mvarGB2Chan].NoteNumber + MidiPatchTrans[NoteArray[mvarGB2Chan].PatchNumber]);
                                         }
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB2Chan].ParentChannel)}{Chr(NoteArray[mvarGB2Chan].NoteNumber)}{Chr(0)}", TotalTicks);
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[mvarGB2Chan].ParentChannel)}{(char)NoteArray[mvarGB2Chan].NoteNumber}{(char)0}", TotalTicks);
                                         NoteArray[mvarGB2Chan].FModChannel = 0;
                                         try { SappyChannels[NoteArray[mvarGB2Chan].ParentChannel].Notes.Remove(Str(mvarGB2Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB2Chan].Enabled = false;
@@ -1460,7 +1437,7 @@ public partial class clsSappyDecoder
                                             // MIDISTOPSOUND
                                             ToneOff(Item.ParentChannel, NoteArray[mvarGB3Chan].NoteNumber + MidiPatchTrans[NoteArray[mvarGB3Chan].PatchNumber]); // I'm removing the Item. parts here... (Drag)
                                         }
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB3Chan].ParentChannel)}{Chr(NoteArray[mvarGB3Chan].NoteNumber)}{Chr(0)}", TotalTicks); // ...and here (Drag)
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[mvarGB3Chan].ParentChannel)}{(char)NoteArray[mvarGB3Chan].NoteNumber}{(char)0}", TotalTicks); // ...and here (Drag)
                                         NoteArray[mvarGB3Chan].FModChannel = 0;
                                         try { SappyChannels[NoteArray[mvarGB3Chan].ParentChannel].Notes.Remove(Str(mvarGB3Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB3Chan].Enabled = false;
@@ -1480,7 +1457,7 @@ public partial class clsSappyDecoder
                                             // MIDISTOPSOUND
                                             ToneOff(NoteArray[mvarGB4Chan].ParentChannel, NoteArray[mvarGB4Chan].NoteNumber + MidiPatchTrans[NoteArray[mvarGB4Chan].PatchNumber]);
                                         }
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[mvarGB4Chan].ParentChannel)}{Chr(NoteArray[mvarGB4Chan].NoteNumber)}{Chr(0)}", TotalTicks);
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[mvarGB4Chan].ParentChannel)}{(char)NoteArray[mvarGB4Chan].NoteNumber}{(char)0}", TotalTicks);
                                         NoteArray[mvarGB4Chan].FModChannel = 0;
                                         try { SappyChannels[NoteArray[mvarGB4Chan].ParentChannel].Notes.Remove(Str(mvarGB4Chan)); } catch (Exception) { }
                                         NoteArray[mvarGB4Chan].Enabled = false;
@@ -1504,7 +1481,7 @@ public partial class clsSappyDecoder
                             NoteArray[x].Notephase = NotePhases.npInitial;
                             if (mvarOutputType == SongOutputTypes.sotWave)
                             {
-                                FSOUND_SetFrequency(NoteArray[x].FModChannel, CInt(daf) * (int)Math.Pow(Math.Pow(2, 1d / 12), CInt(SappyChannels[Item.ParentChannel].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[Item.ParentChannel].PitchBendRange)));
+                                FSOUND_SetFrequency(NoteArray[x].FModChannel, CInt(daf) * (int)Math.Pow(Math.Pow(2, 1d / 12), (double)(SappyChannels[Item.ParentChannel].PitchBend - 0x40) / CInt(0x40) * CInt(SappyChannels[Item.ParentChannel].PitchBendRange)));
                                 FSOUND_SetVolume(NoteArray[x].FModChannel, dav * (SappyChannels[Item.ParentChannel].mute ? 0 : 1));
                                 FSOUND_SetPan(NoteArray[x].FModChannel, SappyChannels[Item.ParentChannel].Panning * 2);
                             }
@@ -1528,11 +1505,11 @@ public partial class clsSappyDecoder
                             {
                                 if (DrumKitExists(Item.PatchNumber)) // better way
                                 {
-                                    BufferEvent($"{Chr(0x99)}{Chr(MidiDrumMap[Item.NoteNumber])}{Chr(Item.Velocity)}", TotalTicks);
+                                    BufferEvent($"{(char)0x99}{(char)MidiDrumMap[Item.NoteNumber]}{(char)Item.Velocity}", TotalTicks);
                                 }
                                 else
                                 {
-                                    BufferEvent($"{Chr(0x90 + Item.ParentChannel)}{Chr(Item.NoteNumber + MidiPatchTrans[Item.PatchNumber])}{Chr(Item.Velocity)}", TotalTicks);
+                                    BufferEvent($"{(char)(0x90 + Item.ParentChannel)}{(char)(Item.NoteNumber + MidiPatchTrans[Item.PatchNumber])}{(char)Item.Velocity}", TotalTicks);
                                 }
                             }
                             PlayedANote?.Invoke((byte)Item.ParentChannel, Item.NoteNumber, Item.Velocity);
@@ -1595,7 +1572,7 @@ public partial class clsSappyDecoder
                                             // Watch this: enabling this makes the file unreadable
                                             // BufferEvent(Chr(&H80 + NoteArray[i].ParentChannel) & Chr(NoteArray[i].NoteNumber), this.TotalTicks, NoteArray[i].ParentChannel)
                                         }
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[i].ParentChannel)}{Chr(NoteArray[i].NoteNumber)}{Chr(0)}", TotalTicks);
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[i].ParentChannel)}{(char)NoteArray[i].NoteNumber}{(char)0}", TotalTicks);
                                         NoteArray[i].FModChannel = 0;
                                         // TODO: (NOT SUPPORTED): On Error Resume Next
                                         SappyChannels[NoteArray[i].ParentChannel].Notes.Remove(Str(i));
@@ -1621,9 +1598,6 @@ public partial class clsSappyDecoder
                                 // MIDISETVOL
                                 SetChnVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
-                            // TODO: (NOT SUPPORTED): On Error Resume Next
-                            if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[i].FModChannel)}{Chr(dav)}", TotalTicks);
-                            // TODO: (NOT SUPPORTED): On Error GoTo 0
                         }
                         else
                         {
@@ -1687,7 +1661,7 @@ public partial class clsSappyDecoder
                                             ToneOff(NoteArray[i].ParentChannel, NoteArray[i].NoteNumber + MidiPatchTrans[NoteArray[i].PatchNumber]);
                                         }
                                         // Watch this...
-                                        if (Recording) BufferEvent($"{Chr(0x80 + NoteArray[i].ParentChannel)}{Chr(NoteArray[i].NoteNumber)}{Chr(0)}", TotalTicks);
+                                        if (Recording) BufferEvent($"{(char)(0x80 + NoteArray[i].ParentChannel)}{(char)NoteArray[i].NoteNumber}{(char)0}", TotalTicks);
                                         NoteArray[i].FModChannel = 0;
                                         // TODO: (NOT SUPPORTED): On Error Resume Next
                                         SappyChannels[NoteArray[i].ParentChannel].Notes.Remove(Str(i));
@@ -1713,9 +1687,6 @@ public partial class clsSappyDecoder
                                 // MIDISETVOL
                                 SetChnVolume(NoteArray[i].FModChannel, dav * (SappyChannels[NoteArray[i].ParentChannel].mute ? 0 : 1));
                             }
-                            // TODO: (NOT SUPPORTED): On Error Resume Next
-                            if (Recording) BufferEvent($"{Chr(0xD0 + NoteArray[i].FModChannel)}{Chr(dav)}", TotalTicks);
-                            // TODO: (NOT SUPPORTED): On Error GoTo 0
                         }
                     }
                 }
@@ -1861,12 +1832,12 @@ public partial class clsSappyDecoder
     private void WriteVarLen(int ch, int Value)
     {
         // This sets the most significant bits of the value wrong, so
-        // I need to fix this. (Drag)
+        //   I need to fix this. (Drag)
         // buffer = Value And &H7F
         // While Value \ 128 > 0
-        // Value = Value \ 128
-        // buffer = buffer * 256
-        // buffer = buffer Or ((Value And &H7F) Or &H80)
+        //   Value = Value \ 128
+        //   buffer = buffer * 256
+        //   buffer = buffer Or ((Value And &H7F) Or &H80)
         // Wend
         // The following is my code. (Drag)
         int buffer = Value & 0x7F;
@@ -1879,7 +1850,7 @@ public partial class clsSappyDecoder
 
         while (true)
         {
-            FilePutObject(ch, (byte)(buffer & 255)); // : Pos = Pos + 1
+            FilePut(ch, (byte)(buffer & 255)); // : Pos = Pos + 1
             if ((buffer & 0x80) != 0)
             {
                 buffer /= 256;
@@ -1922,7 +1893,7 @@ public partial class clsSappyDecoder
         // FlipLong = value
     }
 
-    public static int FlipInt(int Value)
+    public static short FlipInt(int Value)
     {
         byte b1 = (byte)(Value % 0x100);
         Value /= 0x100;
@@ -1932,7 +1903,7 @@ public partial class clsSappyDecoder
         Value *= 0x100;
         Value += b2;
 
-        return Value;
+        return (short)Value;
     }
 
     private void GetSample(SDirect D, SappyDirectHeader dirhead, ref SappySampleHeader smphead, bool UseReadString)
@@ -1972,7 +1943,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + (char)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16));
                 }
             }
         }
@@ -2015,7 +1986,7 @@ public partial class clsSappyDecoder
                 for (int ai = 0; ai <= 31; ai += 1)
                 {
                     int bi = ai % 2;
-                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + Chr((int)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16)));
+                    SamplePool[Str(sid)].SampleData = SamplePool[Str(sid)].SampleData + (char)Int((Strings.Mid(tsi, ai / 2 + 1, 1) == "" ? 0 : Strings.Mid(tsi, ai / 2 + 1, 1)[0]) / (int)Math.Pow(16, bi) % 16 * (GBWaveMulti * 16));
                 }
             }
         }

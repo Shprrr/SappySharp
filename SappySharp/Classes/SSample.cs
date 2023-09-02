@@ -25,7 +25,7 @@ public class SSample
 
     public void ReadSampleDataFromFile(int fn, int tsize)
     {
-        Array sampleData =new byte[tsize];
+        Array sampleData = new byte[tsize];
         mvarSampleDataL = tsize;
         int filenumber = 0;
         FileGet(fn, ref sampleData, ReadOffset(filenumber) + 1);
@@ -34,7 +34,7 @@ public class SSample
     public void SaveSampleDataToFile(int fn)
     {
         int filenumber = 0;
-        FilePutObject(fn, mvarSampleDataB, WriteOffset(filenumber) + 1);
+        FilePut(fn, mvarSampleDataB, WriteOffset(filenumber) + 1);
     }
 
     public bool GBWave

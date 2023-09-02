@@ -54,7 +54,7 @@ static class mdlFile
     public static void WriteByte(int filenumber, byte Data, int offset = -1)
     {
         WriteOffset(filenumber, offset);
-        FilePutObject(filenumber, Data, WriteOffset(filenumber) + 1);
+        FilePut(filenumber, Data, WriteOffset(filenumber) + 1);
         WriteOffset(filenumber, WriteOffset(filenumber) + 1);
     }
 
